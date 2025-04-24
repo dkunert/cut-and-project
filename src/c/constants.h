@@ -1,0 +1,19 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define X_MIN 0
+#define X_MAX 1000000
+#define NUMBER_OF_TESTS 1000
+#define MAX_NOMINATOR_DENOMINATOR 100000
+
+#define MAX_PERIOD_ARRAY_SIZE 8000000000
+#define NO_PERIOD -1
+#define ARRAY_SIZE_EXCEEDED -2
+#define DX_LENGTH_TO_SMALL -3
+#define FRACTION_OF_REMAINING_ELEMENTS 0.9
+#define MAX_RANDOM 100000
+
+#define TEST_FILE "./pattern_x_max_1000000_1000_lines.csv"
+#define FILE_TO_FIND_PATTERN "./find_pattern_x_max_1000000_%d_lines.csv"
+
+#endif /* CONSTANTS_H */

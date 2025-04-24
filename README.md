@@ -42,3 +42,42 @@ we propose the following conjectures concerning the period length $\lambda$ of $
 We use numerical methods to support these conjectures.
 
 We will show that $\lambda_{\omega=0} = 1$. Conjecture 6 is the result of a conversation with [ChatGPT's](https://chat.openai.com) model _o3-mini-high_.
+
+## Content
+
+### LaTeX Code and PDF
+
+Please find the LaTeX Code and the PDF in directory _LaTex_.
+
+### Sorces
+
+Please find the C and the Python code in direcory _src_. The sub-directories for C and Python contain makefiles.
+I have used _ChatGPT_ for both codebases.
+
+#### C Code
+
+#### Configuration
+
+Please configure the code before running it!
+
+#### Makefile
+
+The makefile supports macOS, Linux and Windows.
+
+There are three targets:
+
+* ```make debug``` creates debug code.
+* ```make perf``` produces performance code.
+* ```make all``` produces performance and debug code.
+* ```make clean``` cleans up.
+
+You can excecute the software with ```./cnp```.
+
+#### Python Code
+
+There are four targets:
+
+* ```make install``` installs all required libraries.
+* ```make run``` runs the software.
+* ```make all``` installs all required libraries and runs the software.
+* ```make clean``` cleans up.

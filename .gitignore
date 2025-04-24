@@ -172,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+src/c/cnp
+src/c/*.o
+src/c/*.p
+src/c/*.d
