@@ -5,7 +5,7 @@
 With $\alpha, \beta \in ℕ$, $\alpha \perp \beta$, $x, y \in ℝ$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in ℤ$, we consider the points
 
 $$
-\boldsymbol{P} =
+P =
 \biggl(
 (x, y)
 \Bigm|
@@ -41,6 +41,4 @@ we propose the following conjectures concerning the period length $\lambda$ of $
 
 We use numerical methods to support these conjectures.
 
-> **Remark.** We will show that $\lambda_{\omega=0} = 1$.
-
-> **Remark.** Conjecture 6 is the result of a conversation with [ChatGPT](https://chat.openai.com).
+We will show that $\lambda_{\omega=0} = 1$. Conjecture 6 is the result of a conversation with [ChatGPT's](https://chat.openai.com) model _o3-mini-high_.
