@@ -2,7 +2,7 @@
 
 ## Conjectures on the Period Lengths of One-Dimensional Cut-and-Project Sequences
 
-With $\alpha, \beta \in \mathbb{N}$, $\alpha \perp \beta$, $x, y \in \mathbb{R}$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in \mathbb{Z}$, we consider the points
+With $\alpha, \beta \in ℕ$, $\alpha \perp \beta$, $x, y \in ℝ$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in ℤ$, we consider the points
 
 $$
 \mathbf{P} =
