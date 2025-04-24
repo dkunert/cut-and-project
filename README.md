@@ -6,7 +6,7 @@ With $\alpha, \beta \in \mathbb{N}$, $\alpha \perp \beta$, $x, y \in \mathbb{R}$
 
 $$
 \mathbf{P} =
-\biggl(\,
+\biggl(
 \begin{pmatrix} x \\ y \end{pmatrix}
 \Bigm|
 x \in \mathbb{Z},
