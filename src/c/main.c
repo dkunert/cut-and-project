@@ -14,10 +14,10 @@ int main(int argc, const char *argv[])
         TEST_CONJECTURES = 1 << 1, // 0b00000010
     };
 
-    uint8_t tasks = TEST | TEST_CONJECTURES;
+    TASKS;
 
     if (tasks & TEST) {
-        const bool create_file_to_find_a_pattern = false;
+        const bool create_file_to_find_a_pattern = CREATE_FILE_TO_FIND_A_PATTERN;
         test(create_file_to_find_a_pattern, dx);
     }
     if (tasks & TEST_CONJECTURES)

@@ -177,3 +177,8 @@ src/c/cnp_debug
 src/c/*.o
 src/c/*.p
 src/c/*.d
+LaTeX/Quasi.synctex.gz
+LaTeX/Quasi.aux
+LaTeX/Quasi.fdb_latexmk
+LaTeX/Quasi.fls
+LaTeX/Quasi.out
