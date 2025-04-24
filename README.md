@@ -5,13 +5,13 @@
 With $\alpha, \beta \in \mathbb{N}$, $\alpha \perp \beta$, $x, y \in \mathbb{R}$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in \mathbb{Z}$, we consider the points
 
 $$
-\mathbf{P} \;=\;
+\mathbf{P} =
 \biggl(\,
 \begin{pmatrix} x \\ y \end{pmatrix}
-\;\Bigm|\;
-x \in \mathbb{Z},\;
+\Bigm|
+x \in \mathbb{Z},
 y \in
-\bigl[\tfrac{\alpha}{\beta}(x-\omega),\;\tfrac{\alpha}{\beta}x+\omega\bigr]
+\bigl[\tfrac{\alpha}{\beta}(x-\omega), \tfrac{\alpha}{\beta}x+\omega\bigr]
 \cap \mathbb{Z}
 \biggr)
 $$
