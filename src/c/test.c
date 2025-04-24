@@ -258,7 +258,7 @@ void test(bool create_file_to_find_a_pattern, number_t *dx)
     if (create_file_to_find_a_pattern)
     {
         char output_filename[256];
-        const int number_of_tests = NUMBER_OF_TESTS * 100;
+        const int number_of_tests = NUMBER_OF_LINES_IN_THE_PATTERN_FILE;
         snprintf(output_filename, sizeof(output_filename), FILE_TO_FIND_PATTERN, number_of_tests);
         create_test_data(output_filename, number_of_tests, dx);
     }

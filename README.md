@@ -58,7 +58,7 @@ I have used _ChatGPT_ for both codebases.
 
 #### Configuration
 
-Please configure the code before running it!
+Please configure ```constants.h```, especially ```MAX_PERIOD_ARRAY_SIZE``` before running it!
 
 ##### constants.h
 
@@ -70,13 +70,16 @@ Please configure the code before running it!
 #define X_MIN 0
 #define X_MAX 1000000
 #define NUMBER_OF_TESTS 1000
+#define MAX_RANDOM 100000
 #define MAX_NOMINATOR_DENOMINATOR 100000
+#define TASKS TEST | TEST_CONJECTURES
+#define CREATE_FILE_TO_FIND_A_PATTERN false
+#define NUMBER_OF_LINES_IN_THE_PATTERN_FILE 100000
 
 #define NO_PERIOD -1
 #define ARRAY_SIZE_EXCEEDED -2
 #define DX_LENGTH_TO_SMALL -3
 #define FRACTION_OF_REMAINING_ELEMENTS 0.9
-#define MAX_RANDOM 100000
 
 #define TEST_FILE "./pattern_x_max_1000000_1000_lines.csv"
 #define FILE_TO_FIND_PATTERN "./find_pattern_x_max_1000000_%d_lines.csv"
@@ -84,7 +87,17 @@ Please configure the code before running it!
 #endif /* CONSTANTS_H */
 ```
 
-Please adjust ```MAX_PERIOD_ARRAY_SIZE```. With a size of 8,000,000,000 about 60 GB of RAM is used!
+| Definition                                | Comment                                                                                  |
+|-------------------------------------------|------------------------------------------------------------------------------------------|
+| ```MAX_PERIOD_ARRAY_SIZE```               | Please adjust this. With a size of 8,000,000,000 about 60 GB of RAM is used!             |
+| ```X_MIN```                               | x interval starts here. ```X_MIN``` is included.                                         |
+| ```X_MAX```                               | x interval ends here. ```X_MAX``` is included.                                           |
+| ```NUMBER_OF_TESTS```                     | number of tests **FOR WHAT?**                                                            |
+| ```MAX_RANDOM```                          | maximum for random numbers                                                               |
+| ```MAX_NOMINATOR_DENOMINATOR```           | maximum number for the dominator for random rationals                                    |
+| ```TASKS```                               | Tests and/or tests conconjectures can be performed.                                      |
+| ```CREATE_FILE_TO_FIND_A_PATTERN```       | When tests are done, you can create a file to check the patterns as well.                |
+| ```NUMBER_OF_LINES_IN_THE_PATTERN_FILE``` | This pattern file will have NUMBER_OF_LINES_IN_THE_PATTERN_FILE lines (plus a headline). |
 
 #### Makefile
 
@@ -98,46 +111,6 @@ There are three targets:
 * ```make clean``` cleans up.
 
 You can excecute the performance code with ```./cnp``` and the debug code with ```./cnp_debug```.
-
-#### main.c
-
-```c
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "test.h"
-#include "conjectures.h"
-
-int main(int argc, const char *argv[])
-{
-    number_t *dx = dx_alloc(MAX_PERIOD_ARRAY_SIZE);
-
-    enum Tasks
-    {
-        TEST = 1 << 0,             // 0b00000001
-        TEST_CONJECTURES = 1 << 1, // 0b00000010
-    };
-
-    uint8_t tasks = TEST | TEST_CONJECTURES;
-
-    if (tasks & TEST) {
-        const bool create_file_to_find_a_pattern = false;
-        test(create_file_to_find_a_pattern, dx);
-    }
-    if (tasks & TEST_CONJECTURES)
-        test_conjectures(dx);
-
-    free(dx);
-    return 0;
-}
-```
-
-By setting ```tasks```, you can configure the tasks. By ```setting create_file_to_find_a_pattern```, you can decide of a file to find a pattern is created.
-
-#### tests.c
-
-
-
 
 #### Python Code
 
