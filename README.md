@@ -17,9 +17,11 @@ y \in
 $$
 
 projected vertically onto
+
 $$
 f(x) = \frac{\alpha}{\beta}x
 $$
+
 and measure their Euclidean distances $(d^{(i)})$.
 
 With
