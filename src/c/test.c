@@ -243,7 +243,7 @@ void test_speed(number_t *dx)
  *        file to find a pattern.
  * @param dx The pointer to the array that will hold the dx values.
  */
-void test(bool created_file_to_find_a_pattern, number_t *dx)
+void test(bool create_file_to_find_a_pattern, number_t *dx)
 {
     test_gcd();
     test_lcm();
@@ -255,7 +255,7 @@ void test(bool created_file_to_find_a_pattern, number_t *dx)
 
     test_with_test_file(TEST_FILE, X_MAX, dx);
 
-    if (created_file_to_find_a_pattern)
+    if (create_file_to_find_a_pattern)
     {
         char output_filename[256];
         const int number_of_tests = NUMBER_OF_TESTS * 100;

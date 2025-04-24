@@ -17,8 +17,8 @@ int main(int argc, const char *argv[])
     uint8_t tasks = TEST | TEST_CONJECTURES;
 
     if (tasks & TEST) {
-        const bool created_file_to_find_a_pattern = false;
-        test(created_file_to_find_a_pattern, dx);
+        const bool create_file_to_find_a_pattern = false;
+        test(create_file_to_find_a_pattern, dx);
     }
     if (tasks & TEST_CONJECTURES)
         test_conjectures(dx);
