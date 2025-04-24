@@ -5,9 +5,9 @@
 With $\alpha, \beta \in ℕ$, $\alpha \perp \beta$, $x, y \in ℝ$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in ℤ$, we consider the points
 
 $$
-**P** =
+P =
 \biggl(
-\begin{pmatrix} x \\ y \end{pmatrix}
+(x, y)
 \Bigm|
 x \in ℤ,
 y \in
