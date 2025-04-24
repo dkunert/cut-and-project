@@ -5,14 +5,14 @@
 With $\alpha, \beta \in ℕ$, $\alpha \perp \beta$, $x, y \in ℝ$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in ℤ$, we consider the points
 
 $$
-\mathbf{P} =
+**P** =
 \biggl(
 \begin{pmatrix} x \\ y \end{pmatrix}
 \Bigm|
-x \in \mathbb{Z},
+x \in ℤ,
 y \in
 \bigl[\tfrac{\alpha}{\beta}(x-\omega), \tfrac{\alpha}{\beta}x+\omega\bigr]
-\cap \mathbb{Z}
+\cap ℤ
 \biggr)
 $$
 
