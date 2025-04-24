@@ -1,7 +1,6 @@
 # cut-and-project
-Conjectures on the Period Lengths of One-Dimensional Cut-and-Project Sequences
 
-## Abstract
+## Conjectures on the Period Lengths of One-Dimensional Cut-and-Project Sequences
 
 With $\alpha, \beta \in \mathbb{N}$, $\alpha \perp \beta$, $x, y \in \mathbb{R}$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in \mathbb{Z}$, we consider the points
 
@@ -17,11 +16,11 @@ y \in
 \biggr)
 $$
 
-projected vertically onto 
+projected vertically onto
 $$
 f(x) = \frac{\alpha}{\beta}x
 $$
-and measure their Euclidean distances~$(d^{(i)})$.
+and measure their Euclidean distances $(d^{(i)})$.
 
 With
 $$
