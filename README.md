@@ -23,9 +23,11 @@ $$
 and measure their Euclidean distances $(d^{(i)})$.
 
 With
+
 $$
 \Lambda_{\alpha,\beta} := \alpha + \beta + 1,
 $$
+
 we propose the following conjectures concerning the period length $\lambda$ of $(d^{(i)})$:
 
 1. There is always a finite $\lambda$.
