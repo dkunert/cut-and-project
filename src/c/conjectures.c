@@ -256,7 +256,7 @@ void test_conjectures(number_t *dx)
     {
         if (conjecture & c)
         {
-            test_concjeture2_to_6(dx, c, NUMBER_OF_TESTS);
+            test_concjeture2_to_6(dx, c, NUMBER_OF_NUMBER_OF_CONJECTURE_TESTS);
         }
     }
 }
