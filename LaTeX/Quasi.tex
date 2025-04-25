@@ -38,7 +38,7 @@
 \newcommand{\todo}[1]{\textcolor{red}{TODO: {#1}}}
 \newcommand{\langc}[0]{\mbox{C}\xspace}
 \newcommand{\langp}[0]{\mbox{Python}\xspace}
-\newcommand{\chat}[0]{\mbox{\emph{ChatGPT o3-mini-high}}\xspace}
+\newcommand{\chat}[0]{\mbox{\emph{OpenAI ChatGPT o3-mini-high}}\xspace}
 \newcommand{\function}[1]{\mbox{\texttt{#1}}\xspace}
 % =================================================
 
@@ -77,14 +77,14 @@ we propose the following conjectures concerning the period length $\lambda$ of $
  	\item \label{itm:conj6} If \(\omega \ne 1\), $\lambda \approx \left\lfloor (\omega \; \Lambda_{\alpha, \beta} \right\rfloor$
 \end{enumerate}
 %
-We use numerical methods to support these conjectures.
+We use computational methods to support these conjectures.
 %
 \begin{remark}
 We will show, that $\lambda_{\omega = 0} = 1$.
 \end{remark}
 %
 \begin{remark}
-Conjecture~\ref{itm:conj6} is the result of a conversation with \chat.
+Conjecture~\ref{itm:conj6} is the result of a conversation with \chat (see \cite{ChatGPT}).
 \end{remark}
 \end{abstract}
 
@@ -152,10 +152,10 @@ We use $\mathbb{Z}$ instead of $\mathbb{N}$, because we have a "two-way infinite
 \end{remark}
 %
 \begin{remark}
-Numerical experiments show, that sorting has no influence on $\lambda$.
+Computational experiments show, that sorting has no influence on $\lambda$.
 \end{remark}
 %
-For the numerical analysis we limit $x$ to $[0, x_{max}]$, with $x_{max} \in \mathbb{N}$.
+For the analysis we limit $x$ to $[0, x_{max}]$, with $x_{max} \in \mathbb{N}$.
 %
 Examining Figure~\ref{fig:a2o1} again, we observe the following squared distances:
 %
@@ -170,7 +170,7 @@ Examining Figure~\ref{fig:a2o1} again, we observe the following squared distance
 \label{tab:distances1}
 \end{table}
 
-By choosing the interval $[0, 5]$, $0.8$ is added at the beginning and at the end, making the sequence appear non-periodic despite the repetition of $(0.8, 0.2, 1.48, 0.2)$. Indeed, if we choose the interval $[0, 10]$, the series continues as expected:
+By selecting the interval $[0, 5]$, $0.8$ is appended at both the beginning and the end, making the sequence appear non-periodic despite the repetition of $(0.8, 0.2, 1.48, 0.2)$. However, if we choose the interval $[0, 10]$, the sequence continues as expected:
 %
 \begin{table}[htbp]
 \centering
@@ -183,7 +183,7 @@ By choosing the interval $[0, 5]$, $0.8$ is added at the beginning and at the en
 \label{tab:distances2}
 \end{table}
 
-To solve this problem in the numerical experiments, we delete elements from the beginning and the end of $P_s$, while no finite $\lambda$ is found. We limit the number of removed elements to 10\% of the sequence length.
+To solve this problem in the computational experiments, we delete elements from the beginning and the end of $P_s$, while no finite $\lambda$ is found. We limit the number of removed elements to 10\% of the sequence length.
 %
 This way we get $K$ projected points.
 
@@ -191,10 +191,10 @@ This way we get $K$ projected points.
 \subsection{Distance Calculation}
 % ===============================
 
-The following applies to the euclidian distances of the ordered projected points with $\tilde{p}_{x s}^{(i)} \in [0, x_{max}]$:
+The euclidian distances of the ordered projected points with $\tilde{p}_{x s}^{(i)} \in [0, x_{max}]$ are
 %
 \begin{equation}
-\left( d^{(i)} \right)_{i=1}^{K-1} = \left\lVert \mathbf{\tilde{p}}^{(i+1)}_s - \mathbf{\tilde{p}}^{(i)}_s \right\rVert
+\left( d^{(i)} \right)_{i=1}^{K-1} = \left\lVert \mathbf{\tilde{p}}^{(i+1)}_s - \mathbf{\tilde{p}}^{(i)}_s \right\rVert.
 \end{equation}
 %
 Every injective function applied to the elements of $\left(d^{(i)}\right)_{i=1}^{K-1}$ does not change $\lambda$.
@@ -229,12 +229,12 @@ Here we also can omit the constant $\frac{\beta}{\alpha^2 + \beta^2}$. Finally, 
 \begin{equation}
 \left(\delta^{(i)}\right)_{i=1}^{K-1} =
 \left( 
-	\beta \left( p_{x s}^{(i+1)} - p_{x s}^{(i+1)} \right)
-	+ \alpha \left( p_{y s}^{(i+1)} - p_{y s}^{(i+1)} \right) 
+	\beta \left( p_{x s}^{(i+1)} - p_{x s}^{(i)} \right)
+	+ \alpha \left( p_{y s}^{(i+1)} - p_{y s}^{(i)} \right) 
 \right)_{i=1}^{K-1}.
 \label{delta}
 \end{equation}
-%
+
 This sequence is now examined for periodicity.
 
 \begin{remark}
@@ -248,7 +248,7 @@ $\tilde{p}_{x s}^{(i)} = \tilde{p}_{x s}^{(j)}$ for $i, j \in \mathbb{Z}$ and $i
 We consider the finite sequence $\left(e^{(i)}\right)_{i=1}^{L}$ with $L \in \mathbb{N}_{>1}$ to be periodic, if there exists a $\tilde{\lambda} \in [1, L//2]$ with 
 %
 \begin{equation}
-e^{(i+\tilde{\lambda})} = e^{(i)} \; \forall i \in [1, L-\tilde{\lambda}].
+e^{(i+\tilde{\lambda})} = e^{(i)} \; \forall i \in [1, L - (L \bmod \tilde{\lambda})].
 \end{equation}
 %
 The period length $\lambda$ is defined as
@@ -276,34 +276,17 @@ which consists of constant elements. As $e^{(i+1)} = e^{(i)} \; \forall i \in [1
 \section{Conjectures}
 % ===================
 
-In very rare cases, we see that our \langc software is not able to calculate a finite period length because the size of the array containing the differences is not sufficient. This array consists of 8,000,000,000 elements with \SI{64}{\bit} and has a size of more than \SI{60}{\gigabyte}.
+In very rare cases, we see that our \langc software is not able to calculate a finite period length because the size of the array containing the differences is not sufficient. The array used has 8,000,000,000 \SI{64}{\bit} elements and a size of approximately \SI{60}{\gigabyte}.
 
 \subsection{Conjectures 1 to 5}
 
 Using the \langc software, we were able to support all conjectures listed in the abstract.
 
-\begin{remark}
-The fraction for $a = \sqrt{2}$, represented with \SI{64}{\bit} floating-point arithmetic, is
-%
-\begin{equation}
-\tilde{a} = \frac{6{,}369{,}051{,}672{,}525{,}773}{4{,}503{,}599{,}627{,}370{,}496}.
-\end{equation}
-%
-If conjecture~\ref{itm:conj3} is correct, we would obtain
-%
-\begin{equation}
-\lambda_{a = \tilde{a}, \; \omega = 1} = 10{,}872{,}651{,}299{,}896{,}270.
-\end{equation}
-%
-Such a sequence with \SI{8}{\bit} per element would take up around \SI{11}{\petabyte} of memory.
-Provided conjecture~\ref{itm:conj3} was correct, there is no finite $\lambda$, because $\sqrt{2}$ can only be represented by infinitely large numerators and denominators.
-\end{remark}
-
 \subsection{Conjecture \ref{itm:conj6}}
 
-We found conjecture~\ref{itm:conj6} by providing \emph{ChatGPT o3-mini-high} data created by the \langc function \function{create\_test\_data} and telling it, it should use \emph{XGBoost} to predict $\lambda$. It created the \langp function \function{xgboost} (see \cite{Kunert2025}). 
+We found conjecture~\ref{itm:conj6} by providing \chat data created by the \langc function \function{create\_test\_data} and telling it, it should use \emph{XGBoost} to predict $\lambda$. It created the \langp function \function{xgboost} (see \cite{Kunert2025}). 
 
-When we sent ChatGPT the result of this computation, it wrote of an ”indication that the four predictors \(o_n, o_d, a_n, a_d\) [$\omega = \frac{o_n}{o_d}$, $\alpha = a_n$ and $\beta = a_d$] are in a highly complex, non-linear relationship, which XGBoost captures excellently". Then we reported on conjecture~\ref{itm:conj3} and told \chat, that we want to find a formula for $\lambda$.
+When we sent \chat the result of this computation, it wrote of an ”indication that the four predictors \(o_n, o_d, a_n, a_d\) [$\omega = \frac{o_n}{o_d}$, $\alpha = a_n$ and $\beta = a_d$] are in a highly complex, non-linear relationship, which \emph{XGBoost} captures excellently". Then we reported on conjecture~\ref{itm:conj3} and told \chat, that we want to find a formula for $\lambda$.
 
 Among other suggestions, it proposed the following:
 %
@@ -320,16 +303,24 @@ By experimenting with the \langc software we found that
 gives even better results. The lowest value we found for $R^2$ with the \langc function \function{test\_conjectures} was $0.987994$.
 
 % =========================
+\section*{Acknowledgements}
+% =========================
+
+The author gratefully acknowledges the use of \emph{OpenAI ChatGPT} (see \cite{ChatGPT}) for help refining the English phrasing and for suggestions on software implementation details. Except for conjecture~\ref{itm:conj6}, all conceptual content, data analysis, and the final manuscript were authored and verified by the present author.
+
+In addition, \emph{DeepL Translator} (see \cite{DeepL}) has been used to improve the writing style.
+
+% =========================
 \begin{thebibliography}{99}
 % =========================
 
 \bibitem{AbelPriceYvesMeyer}
-\emph{Page for Yves Meyer at the Abel Prize Homepage}, available at: 
-\url{https://abelprize.no/abel-prize-laureates/2017}, accessed on December 15, 2024.
+\emph{Page for Yves Meyer at the Abel Prize Homepage},
+available at: \url{https://abelprize.no/abel-prize-laureates/2017}, accessed on December 15, 2024.
 
 \bibitem{SpeechTao}
-\emph{Terence Tao on Yves Meyer's work on Wavelets}, available at: 
-\url{https://youtu.be/AnkinNVPjyw}, accessed on December 15, 2024.
+\emph{Terence Tao on Yves Meyer's work on Wavelets},
+available at: \url{https://youtu.be/AnkinNVPjyw}, accessed on December 15, 2024.
 
 \bibitem{Senechal2009}
 Marjorie Senechal,
@@ -337,14 +328,17 @@ Marjorie Senechal,
 2009.
 ISBN: 978-0-521-57541-6.
 
-\bibitem{Kunert2025}%
-D.\,Kunert, 2025,
-\emph{Code for this article},
-Available at \url{https://github.com/dkunert/cut-and-project/tree/main/src}.\\
+\bibitem{ChatGPT}
+OpenAI, \emph{ChatGPT}, available at \url{https://chat.openai.com}, accessed regularly between October 2024 and April 2025.
+
+\bibitem{DeepL}
+DeepL GmbH, \emph{DeepL Translator}, available at \url{https://www.deepl.com}, accessed regularly between October 2024 and April 2025.
+
+\bibitem{Kunert2025}
+Dirk Kunert, 2025,
+\emph{This article and the source code},
+available at: \url{https://github.com/dkunert/cut-and-project/tree/main/src}.
 
 \end{thebibliography}
-
-\section{Conclusion}
-\todo{Missing!}
 
 \end{document}
