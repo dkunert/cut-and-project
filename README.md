@@ -105,7 +105,7 @@ Please configure ```constants.h```, especially ```MAX_PERIOD_ARRAY_SIZE```, befo
 
 #### Makefile
 
-The makefile supports macOS, Linux and Windows.
+The makefile supports macOS, Linux and Windows. I have only tested it under macOS.
 
 There are three targets:
 
