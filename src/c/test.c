@@ -126,6 +126,121 @@ void test_lambda(number_t *dx)
     assert(lambda(2, 1, 1, 1, 0, 50, dx) == 4);
 }
 
+void test_find_period_length(void)
+{
+    //                 0  1  2  3  4  5  6  7  8  9
+    number_t dx01[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    assert(find_period_length(0, 9, dx01) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9
+    number_t dx02[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 2};
+    assert(find_period_length(0, 7, dx02) == 1);
+    assert(find_period_length(0, 8, dx02) == 1);
+    assert(find_period_length(0, 9, dx02) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5
+    number_t dx03[] = {1, 2, 3, 1, 2, 3};
+    assert(find_period_length(0, 5, dx03) == 3);
+
+    //                 0  1  2  3  4  5  6
+    number_t dx04[] = {1, 2, 3, 1, 2, 3, 1};
+    assert(find_period_length(0, 6, dx04) == 3);
+
+    //                 0  1  2  3  4  5  6
+    number_t dx05[] = {1, 2, 3, 1, 2, 3, 4};
+    assert(find_period_length(0, 6, dx05) == NO_PERIOD);
+
+    number_t dx06[] = {1};
+    assert(find_period_length(0, 0, dx06) == NO_PERIOD);
+
+    //                 0  1  2  3
+    number_t dx07[] = {5, 6, 5, 6};
+    assert(find_period_length(0, 3, dx07) == 2);
+
+    //                 0  1  2  3  4
+    number_t dx08[] = {5, 6, 5, 6, 5};
+    assert(find_period_length(0, 4, dx08) == 2);
+
+    //                 0  1  2  3  4
+    number_t dx09[] = {5, 6, 5, 6, 6};
+    assert(find_period_length(0, 4, dx09) == NO_PERIOD);
+
+    //                 0  1  2  3  4
+    number_t dx10[] = {5, 6, 5, 6, 1};
+    assert(find_period_length(0, 4, dx10) == NO_PERIOD);
+    assert(find_period_length(0, 3, dx10) == 2);
+
+    number_t dx11[] = {1, 1};
+    assert(find_period_length(0, 1, dx11) == 1);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+    number_t dx12[] = {3, 3, 1, 2, 2, 3, 3, 1, 2, 2, 3, 3, 1, 2, 2, 3};
+    assert(find_period_length(0, 15, dx12) == 5);
+
+    //                 0  1  2  3  4  5  6  7  8
+    number_t dx13[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+    assert(find_period_length(0, 8, dx13) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11
+    number_t dx14[] = {1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3};
+    assert(find_period_length(0, 11, dx14) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10
+    number_t dx15[] = {1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2};
+    assert(find_period_length(0, 10, dx15) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9
+    number_t dx16[] = {1, 2, 3, 1, 2, 3, 1, 2, 3, 1};
+    assert(find_period_length(0, 9, dx16) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11 12 13
+    number_t dx17[] = {2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3};
+    assert(find_period_length(0, 13, dx17) == 3);
+    assert(find_period_length(0, 12, dx17) == 3);
+    assert(find_period_length(0, 11, dx17) == 3);
+    assert(find_period_length(0, 10, dx17) == 3);
+    assert(find_period_length(0, 9, dx17) == 3);
+    assert(find_period_length(0, 8, dx17) == 3);
+    assert(find_period_length(5, 13, dx17) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
+    number_t dx18[] = {2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1};
+    assert(find_period_length(0, 14, dx18) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+    number_t dx19[] = {2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2};
+    assert(find_period_length(0, 15, dx19) == 3);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
+    number_t dx20[] = {2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 1};
+    assert(find_period_length(0, 15, dx20) == 3);
+    assert(find_period_length(0, 16, dx20) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9  10 11 12
+    number_t dx21[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3};
+    assert(find_period_length(0, 12, dx21) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9  10 11 12
+    number_t dx22[] = {1, 2, 3, 1, 2, 3, 1, 2, 3, 10, 1, 2, 3};
+    assert(find_period_length(0, 12, dx22) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8
+    number_t dx23[] = {1, 2, 3, 4, 5, 1, 2, 3, 4};
+    assert(find_period_length(0, 8, dx23) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9
+    number_t dx24[] = {1, 2, 3, 4, 5, 6, 1, 2, 3, 4};
+    assert(find_period_length(0, 9, dx24) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10
+    number_t dx25[] = {1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4};
+    assert(find_period_length(0, 10, dx25) == NO_PERIOD);
+
+    //                 0  1  2  3  4  5  6  7  8  9 10 11
+    number_t dx26[] = {1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4};
+    assert(find_period_length(0, 11, dx26) == NO_PERIOD);
+}
+
 /**
  * Tests the lambda function with a test file.
  * @param filename The name of the test file.
@@ -250,6 +365,7 @@ void test(bool create_file_to_find_a_pattern, number_t *dx)
     test_rational();
     test_shorten();
     test_random();
+    test_find_period_length();
     test_lambda(dx);
     test_speed(dx);
 
