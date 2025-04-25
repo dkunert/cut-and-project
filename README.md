@@ -58,7 +58,7 @@ I have used _ChatGPT_ for both codebases.
 
 #### Configuration
 
-Please configure ```constants.h```, especially ```MAX_PERIOD_ARRAY_SIZE``` before running it!
+Please configure ```constants.h```, especially ```MAX_PERIOD_ARRAY_SIZE```, before running the software!
 
 ##### constants.h
 
