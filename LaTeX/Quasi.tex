@@ -8,7 +8,7 @@
 \usepackage{xcolor}
 \usepackage{xspace}
 \usepackage[skip=10pt]{caption}
-\usepackage{geometry} % page layout
+\usepackage{geometry}
 \usepackage{siunitx}
 \geometry{a4paper, margin=1in}
 
@@ -18,18 +18,12 @@
 \DeclareSIUnit\gigabyte{\giga\byte}
 \DeclareMathOperator{\round}{round}
 
-% \usepackage{titlesec}
-% \titlespacing*{\section}{0pt}{*2}{*1}
-
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}
 
 \title{Conjectures on the Period Lengths of One-Dimensional Cut-and-Project Sequences}
 \author{Dirk Kunert \thanks{Independent Researcher, Email: dirk.kunert@gmail.com}}
 \date{\today}
-
-% TODO: See https://apps.hegl.mathi.uni-heidelberg.de/Proseminar-WS22-Quasicrystals/pages/cut-and-project1D.html
-
 
 \begin{document}
 %
@@ -48,7 +42,7 @@
 With $\alpha, \beta \in \mathbb{N}$, $\alpha \perp \beta$, $x, y \in \mathbb{R}$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in \mathbb{Z}$, we consider the points
 %
 \begin{equation}
-\mathbf{P} 
+\mathbf{C} 
 = \left(
 \begin{pmatrix} x \\ y \end{pmatrix}
 \;\middle|\;
@@ -70,11 +64,11 @@ we propose the following conjectures concerning the period length $\lambda$ of $
 %
 \begin{enumerate}
 	\item \label{itm:conj1} There is always a finite $\lambda$.
- 	\item \label{itm:conj2} If \(\omega \in (0,1)\), $\lambda_{\alpha, \beta} < \Lambda_{\alpha, \beta}$
+ 	\item \label{itm:conj2} If \(\omega \in (0,1)\), $\lambda_{\alpha, \beta} < \Lambda_{\alpha, \beta}$.
  	\item \label{itm:conj3} If \(\omega = 1\), $\lambda_{\alpha, \beta} = \Lambda_{\alpha, \beta}$.
- 	\item \label{itm:conj4} If \(\omega \in (1,2)\), $\lambda_{\alpha, \beta} \ge \Lambda_{\alpha, \beta}$
- 	\item \label{itm:conj5} If \(\omega > 2\), $\lambda_{\alpha, \beta} > \Lambda_{\alpha, \beta}$
- 	\item \label{itm:conj6} If \(\omega \ne 1\), $\lambda \approx \left\lfloor (\omega \; \Lambda_{\alpha, \beta} \right\rfloor$
+ 	\item \label{itm:conj4} If \(\omega \in (1,2)\), $\lambda_{\alpha, \beta} \ge \Lambda_{\alpha, \beta}$.
+ 	\item \label{itm:conj5} If \(\omega > 2\), $\lambda_{\alpha, \beta} > \Lambda_{\alpha, \beta}$.
+ 	\item \label{itm:conj6} If \(\omega > 0\), $\lambda_{\alpha, \beta} \approx \left\lfloor \omega \; \Lambda_{\alpha, \beta} \right\rfloor$.
 \end{enumerate}
 %
 We use computational methods to support these conjectures.
@@ -102,11 +96,11 @@ Terence Tao (University of California, Los Angeles) held the announcement (see \
 		\includegraphics[width=0.8\textwidth]{cut_and_project_tao}
 	}{
 	}
-    \caption{Screenshot from Terence Tao's presentation taken 60 seconds after the video's start}
+    \caption{Screenshot from Terence Tao's presentation taken 60 seconds after the video's start (see \cite{SpeechTao})}
     \label{fig:MeyerSets}
 \end{figure}
-
-Observing the distances of the points (see Figure~\ref{fig:MeyerSets}, right), he stated the following: "They repeat themselves, but not in a regular fashion."
+%
+With regard to the distances between the projected points on the right side, he noted the following: "They repeat themselves, but not in a regular fashion."
 
 These one-dimensional cut-and-project sequences are explored here. \langc and \langp software is used to support our conjectures (see \cite{Kunert2025}).
 
@@ -118,11 +112,11 @@ These one-dimensional cut-and-project sequences are explored here. \langc and \l
 \subsection{Projection}
 % =====================
 
-In Figure~\ref{fig:a2o1}, 
-the function that is projected vertically onto is $f(x) = \frac{\alpha}{\beta} x$, 
-the upper, passing through $(0, \omega)$, is given by $u(x) = \frac{\alpha}{\beta} x + \omega$, 
+In the figures~\ref{fig:MeyerSets} and ~\ref{fig:a2o1}, 
+the functions that are projected vertically onto are $f(x) = \frac{\alpha}{\beta} x$, 
+the upper, passing through $(0, \omega)$, are given by $u(x) = \frac{\alpha}{\beta} x + \omega$, 
 and the lower, passing through $(\omega, 0)$, by $l(x) = \frac{\alpha}{\beta} \, (x - \omega)$, 
-with $x \in \mathbb{R}$, $\alpha, \beta \in \mathbb{N}$, and the offset $\omega \in \mathbb{R}_{\ge 0}$.
+with $x \in \mathbb{R}$, $\alpha, \beta \in \mathbb{N}$, and the offsets $\omega \in \mathbb{R}_{\ge 0}$.
 
 \begin{figure}[htbp]
     \centering
@@ -134,16 +128,16 @@ with $x \in \mathbb{R}$, $\alpha, \beta \in \mathbb{N}$, and the offset $\omega 
     \label{fig:a2o1}
 \end{figure}
 %
-Projecting the points shown in equation \ref{eq:points} vertically on $f(x) = \frac{\alpha}{\beta} x$, we get
+Projecting the points $\mathbf{C}$ described in equation \ref{eq:points} vertically on $f(x) = \frac{\alpha}{\beta} x$, we get
 %
 \begin{equation}
-\mathbf{\tilde{P}}
-= \frac{1}{\alpha^2 + \beta^2} \begin{pmatrix} \beta^2 & \alpha \beta \\ \alpha \beta & \alpha^2 \end{pmatrix} \mathbf{P}.\label{eq:c}
+\mathbf{P}
+= \frac{1}{\alpha^2 + \beta^2} \begin{pmatrix} \beta^2 & \alpha \beta \\ \alpha \beta & \alpha^2 \end{pmatrix} \mathbf{C}.\label{eq:c}
 \end{equation}
 %
-Figure~\ref{fig:a2o1} shows that the first projected points are $1'$, $2'$, $3'$, $5'$, $4'$, $6'$, $7'$, $9'$, and $8'$. They are not in the correct order. So, $\mathbf{\tilde{P}}$ must be sorted by the x-coordinates of its points. We get
+Figure~\ref{fig:a2o1} shows that the first projected points are $1'$, $2'$, $3'$, $5'$, $4'$, $6'$, $7'$, $9'$, and $8'$. They are not in the correct order. So, $\mathbf{P}$ must be sorted by the x-coordinates of its points. We get
 \begin{equation}
-\mathbf{\tilde{P}}_s = \left(\mathbf{\tilde{p}}_s^{(i)} \right),\label{eq:sort}
+\mathbf{P}_s = \left(\mathbf{p}_s^{(i)} \right),\label{eq:sort}
 \end{equation}
 with $i \in \mathbb{Z}$.
 %
@@ -152,7 +146,7 @@ We use $\mathbb{Z}$ instead of $\mathbb{N}$, because we have a "two-way infinite
 \end{remark}
 %
 \begin{remark}
-Computational experiments show, that sorting has no influence on $\lambda$.
+Computational experiments show, that sorting has no influence on $\lambda$. \todo{Check!}
 \end{remark}
 %
 For the analysis we limit $x$ to $[0, x_{max}]$, with $x_{max} \in \mathbb{N}$.
@@ -163,27 +157,27 @@ Examining Figure~\ref{fig:a2o1} again, we observe the following squared distance
 \centering
 \begin{tabular}{| c | c || c | c | c | c | c | c | c | c | c | c || c |}
     \hline
-    \textbf{Index} &   1 &   2 &   3 &    4 &   5 & \dots &  18 &  19 &   20 &  21 &  22 &  23 \\ \hline
-    \textbf{Value} & 0.8 & 0.8 & 0.2 & 1.48 & 0.2 & \dots & 0.8 & 0.2 & 1.48 & 0.2 & 0.8 & 0.8 \\ \hline
+    \textbf{Index} & \underline{1} &   2 &   3 &    4 &   5 & \dots &  18 &  19 &  20  &  21 &  22 &  \underline{23} \\ \hline
+    \textbf{Value} &           0.8 & 0.8 & 0.2 & 1.48 & 0.2 & \dots & 0.8 & 0.2 & 1.48 & 0.2 & 0.8 &             0.8 \\ \hline
 \end{tabular}
 \caption{Squared distances in Figure~\ref{fig:a2o1} for $x_{max} = 5$}
 \label{tab:distances1}
 \end{table}
 
-By selecting the interval $[0, 5]$, $0.8$ is appended at both the beginning and the end, making the sequence appear non-periodic despite the repetition of $(0.8, 0.2, 1.48, 0.2)$. However, if we choose the interval $[0, 10]$, the sequence continues as expected:
+By selecting the interval $[0, 5]$, $0.8$ appears at index 1 and index 23, making the sequence appear non-periodic despite the repetition of $(0.8, 0.2, 1.48, 0.2)$. However, if we choose the interval $[0, 10]$, the sequence continues as expected after index 22:
 %
 \begin{table}[htbp]
 \centering
   \begin{tabular}{| c | c | c | c | c | c | c |}
     \hline
-    \textbf{Index} & \dots &  22 &  23 &   24 &  25 & \dots \\ \hline
-    \textbf{Value} & \dots & 0.8 & 0.2 & 1.48 & 0.2 & \dots \\ \hline
+    \textbf{Index} & \dots &  22 & \underline{23} &   24 &  25 & \dots \\ \hline
+    \textbf{Value} & \dots & 0.8 &            0.2 & 1.48 & 0.2 & \dots \\ \hline
   \end{tabular}
 \caption{Squared distances in Figure~\ref{fig:a2o1} for $x_{max} = 10$}
 \label{tab:distances2}
 \end{table}
 
-To solve this problem in the computational experiments, we delete elements from the beginning and the end of $P_s$, while no finite $\lambda$ is found. We limit the number of removed elements to 10\% of the sequence length.
+To solve this problem in the computational experiments, we delete elements from the beginning and the end of $\mathbf{P}_s$, while no finite $\lambda$ is found. We limit the number of removed elements to 10\% of the sequence length.
 %
 This way we get $K$ projected points.
 
@@ -191,10 +185,10 @@ This way we get $K$ projected points.
 \subsection{Distance Calculation}
 % ===============================
 
-The euclidian distances of the ordered projected points with $\tilde{p}_{x s}^{(i)} \in [0, x_{max}]$ are
+The euclidian distances of the ordered projected points are
 %
 \begin{equation}
-\left( d^{(i)} \right)_{i=1}^{K-1} = \left\lVert \mathbf{\tilde{p}}^{(i+1)}_s - \mathbf{\tilde{p}}^{(i)}_s \right\rVert.
+d^{(i)} = \left\lVert \mathbf{p}^{(i+1)}_s - \mathbf{p}^{(i)}_s \right\rVert.
 \end{equation}
 %
 Every injective function applied to the elements of $\left(d^{(i)}\right)_{i=1}^{K-1}$ does not change $\lambda$.
@@ -202,43 +196,26 @@ Every injective function applied to the elements of $\left(d^{(i)}\right)_{i=1}^
 $f(x) = x^2$ is injective for $x \in \mathbb{R}_{\geq 0}$. Thus, we can use the squared distances $\left(s^{(i)}\right)_{i=1}^{K-1}$ instead of the euclidian ones:
 %
 \begin{align}
-s^{(i)} &= \left(\tilde{p}_{x s}^{(i+1)} - \tilde{p}_{x s}^{(i)}\right)^2 + \left(\tilde{p}_{y s}^{(i+1)} - \tilde{p}_{y s}^{(i)}\right)^2 \\
-                                 &= \left(1 + \frac{\alpha^2}{\beta^2} \right) \left(\tilde{p}_{x s}^{(i+1)} - \tilde{p}_{x s}^{(i)}\right)^2,
+s^{(i)} &= \left(p_{x s}^{(i+1)} - p_{x s}^{(i)}\right)^2 + \left(p_{y s}^{(i+1)} - p_{y s}^{(i)}\right)^2 \\
+                      &= \left(1 + \frac{\alpha^2}{\beta^2} \right) \left(p_{x s}^{(i+1)} - p_{x s}^{(i)}\right)^2,
 \end{align}
 %
 because
 %
 \begin{equation}
-\tilde{p}_{y s}^{(i)} = \frac{\alpha}{\beta} \tilde{p}_{x s}^{(i)}.
+p_{y s}^{(i)} = \frac{\alpha}{\beta} p_{x s}^{(i)}.
 \end{equation}
 %
 $f(x) = \gamma x$ and $f(x) = \sqrt{x}$ are injective for $\gamma \in \mathbb{R}_{\ne 0}$ and $x \in \mathbb{R}_{\geq 0}$ as well. We get
 %
 \begin{equation}
-\tilde{s}^{(i)} = \left(\tilde{p}_{x s}^{(i+1)} - \tilde{p}_{x s}^{(i)}\right).
-\end{equation}
-%
-From equation~\eqref{eq:c} it follows that
-%
-\begin{equation}
-\tilde{p}_{x s}^{(i)} = \frac{\beta}{\alpha^2 + \beta^2} \left( \beta p_{x s}^{(i)} + \alpha p_{y s}^{(i)} \right).
-\end{equation}
-%
-Here we also can omit the constant $\frac{\beta}{\alpha^2 + \beta^2}$. Finally, we obtain
-%
-\begin{equation}
-\left(\delta^{(i)}\right)_{i=1}^{K-1} =
-\left( 
-	\beta \left( p_{x s}^{(i+1)} - p_{x s}^{(i)} \right)
-	+ \alpha \left( p_{y s}^{(i+1)} - p_{y s}^{(i)} \right) 
-\right)_{i=1}^{K-1}.
-\label{delta}
+\delta^{(i)} = p_{x s}^{(i+1)} - p_{x s}^{(i)}.\label{eq:delta}
 \end{equation}
 
-This sequence is now examined for periodicity.
+The sequence $\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is now examined for periodicity.
 
 \begin{remark}
-$\tilde{p}_{x s}^{(i)} = \tilde{p}_{x s}^{(j)}$ for $i, j \in \mathbb{Z}$ and $i \ne j$ may occur under specific conditions: For $\frac{\alpha}{\beta} = 1$ and $\omega = 1$ both points, $(0, 1)$ and $(1, 0)$, are projected to $(0.5, 0.5)$. Therefore $\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is not discrete.
+$\mathbf{p}_s^{(i)} = \mathbf{p}_s^{(j)}$ for $i, j \in \mathbb{Z}$ and $i \ne j$ may occur under specific conditions: For $\frac{\alpha}{\beta} = 1$ and $\omega = 1$ both points, $(0, 1)$ and $(1, 0)$, are projected to $(0.5, 0.5)$. Therefore $\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is not discrete.
 \end{remark}
 
 % ===================
@@ -258,18 +235,18 @@ The period length $\lambda$ is defined as
 \end{equation}
 %
 \begin{proof}
-$\lambda_{\omega = 0} = 1$: As sorting is not necessary, $\mathbf{P}_s = \mathbf{P}$. Thus,
+$\lambda_{\omega = 0} = 1$: As sorting is not necessary, we have
 %
 \begin{equation}
-\left(\delta^{(i)}\right)_{i=1}^{K-1} = \left(\beta \left(p_x^{(i+1)} - p_x^{(i)}\right) + \alpha \left(p_y^{(i+1)} - p_y^{(i)}\right)\right)_{i=1}^{K-1}
+\mathbf{p}_s^{(i)} = \mathbf{p}^{(i)} = i \begin{pmatrix} \beta \\ \alpha \end{pmatrix}.
 \end{equation}
 %
-according to \ref{delta}. As $p_x^{(i+1)} - p_x^{(i)} = 1$ and $p_y^{(i+1)} - p_y^{(i)} = \frac{\alpha}{\beta}$, we get
+According to equation~\eqref{eq:delta}, we get the constants
 \begin{equation}
-\left(\delta^{(i)}\right)_{i=1}^{K-1} = \left(\beta + \frac{\alpha^2}{\beta}\right)_{i=1}^{K-1},
+\delta^{(i)} = \beta.
 \end{equation}
 %
-which consists of constant elements. As $e^{(i+1)} = e^{(i)} \; \forall i \in [1, K-2]$, $\lambda_{\omega = 0} = 1$.
+Hence $\lambda_{\omega = 0} = 1$.
 \end{proof}
 
 % ===================
@@ -284,9 +261,9 @@ Using the \langc software, we were able to support all conjectures listed in the
 
 \subsection{Conjecture \ref{itm:conj6}}
 
-We found conjecture~\ref{itm:conj6} by providing \chat data created by the \langc function \function{create\_test\_data} and telling it, it should use \emph{XGBoost} to predict $\lambda$. It created the \langp function \function{xgboost} (see \cite{Kunert2025}). 
+We found conjecture~\ref{itm:conj6} by providing \chat data for $\omega > 0$ created by the \langc function \function{create\_test\_data} and telling it, it should use \emph{XGBoost} to predict $\lambda$. It created the \langp function \function{xgboost} (see \cite{Kunert2025}). 
 
-When we sent \chat the result of this computation, it wrote of an ”indication that the four predictors \(o_n, o_d, a_n, a_d\) [$\omega = \frac{o_n}{o_d}$, $\alpha = a_n$ and $\beta = a_d$] are in a highly complex, non-linear relationship, which \emph{XGBoost} captures excellently". Then we reported on conjecture~\ref{itm:conj3} and told \chat, that we want to find a formula for $\lambda$.
+When we sent the result of this computation, \chat wrote of an ”indication that the four predictors \(o_n, o_d, a_n, a_d\) [$\omega = \frac{o_n}{o_d}$, $\alpha = a_n$ and $\beta = a_d$] are in a highly complex, non-linear relationship, which \emph{XGBoost} captures excellently". Then we reported on conjecture~\ref{itm:conj3} and told \chat, that we want to find a formula for $\lambda$.
 
 Among other suggestions, it proposed the following:
 %
@@ -308,7 +285,7 @@ gives even better results. The lowest value we found for $R^2$ with the \langc f
 
 The author gratefully acknowledges the use of \emph{OpenAI ChatGPT} (see \cite{ChatGPT}) for help refining the English phrasing and for suggestions on software implementation details. Except for conjecture~\ref{itm:conj6}, all conceptual content, data analysis, and the final manuscript were authored and verified by the present author.
 
-In addition, \emph{DeepL Translator} (see \cite{DeepL}) has been used to improve the writing style.
+In addition, the \emph{DeepL Translator} (see \cite{DeepL}) has been used to improve the writing style.
 
 % =========================
 \begin{thebibliography}{99}
@@ -336,7 +313,7 @@ DeepL GmbH, \emph{DeepL Translator}, available at \url{https://www.deepl.com}, a
 
 \bibitem{Kunert2025}
 Dirk Kunert, 2025,
-\emph{This article and the source code},
+\emph{Repository \emph{cut-and-project}},
 available at: \url{https://github.com/dkunert/cut-and-project}.
 
 \end{thebibliography}
