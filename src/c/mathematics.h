@@ -248,8 +248,40 @@ static inline bool is_legal_period_length(long period_length)
     return period_length > 0;
 }
 
+/**
+ * Compares two number_t values for sorting.
+ * Returns negative if x < y, zero if x == y, positive if x > y.
+ *
+ * @param p Pointer to the first number_t value.
+ * @param q Pointer to the second number_t value.
+ * @return The comparison result.
+ */
+static inline int cmp_int_fast64(const void *p, const void *q) {
+    number_t x = *(const number_t*)p;
+    number_t y = *(const number_t*)q;
+    // return negative if x<y, zero if x==y, positive if x>y
+    return (x > y) - (x < y);
+}
+
+/**
+ * Sorts a range of elements in an array using qsort.
+ * The range is defined by the indices a and b (inclusive).
+ *
+ * @param array The array to sort.
+ * @param a The starting index of the range.
+ * @param b The ending index of the range.  
+ */
+void inline sort_range(number_t *array, size_t a, size_t b) {
+    if (b < a) return;                     // nothing to do
+    size_t count = b - a + 1;              // number of elements
+    qsort(array + a,                      // start at &array[a]
+          count,                          // how many elements
+          sizeof *array,                  // size of each element
+          cmp_int_fast64);                // your comparator
+}
+
 // Function prototypes
-long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta, number_t x_min, number_t x_max, number_t *dx);
+long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta, number_t x_min, number_t x_max, bool sort, number_t *dx);
 number_t random_number_including(const number_t min, const number_t max);
 rational_t rational_random_gt_0_lt_1(void);
 rational_t rational_random_gt_1(void);

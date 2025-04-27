@@ -123,9 +123,12 @@ void test_random(void)
  */
 void test_lambda(number_t *dx)
 {
-    assert(lambda(2, 1, 1, 1, 0, 50, dx) == 4);
+    assert(lambda(2, 1, 1, 1, 0, 50, false, dx) == 4);
 }
 
+/**
+ * Tests the find_period_length function.
+ */
 void test_find_period_length(void)
 {
     //                 0  1  2  3  4  5  6  7  8  9
@@ -242,12 +245,44 @@ void test_find_period_length(void)
 }
 
 /**
+ * Tests the sorting of the dx values.
+ * It checks if the lambda function returns the same value
+ * for sorted and unsorted dx values.
+ * @param dx The pointer to the array that will hold the dx values.
+ */
+void test_sort(number_t *dx) {
+    rational_t omega;
+    number_t gamma, delta;
+
+    for (int i = 0; i < 1000; i++)
+    {
+        printf("Sort test %d\n", i);
+
+        do
+            {
+                gamma = number_random_gt_0();
+                delta = number_random_gt_0();
+            } while (delta == 0);
+        omega = rational_create(gamma, delta);
+        
+        number_t alpha = number_random_gt_0();
+        number_t beta = number_random_gt_0();
+        shorten(&alpha, &beta);
+
+        long lambda_sorted = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, true, dx);
+        long lambda_unsorted = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, false, dx);
+        assert(lambda_sorted == lambda_unsorted);
+    }
+}
+
+/**
  * Tests the lambda function with a test file.
  * @param filename The name of the test file.
  * @param x_max The maximum value of x.
+ * @param sort Indicates whether to sort the dx values.
  * @param dx The pointer to the array that will hold the dx values.
  */
-int test_with_test_file(const char *filename, number_t x_max, number_t *dx)
+int test_with_test_file(const char *filename, number_t x_max, bool sort, number_t *dx)
 {
     clock_t start = clock();
 
@@ -278,7 +313,7 @@ int test_with_test_file(const char *filename, number_t x_max, number_t *dx)
     {
         if (sscanf(line, "%d,%d,%d,%d,%ld", &o_n, &o_d, &a_n, &a_d, &expected_period_length) == 5)
         {
-            long computed_lambda = lambda(a_n, a_d, o_n, o_d, -10, x_max, dx);
+            long computed_lambda = lambda(a_n, a_d, o_n, o_d, -10, x_max, sort, dx);
             printf("Read: %d -- %d, %d, %d, %d, %ld = %ld (computed)?\n", ++counter, o_n, o_d, a_n, a_d, expected_period_length, computed_lambda);
             assert(expected_period_length == computed_lambda);
         }
@@ -322,7 +357,7 @@ void create_test_data(const char *filename, const int number_of_tests, number_t 
     {
         const rational_t o = rational_random_gt_1();
         const rational_t a = rational_random_gt_1();
-        const long period_length = lambda(a.numerator, a.denominator, o.numerator, o.denominator, 0, 1000000, dx);
+        const long period_length = lambda(a.numerator, a.denominator, o.numerator, o.denominator, 0, 1000000, false, dx);
 
         if (is_legal_period_length(period_length))
         {
@@ -344,7 +379,7 @@ void test_speed(number_t *dx)
 {
     // about 1100 times faster than the Rust implementation!
     clock_t start = clock();
-    long l = lambda(37033, 4687, 51, 4, 0, 1000000, dx);
+    long l = lambda(37033, 4687, 51, 4, 0, 1000000, false, dx);
     assert(l == 531930);
     double elapsed_time = (double)(clock() - start) / CLOCKS_PER_SEC;
     printf("Execution time: %f seconds\n", elapsed_time);
@@ -368,8 +403,8 @@ void test(bool create_file_to_find_a_pattern, number_t *dx)
     test_find_period_length();
     test_lambda(dx);
     test_speed(dx);
-
-    test_with_test_file(TEST_FILE, X_MAX, dx);
+    test_sort(dx);
+    test_with_test_file(TEST_FILE, X_MAX, false, dx);
 
     if (create_file_to_find_a_pattern)
     {

@@ -124,12 +124,12 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
         number_t beta = number_random_gt_0();
         shorten(&alpha, &beta);
 
-        long computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, dx);
+        long computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, false, dx);
 
         if (computed_period_length == NO_PERIOD)
         {
             printf("No period found for a = %lld/%lld and omaga = %lld/%lld! Trying 10*XMAX!\n", alpha, beta, omega.numerator, omega.denominator);
-            computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, 10 * X_MAX, dx);
+            computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, 10 * X_MAX, false, dx);
 
             if (computed_period_length == NO_PERIOD)
             {
@@ -145,7 +145,7 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
         else if (computed_period_length == DX_LENGTH_TO_SMALL)
         {
             printf("Too many elements cut from dx for a = %lld/%lld and omaga = %lld/%lld! Trying 10*X_MAX!\n", alpha, beta, omega.numerator, omega.denominator);
-            computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, 10 * X_MAX, dx);
+            computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, 10 * X_MAX, false, dx);
 
             if (computed_period_length == DX_LENGTH_TO_SMALL)
             {

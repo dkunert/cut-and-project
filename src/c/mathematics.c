@@ -18,7 +18,7 @@
  *         many elements are cut from dx.
  */
 long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
-            const number_t x_min, const number_t x_max, number_t *dx)
+            const number_t x_min, const number_t x_max, bool sort, number_t *dx)
 {
     // Shorten the fractions alpha/beta and gamma/delta optaining smaller figures.
     shorten(&alpha, &beta);
@@ -35,7 +35,7 @@ long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
     long int index_dx = 0;
     number_t beta_x = beta * x;
     bool is_not_first = false;
-
+    
     while (x < x_max)
     {
         const number_t y_ceil_l = rational_ceil(l);
@@ -50,13 +50,16 @@ long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
 
         for (int i = 0; i < elements_to_add; i++)
         {
-            if (is_not_first)
-            {
-                dx[index_dx - 1] -= current_dx;
-            }
-            else
-            {
-                is_not_first = true;
+            if (!sort) {
+                if (is_not_first)
+                {
+                    dx[index_dx - 1] -= current_dx;
+                }
+                else
+                {
+                    is_not_first = true;
+                }
+
             }
             dx[index_dx++] = current_dx;
             current_dx += alpha;
@@ -68,9 +71,29 @@ long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
         x++;
     }
 
+    if (sort) {
+        // Sort the dx values.
+        sort_range(dx, 0, index_dx - 1);
+
+        // compute the difference between the dx values
+        // and store them in dx.
+        for (size_t i = 1; i < index_dx; i++)
+        {
+            dx[i - 1] = dx[i] - dx[i - 1];
+        }
+    }
+
+    long to_delete;
+    
+    if (sort) {
+        to_delete = (1.0 - FRACTION_OF_REMAINING_ELEMENTS) / 40.0 * index_dx;
+    } else {
+        to_delete = 1;
+    }
+
     // Find the period length.
-    long index_start = 1;
-    long index_end = index_dx - 1;
+    long index_start = to_delete;
+    long index_end = index_dx - to_delete;
     const long initial_dx_length = index_end - index_start + 1;
     long current_dx_length = initial_dx_length;
     long period_length = NO_PERIOD;
