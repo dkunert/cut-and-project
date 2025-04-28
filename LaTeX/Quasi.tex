@@ -209,10 +209,25 @@ p_{y s}^{(i)} = \frac{\alpha}{\beta} p_{x s}^{(i)}.
 $f(x) = \gamma x$ and $f(x) = \sqrt{x}$ are injective for $\gamma \in \mathbb{R}_{\ne 0}$ and $x \in \mathbb{R}_{\geq 0}$ as well. We get
 %
 \begin{equation}
-\delta^{(i)} = p_{x s}^{(i+1)} - p_{x s}^{(i)}.\label{eq:delta}
+\tilde{\delta}^{(i)} = p_{x s}^{(i+1)} - p_{x s}^{(i)}.\label{eq:delta1}
 \end{equation}
 
-The sequence $\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is now examined for periodicity.
+Equation~\eqref{eq:c} gives
+\begin{equation}
+p_x^{(i)} = \frac{\beta}{\alpha^2 + \beta^2} \left(\beta c_x^{(i)} + \alpha c_y^{(i)}\right),
+\end{equation}
+%
+where we can omit the constant $\frac{\beta}{\alpha^2 + \beta^2}$:
+%
+\begin{equation}
+\tilde{p}_x^{(i)} = \beta c_x^{(i)} + \alpha c_y^{(i)}.
+\end{equation}
+When we sort $\left(\tilde{p}_x^{(i)}\right)$, the result is
+\begin{equation}
+\delta^{(i)} = \tilde{p}_{x s}^{(i+1)} - \tilde{p}_{x s}^{(i)}\label{eq:delta2}.
+\end{equation}
+
+$\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is now examined for periodicity.
 
 \begin{remark}
 $\mathbf{p}_s^{(i)} = \mathbf{p}_s^{(j)}$ for $i, j \in \mathbb{Z}$ and $i \ne j$ may occur under specific conditions: For $\frac{\alpha}{\beta} = 1$ and $\omega = 1$ both points, $(0, 1)$ and $(1, 0)$, are projected to $(0.5, 0.5)$. Therefore $\left(\delta^{(i)}\right)_{i=1}^{K-1}$ is not discrete.
@@ -241,7 +256,8 @@ $\lambda_{\omega = 0} = 1$: As sorting is not necessary, we have
 \mathbf{p}_s^{(i)} = \mathbf{p}^{(i)} = i \begin{pmatrix} \beta \\ \alpha \end{pmatrix}.
 \end{equation}
 %
-According to equation~\eqref{eq:delta}, we get the constants
+If we use equation~\eqref{eq:delta1}, we obtain the constants
+
 \begin{equation}
 \delta^{(i)} = \beta.
 \end{equation}
