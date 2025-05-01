@@ -53,7 +53,7 @@ y \in
 \right)\label{eq:points}
 \end{equation}
 %
-projected vertically onto $f(x) = \frac{\alpha}{\beta} x$ and measure their euclidian distances $\left( d^{(i)} \right)$.
+to be projected vertically onto $f(x) = \frac{\alpha}{\beta} x$ and measure their euclidian distances $\left( d^{(i)} \right)$.
 %
 With
 \[
@@ -71,7 +71,7 @@ we propose the following conjectures concerning the period length $\lambda$ of $
  	\item \label{itm:conj6} If \(\omega > 0\), $\lambda_{\alpha, \beta} \approx \left\lfloor \omega \; \Lambda_{\alpha, \beta} \right\rfloor$.
 \end{enumerate}
 %
-We use computational methods to support these conjectures.
+We use computational methods to support these conjectures (see \cite{Kunert2025}).
 %
 \begin{remark}
 We will show, that $\lambda_{\omega = 0} = 1$.
@@ -102,7 +102,7 @@ Terence Tao (University of California, Los Angeles) held the announcement (see \
 %
 With regard to the distances between the projected points on the right side, he noted the following: "They repeat themselves, but not in a regular fashion."
 
-These one-dimensional cut-and-project sequences are explored here. \langc and \langp software is used to support our conjectures (see \cite{Kunert2025}).
+These one-dimensional cut-and-project sequences are explored here.
 
 % =====================================
 \section{Construction of the Sequences}
@@ -128,7 +128,7 @@ with $x \in \mathbb{R}$, $\alpha, \beta \in \mathbb{N}$, and the offsets $\omega
     \label{fig:a2o1}
 \end{figure}
 %
-Projecting the points $\mathbf{C}$ described in equation \ref{eq:points} vertically on $f(x) = \frac{\alpha}{\beta} x$, we get
+Projecting the points $\mathbf{C}$ described in equation \ref{eq:points} vertically onto $f(x) = \frac{\alpha}{\beta} x$, we get
 %
 \begin{equation}
 \mathbf{P}
@@ -240,7 +240,7 @@ $\mathbf{p}_s^{(i)} = \mathbf{p}_s^{(j)}$ for $i, j \in \mathbb{Z}$ and $i \ne j
 We consider the finite sequence $\left(e^{(i)}\right)_{i=1}^{L}$ with $L \in \mathbb{N}_{>1}$ to be periodic, if there exists a $\tilde{\lambda} \in [1, L//2]$ with 
 %
 \begin{equation}
-e^{(i+\tilde{\lambda})} = e^{(i)} \; \forall i \in [1, L - (L \bmod \tilde{\lambda})].
+e^{(i+\tilde{\lambda})} = e^{(i)} \quad \forall i \in [1, L - (L \bmod \tilde{\lambda})].
 \end{equation}
 %
 The period length $\lambda$ is defined as
@@ -269,7 +269,7 @@ Hence, $\lambda_{\omega = 0} = 1$.
 \section{Conjectures}
 % ===================
 
-In very rare cases, we see that our \langc software is not able to calculate a finite period length because the size of the array containing the differences is not sufficient. The array used has 8,000,000,000 \SI{64}{\bit} elements and a size of approximately \SI{60}{\gigabyte}.
+In very rare cases, our \langc software fails to compute a finite period length because the array holding the differences---despite containing 8{,}000{,}000{,}000 64-bit elements (approximately \SI{60}{\gigabyte})---is not sufficiently large.
 
 \subsection{Conjectures 1 to 5}
 
