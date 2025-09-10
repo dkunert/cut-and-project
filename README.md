@@ -16,7 +16,7 @@ y \in
 \biggr)
 $$
 
-projected vertically onto
+projected orthogonally onto
 
 $$
 f(x) = \frac{\alpha}{\beta}x
