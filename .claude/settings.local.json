@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.c /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.h)",
+      "Bash(ls -la /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX/*.tex)",
+      "Bash(grep -l \"number_t random_number_including\\\\|rational_t rational_random\" /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.c)"
+    ]
+  }
+}
