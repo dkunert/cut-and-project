@@ -3,7 +3,17 @@
     "allow": [
       "Bash(wc -l /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.c /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.h)",
       "Bash(ls -la /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX/*.tex)",
-      "Bash(grep -l \"number_t random_number_including\\\\|rational_t rational_random\" /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.c)"
+      "Bash(grep -l \"number_t random_number_including\\\\|rational_t rational_random\" /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.c)",
+      "WebSearch",
+      "WebFetch(domain:www.irif.fr)",
+      "WebFetch(domain:www.cambridge.org)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:www.researchgate.net)",
+      "WebFetch(domain:math.colgate.edu)",
+      "WebFetch(domain:www.math.uh.edu)",
+      "WebFetch(domain:www-igm.univ-mlv.fr)",
+      "WebFetch(domain:link.springer.com)"
     ]
   }
 }
