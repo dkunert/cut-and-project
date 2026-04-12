@@ -124,6 +124,12 @@ void test_random(void)
 void test_lambda(number_t *dx)
 {
     assert(lambda(2, 1, 1, 1, 0, 50, false, dx) == 4);
+    for (int xm = 50; xm <= 1000; xm += 50) {
+        long s = lambda(2, 1, 69986, 35837, 0, xm, true, dx);
+        long u = lambda(2, 1, 69986, 35837, 0, xm, false, dx);
+        printf("x_max=%d: sorted=%ld unsorted=%ld\n", xm, s, u);
+    }
+    // assert(lambda(2, 1, 69986, 35837, 0, 100000, true, dx) == 1);
 }
 
 /**

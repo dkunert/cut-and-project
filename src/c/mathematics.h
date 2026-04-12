@@ -271,7 +271,7 @@ static inline int cmp_int_fast64(const void *p, const void *q) {
  * @param a The starting index of the range.
  * @param b The ending index of the range.  
  */
-void inline sort_range(number_t *array, size_t a, size_t b) {
+static inline void sort_range(number_t *array, size_t a, size_t b) {
     if (b < a) return;                     // nothing to do
     size_t count = b - a + 1;              // number of elements
     qsort(array + a,                      // start at &array[a]

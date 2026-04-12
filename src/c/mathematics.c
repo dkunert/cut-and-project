@@ -81,6 +81,7 @@ long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
         {
             dx[i - 1] = dx[i] - dx[i - 1];
         }
+        index_dx--; // now index_dx counts the valid differences
     }
 
     long to_delete;

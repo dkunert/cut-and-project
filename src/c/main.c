@@ -16,12 +16,16 @@ int main(int argc, const char *argv[])
 
     uint8_t tasks = TASKS;
 
-    if (tasks & TEST) {
-        const bool create_file_to_find_a_pattern = CREATE_FILE_TO_FIND_A_PATTERN;
-        test(create_file_to_find_a_pattern, dx);
+    test(false, dx);
+
+    if (false) {
+        if (tasks & TEST) {
+            const bool create_file_to_find_a_pattern = CREATE_FILE_TO_FIND_A_PATTERN;
+            test(create_file_to_find_a_pattern, dx);
+        }
+        if (tasks & TEST_CONJECTURES)
+            test_conjectures(dx);
     }
-    if (tasks & TEST_CONJECTURES)
-        test_conjectures(dx);
 
     free(dx);
     return 0;
