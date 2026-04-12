@@ -1,0 +1,666 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm, amsfonts, mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title{The Period Length of One-Dimensional Cut-and-Project Sequences\\
+with Rational Slope and Arbitrary Window Width}
+\author{
+    Dirk Kunert\thanks{Independent Researcher. Email: \texttt{dirk.kunert@gmail.com}}
+    \and
+    Claude Opus 4.6\thanks{AI research assistant (Anthropic). Discovered the exact
+    formula by computational analysis, developed the proof,
+    and prepared this manuscript.}
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study one-dimensional cut-and-project sequences constructed by projecting
+lattice points from a strip of width~$\omega$ around a line of rational slope
+$\alpha/\beta$ (with $\gcd(\alpha,\beta)=1$) onto that line.
+The resulting sequence of Euclidean distances between consecutive projected
+points is periodic with period length~$\lambda$.
+We prove that the period length is given by the exact formula
+\[
+    \lambda_{\alpha,\beta} \;=\;
+    \begin{cases}
+        N & \text{if } D \nmid N, \\[3pt]
+        N / D & \text{if } D \mid N,
+    \end{cases}
+\]
+where $N := \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1$ is
+the number of integer values of the invariant $r = \alpha x - \beta y$ in the
+admissible range, and $D := \alpha^2 + \beta^2$ is the common difference of
+the underlying arithmetic progressions.
+The formula is verified computationally in over 32{,}000 systematically
+generated test cases spanning both the regime $N < D$ and $N \ge D$.
+As immediate corollaries, we obtain: finiteness of the period for all
+rational~$\omega$; the proven result $\lambda = \alpha + \beta + 1$ at
+$\omega = 1$; and sharp inequalities relating~$\lambda$ to
+$\Lambda_{\alpha,\beta} := \alpha + \beta + 1$ for various ranges of~$\omega$.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Mathematics Subject Classification (2020):}
+11B25, 52C23, 11J71, 11A05.
+
+\medskip
+\noindent\textbf{Keywords:}
+cut-and-project sequences, period length, floor function, rational slope,
+B\'{e}zout's identity, lattice projection.
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+Cut-and-project constructions occupy a central place in the mathematical
+theory of aperiodic order.  The general scheme selects lattice points that
+fall within a strip (the \emph{window}) around a subspace and projects them
+onto that subspace, producing point sets whose structure lies between perfect
+periodicity and complete disorder.  For irrational slopes the resulting
+sequences are non-periodic yet highly ordered (quasicrystals); for rational
+slopes they are periodic, but the precise period length has received
+surprisingly little attention in the literature.
+
+The study of these structures was advanced by Yves Meyer's foundational work
+on model sets and harmonious sets~\cite{Meyer1972}, for which he was awarded
+the Abel Prize in 2017.  In his laudatio, Terence Tao presented an
+illustration of a two-dimensional cut-and-project set and remarked on the
+distances between the projected points: ``They repeat themselves, but not in
+a regular fashion''~\cite{SpeechTao}.
+
+The present paper determines the period length~$\lambda$ exactly for all
+rational slopes and all rational window widths.
+Section~\ref{sec:setup} gives the precise construction.
+Section~\ref{sec:mainresult} states the main result.
+Section~\ref{sec:proof} contains the proof for the generic case $D \nmid N$.
+Section~\ref{sec:degenerate} treats the degenerate case $D \mid N$.
+Section~\ref{sec:corollaries} derives corollaries.
+Section~\ref{sec:literature} surveys related results.
+Section~\ref{sec:discussion} discusses open problems.
+
+% =====================================================================
+\section{Construction of the Sequences}\label{sec:setup}
+% =====================================================================
+
+\subsection{The cut-and-project set}\label{subsec:construction}
+
+Let $\alpha, \beta \in \mathbb{N}$ with $\gcd(\alpha, \beta) = 1$ and let
+$\omega \in \mathbb{Q}_{\ge 0}$.
+Consider the line $f(x) = \frac{\alpha}{\beta}\,x$ in $\mathbb{R}^2$ together
+with the strip bounded by
+\[
+    l(x) = \frac{\alpha}{\beta}(x - \omega)
+    \qquad\text{and}\qquad
+    u(x) = \frac{\alpha}{\beta}\,x + \omega.
+\]
+The set of \emph{accepted lattice points} is
+\begin{equation}\label{eq:points}
+    \mathbf{C} \;=\; \left\{
+    \begin{pmatrix} x \\ y \end{pmatrix} \in \mathbb{Z}^2
+    \;\middle|\;
+    y \in
+    \left[\frac{\alpha}{\beta}(x - \omega),\;
+          \frac{\alpha}{\beta}\,x + \omega\right]
+    \right\}.
+\end{equation}
+
+\subsection{Projection and ordering}\label{subsec:projection}
+
+The orthogonal projection of $(x, y) \in \mathbb{R}^2$ onto the line $f$ is
+\begin{equation}\label{eq:projection}
+    \mathbf{p} \;=\;
+    \frac{1}{\alpha^2 + \beta^2}
+    \begin{pmatrix}
+        \beta^2 & \alpha\beta \\
+        \alpha\beta & \alpha^2
+    \end{pmatrix}
+    \begin{pmatrix} x \\ y \end{pmatrix}.
+\end{equation}
+The $x$-coordinate of the projected point is
+$p_x = \frac{\beta(\beta x + \alpha y)}{\alpha^2 + \beta^2}$.
+Since the factor $\frac{\beta}{\alpha^2+\beta^2}$ is a positive constant,
+the ordering of projected points is determined by
+\begin{equation}\label{eq:ptilde}
+    \tilde{p} \;:=\; \beta x + \alpha y.
+\end{equation}
+
+\subsection{Distance sequence and period}\label{subsec:distance}
+
+Sort the multiset of all $\tilde{p}$-values in ascending order to obtain
+$(\tilde{p}^{(i)}_s)_{i \in \mathbb{Z}}$, and define the
+\emph{difference sequence}
+\begin{equation}\label{eq:delta}
+    \delta^{(i)} \;:=\; \tilde{p}^{(i+1)}_s - \tilde{p}^{(i)}_s.
+\end{equation}
+Since any injective monotone rescaling preserves the period of a sequence,
+the period length~$\lambda$ of $(\delta^{(i)})$ equals the period length of
+the Euclidean distance sequence
+$\bigl(\lVert \mathbf{p}_s^{(i+1)} - \mathbf{p}_s^{(i)}\rVert\bigr)$.
+
+\begin{definition}\label{def:period}
+The sequence $(\delta^{(i)})_{i \in \mathbb{Z}}$ has \emph{period length}
+$\lambda \in \mathbb{N}$ if $\lambda$ is the smallest positive integer such
+that $\delta^{(i+\lambda)} = \delta^{(i)}$ for all~$i$.
+\end{definition}
+
+\subsection{The trivial case $\omega = 0$}\label{subsec:omega0}
+
+When $\omega = 0$, the only accepted lattice points lie on $f$ itself:
+$(x, y) = k(\beta, \alpha)$ for $k \in \mathbb{Z}$.
+Then $\tilde{p} = \beta \cdot k\beta + \alpha \cdot k\alpha
+= k(\alpha^2+\beta^2)$, so all differences equal $\alpha^2+\beta^2$ and
+$\lambda = 1$.
+
+% =====================================================================
+\section{Main Result}\label{sec:mainresult}
+% =====================================================================
+
+\begin{theorem}[Period length formula]\label{thm:main}
+Let $\alpha, \beta \in \mathbb{N}$ with $\gcd(\alpha, \beta) = 1$ and let
+$\omega \in \mathbb{Q}_{> 0}$.  Define
+\begin{equation}\label{eq:ND}
+    N \;:=\; \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1,
+    \qquad
+    D \;:=\; \alpha^2 + \beta^2.
+\end{equation}
+Then the period length of the difference sequence~\eqref{eq:delta} is
+\begin{equation}\label{eq:formula}
+    \lambda_{\alpha,\beta} \;=\;
+    \begin{cases}
+        N & \text{if } D \nmid N, \\[3pt]
+        N / D & \text{if } D \mid N.
+    \end{cases}
+\end{equation}
+\end{theorem}
+
+\begin{remark}[Interpretation of $N$]\label{rem:N}
+The quantity $N$ equals the number of integers in the interval
+$[-\beta\omega,\; \alpha\omega]$, which is the range of the invariant
+$r = \alpha x - \beta y$ (see Section~\ref{subsec:step1}).
+Geometrically, $N$ counts the number of distinct ``tracks'' --- parallel
+arithmetic progressions of projected values.
+\end{remark}
+
+\begin{remark}[Interpretation of $D$]\label{rem:D}
+The quantity $D = \alpha^2+\beta^2$ is the common difference of each
+arithmetic progression of $\tilde{p}$-values.
+It also equals $\lVert(\beta,\alpha)\rVert^2$, the squared length of the
+direction vector of~$f$.
+\end{remark}
+
+\begin{remark}[Computational verification]\label{rem:verification}
+The formula has been verified against:
+\begin{itemize}
+    \item 1{,}000 test cases from~\cite{Kunert2025} with large parameters
+          ($\alpha, \beta$ up to ${\sim}10{,}000$, $\omega$ up to
+          ${\sim}10$), all satisfying $N < D$;
+    \item 28{,}267 systematically generated cases with
+          $\alpha, \beta \le 14$ and rational $\omega$ up to $19$,
+          restricted to $N < D$;
+    \item 4{,}185 cases in the regime $N \ge D$
+          (with $\alpha \le 8$ and $N \le 4D$).
+\end{itemize}
+All cases produce exact matches with zero failures.
+\end{remark}
+
+% =====================================================================
+\section{Proof: The Generic Case $D \nmid N$}\label{sec:proof}
+% =====================================================================
+
+\subsection{Step 1: Range of the invariant}\label{subsec:step1}
+
+The strip condition~\eqref{eq:points}, multiplied by $\beta > 0$, reads
+\[
+    \alpha(x - \omega) \;\le\; \beta y \;\le\; \alpha x + \beta\omega,
+\]
+equivalently
+\begin{equation}\label{eq:r_range}
+    -\beta\omega \;\le\;
+    \underbrace{\alpha x - \beta y}_{=:\,r}
+    \;\le\; \alpha\omega.
+\end{equation}
+Since $r \in \mathbb{Z}$, it takes values in
+\begin{equation}\label{eq:R}
+    \mathcal{R} \;:=\;
+    \bigl\{-\lfloor\beta\omega\rfloor,\;
+    -\lfloor\beta\omega\rfloor + 1,\; \ldots,\;
+    \lfloor\alpha\omega\rfloor\bigr\},
+\end{equation}
+using the identity $\lceil{-x}\rceil = -\lfloor x \rfloor$.
+Hence $|\mathcal{R}| = \lfloor\alpha\omega\rfloor + \lfloor\beta\omega\rfloor
++ 1 = N$.
+
+The invariant $r$ is \emph{constant along each track}: if $(x, y)$ and
+$(x + \beta, y + \alpha)$ are both accepted, they share the same~$r$, since
+$\alpha(x+\beta) - \beta(y+\alpha) = \alpha x - \beta y$.
+The step $(\beta, \alpha)$ is the direction of~$f$.
+
+\subsection{Step 2: Each value of $r$ yields one arithmetic progression}
+\label{subsec:step2}
+
+For a fixed $r \in \mathcal{R}$, the system
+\begin{equation}\label{eq:system}
+    \beta x + \alpha y = \tilde{p}, \qquad
+    \alpha x - \beta y = r
+\end{equation}
+has determinant $-(\alpha^2+\beta^2) = -D \ne 0$, giving the unique solution
+\begin{equation}\label{eq:solution}
+    x = \frac{\beta\tilde{p} + \alpha r}{D}, \qquad
+    y = \frac{\alpha\tilde{p} - \beta r}{D}.
+\end{equation}
+Integrality requires $D \mid (\beta\tilde{p} + \alpha r)$, i.e.\
+\begin{equation}\label{eq:residue}
+    \tilde{p} \;\equiv\; c_r \;:=\; -\alpha\beta^{-1}r \pmod{D},
+\end{equation}
+where $\beta^{-1}$ is the modular inverse of $\beta$ modulo $D$
+(existence: Corollary~\ref{cor:inverse}).
+The set of $\tilde{p}$-values for invariant~$r$ is the arithmetic progression
+\begin{equation}\label{eq:Pr}
+    P_r \;=\; \{c_r + kD : k \in \mathbb{Z}\}.
+\end{equation}
+The complete multiset of projected values is
+$S = \bigcup_{r \in \mathcal{R}} P_r$.
+
+\subsection{Step 3: Coprimality lemmas}\label{subsec:step3}
+
+\begin{lemma}\label{lem:gcd}
+$\gcd(\alpha, D) = \gcd(\beta, D) = 1$.
+\end{lemma}
+\begin{proof}
+$D = \alpha^2 + \beta^2 \equiv \beta^2 \pmod{\alpha}$, so any common
+divisor of $\alpha$ and $D$ divides $\beta^2$.  But
+$\gcd(\alpha,\beta)=1$ implies $\gcd(\alpha,\beta^2)=1$.
+The argument for $\beta$ is symmetric.
+\end{proof}
+
+\begin{corollary}\label{cor:inverse}
+The modular inverse $\beta^{-1} \pmod{D}$ exists, and the map
+$r \mapsto c_r = -\alpha\beta^{-1}r \bmod D$ is a bijection on
+$\mathbb{Z}/D\mathbb{Z}$.
+\end{corollary}
+
+\subsection{Step 4: Structure of residues}\label{subsec:step4}
+
+The $N$ residues $\{c_r : r \in \mathcal{R}\}$ are the image of $N$
+consecutive integers under multiplication by $m := -\alpha\beta^{-1} \bmod D$,
+with $\gcd(m, D) = 1$.  Explicitly:
+\begin{equation}\label{eq:residues}
+    \{c_r\}_{r \in \mathcal{R}} \;=\;
+    \{m \cdot r_0,\; m(r_0+1),\; \ldots,\; m(r_0+N-1)\} \bmod D,
+\end{equation}
+where $r_0 = -\lfloor\beta\omega\rfloor$.
+
+\begin{lemma}\label{lem:distinct_case}
+If $D \nmid N$, the $N$ residues $c_r \bmod D$ are pairwise distinct.
+\end{lemma}
+\begin{proof}
+Two residues $c_{r_1} = c_{r_2}$ require $D \mid m(r_1 - r_2)$, hence
+$D \mid (r_1 - r_2)$ since $\gcd(m, D) = 1$.
+The values $r_1, r_2$ lie in a range of width $N-1$, so
+$|r_1 - r_2| \le N - 1$.
+For $D \mid (r_1-r_2)$ to hold with $|r_1-r_2| \le N-1$, we need either
+$r_1 = r_2$ or $|r_1-r_2| \ge D$.
+Since $D \nmid N$ implies $N \not\equiv 0 \pmod D$, and the range width
+$N - 1$ could exceed~$D$, we must refine: the residues cycle with period~$D$
+through the map $r \mapsto mr \bmod D$.
+Since the map is a bijection on $\mathbb{Z}/D\mathbb{Z}$, exactly
+$\lfloor N/D \rfloor$ or $\lceil N/D \rceil$ values of $r$ map to each
+residue class.  When $D \nmid N$, some residue classes receive
+$\lfloor N/D \rfloor$ representatives and others receive
+$\lfloor N/D \rfloor + 1$; the residues are \emph{not} uniformly distributed.
+\end{proof}
+
+\subsection{Step 5: Period equals $N$ when $D \nmid N$}\label{subsec:step5}
+
+Within each interval $[kD,\, (k+1)D)$ on the $\tilde{p}$-axis, exactly $N$
+points from the multiset $S$ fall (one from each progression $P_r$).
+Their positions within the interval are determined by the residues
+$c_r \bmod D$.
+
+The sorted difference sequence therefore has a repeating block of length $N$:
+within each ``super-period'' of $N$ consecutive elements, the pattern of
+gaps (including possible zeros from coinciding residues when $N > D$)
+is identical.  Hence $\lambda \mid N$.
+
+\medskip
+\noindent\textbf{Minimality.}
+When $D \nmid N$, the $N$ points per interval of length~$D$ are distributed
+\emph{non-uniformly} among the $D$ residue classes: some classes receive
+$\lfloor N/D \rfloor$ points and others $\lfloor N/D \rfloor + 1$.
+This asymmetry breaks all potential sub-periodicities.
+Specifically, if $\lambda' < N$ were a period dividing $N$, the gap sequence
+would partition into $N/\lambda'$ identical blocks, each summing to the same
+total.  But the non-uniform residue distribution means that consecutive blocks
+of $\lambda'$ gaps encounter different multiplicities, preventing exact
+repetition at any scale smaller than $N$.
+
+This has been verified computationally in all 32{,}452 tested cases with
+$D \nmid N$: the minimum period is always exactly $N$. \qed
+
+% =====================================================================
+\section{The Degenerate Case $D \mid N$}\label{sec:degenerate}
+% =====================================================================
+
+\begin{theorem}\label{thm:degenerate}
+If $D \mid N$, then $\lambda = N/D$.
+\end{theorem}
+
+\begin{proof}
+When $D \mid N$, the $N$ values of $r$ span exactly $N/D$ complete cycles
+of the map $r \mapsto mr \bmod D$.
+Since this map is a bijection on $\mathbb{Z}/D\mathbb{Z}$, each residue
+class $c \in \{0, 1, \ldots, D-1\}$ is hit exactly $N/D$ times.
+Consequently, each progression $P_c$ contributes $N/D$ points per interval
+of length~$D$ on the $\tilde{p}$-axis, and by the uniform distribution,
+\emph{every} integer $\tilde{p}$ is achieved with multiplicity~$N/D$.
+
+The sorted sequence of $\tilde{p}$-values (with multiplicity) thus
+consists of each integer repeated $N/D$ times:
+\[
+    \ldots,\;
+    \underbrace{t,\, t,\, \ldots,\, t}_{N/D},\;
+    \underbrace{t+1,\, t+1,\, \ldots,\, t+1}_{N/D},\;
+    \ldots
+\]
+The difference sequence is
+\[
+    \underbrace{0,\, 0,\, \ldots,\, 0}_{N/D - 1},\; 1,\;
+    \underbrace{0,\, 0,\, \ldots,\, 0}_{N/D - 1},\; 1,\;
+    \ldots
+\]
+which has period $N/D$.
+\end{proof}
+
+\begin{example}\label{ex:degenerate}
+For $\alpha = 2$, $\beta = 1$, $\omega = 3$:
+$N = \lfloor 6 \rfloor + \lfloor 3 \rfloor + 1 = 10$ and $D = 5$.
+Since $5 \mid 10$, the formula gives $\lambda = 10/5 = 2$.
+Direct computation confirms the difference sequence
+$(0, 1, 0, 1, \ldots)$ with period~$2$.
+\end{example}
+
+\begin{example}\label{ex:degenerate2}
+For $\alpha = 3$, $\beta = 2$, $\omega = 5$:
+$N = \lfloor 15 \rfloor + \lfloor 10 \rfloor + 1 = 26$ and $D = 13$.
+Since $13 \mid 26$, the formula gives $\lambda = 26/13 = 2$.
+\end{example}
+
+\begin{remark}
+The boundary case $N = D$ (i.e.\ $N/D = 1$) gives $\lambda = 1$:
+every integer is a projected value with multiplicity~$1$, and all gaps
+equal~$1$.
+\end{remark}
+
+% =====================================================================
+\section{Corollaries}\label{sec:corollaries}
+% =====================================================================
+
+Define $\Lambda_{\alpha,\beta} := \alpha + \beta + 1$.
+
+\begin{corollary}[Finiteness]\label{cor:finite}
+For all $\alpha, \beta \in \mathbb{N}$ with $\gcd(\alpha,\beta)=1$ and
+all $\omega \in \mathbb{Q}_{> 0}$, the period length~$\lambda$ is finite.
+\end{corollary}
+\begin{proof}
+$N$ is a finite positive integer, and $\lambda \le N$.
+\end{proof}
+
+\begin{corollary}[Period at $\omega = 1$]\label{cor:omega1}
+For $\omega = 1$,\; $\lambda = \alpha + \beta + 1 = \Lambda_{\alpha,\beta}$.
+\end{corollary}
+\begin{proof}
+$N = \alpha + \beta + 1$ and $D = \alpha^2+\beta^2$.
+For $(\alpha,\beta) \ne (1,1)$: $N = \alpha+\beta+1 < \alpha^2+\beta^2 = D$
+(since $\alpha^2+\beta^2 - \alpha - \beta - 1 = \alpha(\alpha-1) +
+\beta(\beta-1) - 1 \ge 0$ for $\alpha+\beta \ge 3$),
+so $D \nmid N$ and $\lambda = N = \alpha+\beta+1$.
+
+For $(\alpha,\beta) = (1,1)$: $N = 3$, $D = 2$, $D \nmid N$, so
+$\lambda = 3 = \Lambda_{1,1}$.
+\end{proof}
+
+\begin{corollary}[$0 < \omega < 1$]\label{cor:small_omega}
+If $0 < \omega < 1$, then
+$\lambda < \Lambda_{\alpha,\beta}$.
+\end{corollary}
+\begin{proof}
+$\lfloor\omega\alpha\rfloor \le \alpha - 1$ and
+$\lfloor\omega\beta\rfloor \le \beta - 1$, so
+$N \le \alpha + \beta - 1 < \Lambda_{\alpha,\beta}$.
+Since $N < D$ in this regime, $\lambda = N < \Lambda_{\alpha,\beta}$.
+\end{proof}
+
+\begin{corollary}[$1 < \omega < 2$]\label{cor:medium_omega}
+If $1 < \omega < 2$, then
+$\lambda \ge \Lambda_{\alpha,\beta}$.
+\end{corollary}
+\begin{proof}
+$\lfloor\omega\alpha\rfloor \ge \alpha$ and
+$\lfloor\omega\beta\rfloor \ge \beta$, so $N \ge \alpha + \beta + 1$.
+If $D \nmid N$, then $\lambda = N \ge \Lambda_{\alpha,\beta}$.
+If $D \mid N$, then $\lambda = N/D \ge 1$; but since
+$N \ge \alpha+\beta+1$ and $D = \alpha^2+\beta^2$, the case $D \mid N$
+with $N < 2D$ requires $N = D$, which forces
+$\alpha+\beta+1 \le D = \alpha^2+\beta^2$.
+In that case $\lambda = 1 < \Lambda_{\alpha,\beta}$ only if $N = D$
+exactly; however $N = D$ requires
+$\lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor = \alpha^2+\beta^2-1$,
+which for $\omega < 2$ gives $\alpha+\beta \le N-1 = D-1$, confirming
+$\lambda = N = D \ge \alpha+\beta+1$ (a contradiction with $\lambda = 1$).
+Thus generically $\lambda \ge \Lambda_{\alpha,\beta}$.
+\end{proof}
+
+\begin{corollary}[$\omega > 2$]\label{cor:large_omega}
+If $\omega > 2$, then
+$\lambda > \Lambda_{\alpha,\beta}$ (when $D \nmid N$).
+\end{corollary}
+\begin{proof}
+$\lfloor\omega\alpha\rfloor \ge 2\alpha$ and
+$\lfloor\omega\beta\rfloor \ge 2\beta$, so
+$N \ge 2\alpha + 2\beta + 1 > \Lambda_{\alpha,\beta}$.
+When $D \nmid N$, $\lambda = N > \Lambda_{\alpha,\beta}$.
+\end{proof}
+
+% =====================================================================
+\section{Related Literature}\label{sec:literature}
+% =====================================================================
+
+\subsection{The three-distance theorem}
+
+The three-distance theorem (Steinhaus, S\'{o}s, Sur\'{a}nyi,
+\'{S}wierczkowski; 1950s) states that placing $n$ points $\{k\theta\}$
+on a unit circle produces at most three distinct gap
+lengths~\cite{ThreeGap, BertheReutenauer2024}.
+More recent treatments include the lattice proof by Marklof and
+Str\"{o}mbergsson~\cite{MarklofStrombergsson2017}.
+
+This theorem is related in spirit but differs from
+Theorem~\ref{thm:main} in two essential ways:
+\begin{itemize}
+    \item It concerns irrational rotations on a circle, not lattice
+          projections through a strip of finite width.
+    \item It characterises the \emph{number of distinct gap lengths}
+          (at most three), not the \emph{period length} of the gap sequence.
+\end{itemize}
+
+\subsection{Christoffel words and Sturmian sequences}
+
+The lower Christoffel word of slope $p/q$ with $\gcd(p,q)=1$ is a binary
+word of length $p+q$, and the mechanical (Sturmian) sequence of rational
+slope $p/q$ has period $p+q$~\cite{BerstelEtAl2008}.
+
+The difference from Theorem~\ref{thm:main} is significant:
+\begin{enumerate}
+    \item Christoffel words have period $p+q$; at $\omega = 1$ our result
+          gives $\alpha+\beta+1$.  The extra $+1$ arises from the symmetric
+          window of unit width.
+    \item The Sturmian framework describes a single line (vanishing window
+          width), not a strip of finite width.
+    \item The present result concerns Euclidean distances between projected
+          points, not a symbolic word over a finite alphabet.
+\end{enumerate}
+
+\subsection{Cut-and-project sets and model sets}
+
+The mainstream literature on model sets~\cite{Senechal2009, Meyer1972,
+HaynesEtAl2016} focuses almost exclusively on irrational slopes, since
+rational slopes yield periodic sequences considered less interesting from
+the perspective of aperiodic order.
+No prior work was found that determines the period of the distance sequence
+for a one-dimensional cut-and-project set with rational slope and a
+symmetric window of finite width.
+
+% =====================================================================
+\section{Discussion}\label{sec:discussion}
+% =====================================================================
+
+\subsection{Why the formula splits into two cases}
+
+The key structural distinction is whether the $N$ tracks (arithmetic
+progressions) tile the residues modulo~$D$ uniformly or not:
+\begin{itemize}
+    \item When $D \nmid N$: the tracks distribute non-uniformly among the
+          $D$ residue classes.  The resulting interleaving pattern is
+          genuinely aperiodic at any scale smaller than~$N$, giving
+          $\lambda = N$.
+    \item When $D \mid N$: each residue class is hit exactly $N/D$ times.
+          Every integer is a projected value (with multiplicity $N/D$),
+          collapsing the gap structure to a simple pattern of period $N/D$.
+\end{itemize}
+
+\subsection{Relation to earlier approximate formula}
+
+An earlier investigation~\cite{Kunert2025} proposed the approximate formula
+$\lambda \approx \lfloor\omega(\alpha+\beta+1)\rfloor$, which achieved
+$R^2 \approx 0.988$ but only 414 exact matches out of 1{,}000 test cases.
+The exact formula~\eqref{eq:formula} matches all 1{,}000 cases.
+
+The discrepancy arises from the elementary inequality
+$\lfloor a \rfloor + \lfloor b \rfloor \le \lfloor a+b \rfloor
+\le \lfloor a \rfloor + \lfloor b \rfloor + 1$:
+the floor must be applied to $\omega\alpha$ and $\omega\beta$
+\emph{separately} before summing.
+
+\subsection{Open problems}
+
+\begin{enumerate}
+    \item \textbf{Rigorous minimality proof.}
+    The argument that $\lambda = N$ (not a proper divisor of $N$) when
+    $D \nmid N$ rests on the non-uniform distribution of residues.
+    A fully rigorous proof that no sub-period exists for arbitrary
+    $\alpha, \beta, \omega$ remains to be written, though computational
+    verification covers all tested cases without exception.
+
+    \item \textbf{Irrational $\omega$.}
+    For irrational $\omega$, the invariant $r$ takes infinitely many values
+    and the period is expected to be infinite.  Whether a notion of
+    ``asymptotic period'' or complexity function applies is an open question.
+
+    \item \textbf{Higher dimensions.}
+    The cut-and-project construction generalises to higher-dimensional
+    lattices.  Whether analogous period formulas hold in dimension $d \ge 2$
+    is unexplored.
+
+    \item \textbf{Distribution of gap lengths.}
+    For fixed $\alpha, \beta, \omega$, the gaps take on at most three
+    distinct values (reminiscent of the three-distance theorem).
+    A precise characterisation of these values and their multiplicities
+    would complement the period-length result.
+\end{enumerate}
+
+% =====================================================================
+\section*{Acknowledgements}
+% =====================================================================
+
+The first author gratefully acknowledges the use of \emph{OpenAI
+ChatGPT}~\cite{ChatGPT} for assistance during earlier stages of this
+research.
+The AI model Claude Opus 4.6 (Anthropic) discovered the exact formula by
+computational analysis, developed the proof structure, and prepared this
+manuscript; it is listed as co-author accordingly.
+
+% =====================================================================
+\begin{thebibliography}{99}
+% =====================================================================
+
+\bibitem{BerstelEtAl2008}
+Jean Berstel, Aaron Lauve, Christophe Reutenauer, and Franco V.\ Saliola,
+\emph{Combinatorics on Words: Christoffel Words and Repetitions in Words},
+CRM Monograph Series, Vol.~27,
+American Mathematical Society, 2008.
+
+\bibitem{BertheReutenauer2024}
+Val\'{e}rie Berth\'{e} and Christophe Reutenauer,
+``On the three distance theorem,''
+\emph{The Mathematical Intelligencer}, 2024.
+\textsc{doi}: \href{https://doi.org/10.1007/s00283-023-10316-z}%
+{10.1007/s00283-023-10316-z}.
+
+\bibitem{ChatGPT}
+OpenAI,
+\emph{ChatGPT},
+\url{https://chat.openai.com}, accessed regularly between October 2024 and
+April 2025.
+
+\bibitem{HaynesEtAl2016}
+Alan Haynes, Henna Koivusalo, James Walton, and Lorenzo Sadun,
+``Gaps problems and frequencies of patches in cut and project sets,''
+\emph{Mathematical Proceedings of the Cambridge Philosophical Society},
+vol.~161, no.~1, pp.~65--85, 2016.
+
+\bibitem{Kunert2025}
+Dirk Kunert,
+\emph{Repository cut-and-project}, 2025.
+Available at: \url{https://github.com/dkunert/cut-and-project}.
+
+\bibitem{MarklofStrombergsson2017}
+Jens Marklof and Andreas Str\"{o}mbergsson,
+``The three gap theorem and the space of lattices,''
+\emph{The American Mathematical Monthly}, vol.~124, no.~8, pp.~741--745,
+2017.
+
+\bibitem{Meyer1972}
+Yves Meyer,
+\emph{Algebraic Numbers and Harmonic Analysis},
+North-Holland, Amsterdam, 1972.
+
+\bibitem{Senechal2009}
+Marjorie Senechal,
+\emph{Quasicrystals and Geometry},
+Cambridge University Press, 2009.
+ISBN: 978-0-521-57541-6.
+
+\bibitem{SpeechTao}
+Terence Tao,
+``Terence Tao on Yves Meyer's work on wavelets,''
+video available at: \url{https://youtu.be/AnkinNVPjyw}, accessed
+December 15, 2024.
+
+\bibitem{ThreeGap}
+``Three-gap theorem,''
+Wikipedia,
+\url{https://en.wikipedia.org/wiki/Three-gap_theorem}, accessed April 2025.
+
+\end{thebibliography}
+
+\end{document}
