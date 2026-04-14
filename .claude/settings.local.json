@@ -13,7 +13,8 @@
       "WebFetch(domain:math.colgate.edu)",
       "WebFetch(domain:www.math.uh.edu)",
       "WebFetch(domain:www-igm.univ-mlv.fr)",
-      "WebFetch(domain:link.springer.com)"
+      "WebFetch(domain:link.springer.com)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make perf 2>&1)"
     ]
   }
 }
