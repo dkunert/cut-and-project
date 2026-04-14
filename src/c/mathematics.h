@@ -223,8 +223,8 @@ static long find_period_length(const long index_start, const long index_end, con
     // Try each candidate period length
     for (long period = 1; period <= n / 2; period++)
     {
-        // Early checks: compare the last element with the element at index (n-1) % p.
-        if (dx[n - 1] != dx[(n - 1) % period])
+        // Early check: compare the last element with the element at index (n-1) % p.
+        if (dx[index_end] != dx[index_start + (n - 1) % period])
             continue;
 
         // Check if the sequence is periodic with period p.

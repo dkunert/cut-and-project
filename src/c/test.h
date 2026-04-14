@@ -6,6 +6,6 @@
 #include <stdbool.h>
 #include "mathematics.h"
 
-void test(bool created_file_to_find_a_pattern, number_t *dx);
+void test(bool created_file_to_find_a_pattern, bool perform_sort_test, number_t *dx);
 
 #endif /* TEST_H */

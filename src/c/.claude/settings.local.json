@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(ls -la /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.o 2>/dev/null && ls -la /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/*.d 2>/dev/null)",
-      "Bash(nm /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/mathematics.debug.o | grep sort)"
+      "Bash(nm /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/mathematics.debug.o | grep sort)",
+      "Bash(clang -O0 -g -std=c11 -o debug_lambda2 debug_lambda2.c mathematics.c && ./debug_lambda2)",
+      "Bash(clang -O0 -g -std=c11 -o debug_lambda4 debug_lambda4.c mathematics.c && ./debug_lambda4)",
+      "Bash(clang -O0 -g -std=c11 -o debug_lambda5 debug_lambda5.c mathematics.c && ./debug_lambda5)",
+      "Bash(make clean:*)",
+      "Bash(./cnp_debug 2>&1)"
     ]
   }
 }

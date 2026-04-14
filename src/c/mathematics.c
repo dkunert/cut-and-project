@@ -9,7 +9,7 @@
  * @param alpha The numerator of a.
  * @param beta The denominator of a.
  * @param gamma The numerator of omega.
- * @param delta The denominator of omaga.
+ * @param delta The denominator of omega.
  * @param x_min The minimum value of x.
  * @param x_max The maximum value of x.
  * @param dx The pointer to the array that will hold the dx values.
@@ -20,7 +20,7 @@
 long lambda(number_t alpha, number_t beta, number_t gamma, number_t delta,
             const number_t x_min, const number_t x_max, bool sort, number_t *dx)
 {
-    // Shorten the fractions alpha/beta and gamma/delta optaining smaller figures.
+    // Shorten the fractions alpha/beta and gamma/delta obtaining smaller figures.
     shorten(&alpha, &beta);
     shorten(&gamma, &delta);
 
@@ -175,10 +175,10 @@ rational_t rational_random_gt_0(const bool lt_1)
 }
 
 /**
- * Generates random rational greter than 0
+ * Generates random rational greater than 0
  * an less than 1.
  *
- * @return A random rational in (1, MAX_RAMDOM].
+ * @return A random rational in (1, MAX_RANDOM].
  */
 rational_t rational_random_gt_0_lt_1(void)
 {
@@ -186,9 +186,9 @@ rational_t rational_random_gt_0_lt_1(void)
 }
 
 /**
- * Generates random rational greter than 1.
+ * Generates random rational greater than 1.
  *
- * @return A random rational in (1, MAX_RAMDOM].
+ * @return A random rational in (1, MAX_RANDOM].
  */
 rational_t rational_random_gt_1(void)
 {
@@ -198,7 +198,7 @@ rational_t rational_random_gt_1(void)
 /**
  * Generates random rational greater or equal 2
  *
- * @return A random rational in [2, MAX_RAMDOM].
+ * @return A random rational in [2, MAX_RANDOM].
  */
 rational_t rational_random_ge_2(void)
 {

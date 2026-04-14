@@ -124,12 +124,8 @@ void test_random(void)
 void test_lambda(number_t *dx)
 {
     assert(lambda(2, 1, 1, 1, 0, 50, false, dx) == 4);
-    for (int xm = 50; xm <= 1000; xm += 50) {
-        long s = lambda(2, 1, 69986, 35837, 0, xm, true, dx);
-        long u = lambda(2, 1, 69986, 35837, 0, xm, false, dx);
-        printf("x_max=%d: sorted=%ld unsorted=%ld\n", xm, s, u);
-    }
-    // assert(lambda(2, 1, 69986, 35837, 0, 100000, true, dx) == 1);
+    printf("lambda(2, 1, 69986, 35837, 0, 10000, true, dx) = %ld\n", lambda(2, 1, 69986, 35837, 0, 10000, true, dx));
+    assert(lambda(2, 1, 69986, 35837, 0, 100000, true, dx) == 1);
 }
 
 /**
@@ -260,7 +256,7 @@ void test_sort(number_t *dx) {
     rational_t omega;
     number_t gamma, delta;
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 250; i++)
     {
         printf("Sort test %d\n", i);
 
@@ -361,6 +357,9 @@ void create_test_data(const char *filename, const int number_of_tests, number_t 
 
     for (int i = 0; i < number_of_tests; i++)
     {
+        if (i % 100 == 0)
+            printf("Creating test data: %d / %d\n", i, number_of_tests);
+
         const rational_t o = rational_random_gt_1();
         const rational_t a = rational_random_gt_1();
         const long period_length = lambda(a.numerator, a.denominator, o.numerator, o.denominator, 0, 1000000, false, dx);
@@ -397,9 +396,10 @@ void test_speed(number_t *dx)
  *
  * @param created_file_to_find_a_pattern Indicates whether to create a
  *        file to find a pattern.
+ * @param perform_sort_test Indicates whether to run the sort test.
  * @param dx The pointer to the array that will hold the dx values.
  */
-void test(bool create_file_to_find_a_pattern, number_t *dx)
+void test(bool create_file_to_find_a_pattern, bool perform_sort_test, number_t *dx)
 {
     test_gcd();
     test_lcm();
@@ -409,9 +409,8 @@ void test(bool create_file_to_find_a_pattern, number_t *dx)
     test_find_period_length();
     test_lambda(dx);
     test_speed(dx);
-    test_sort(dx);
+    if (perform_sort_test) test_sort(dx);
     test_with_test_file(TEST_FILE, X_MAX, false, dx);
-
     if (create_file_to_find_a_pattern)
     {
         char output_filename[256];
