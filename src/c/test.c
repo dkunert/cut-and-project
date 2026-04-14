@@ -355,23 +355,54 @@ void create_test_data(const char *filename, const int number_of_tests, number_t 
     // Write the header
     fprintf(file, "o_n,o_d,a_n,a_d,period\n");
 
-    for (int i = 0; i < number_of_tests; i++)
+    int written = 0;
+    clock_t total_start = clock();
+
+    for (int i = 0; written < number_of_tests; i++)
     {
         if (i % 100 == 0)
-            printf("Creating test data: %d / %d\n", i, number_of_tests);
+        {
+            double elapsed = (double)(clock() - total_start) / CLOCKS_PER_SEC;
+            printf("Creating test data: %d written / %d target (attempt %d) [%.2f s elapsed]\n", written, number_of_tests, i, elapsed);
+        }
 
-        const rational_t o = rational_random_gt_1();
-        const rational_t a = rational_random_gt_1();
-        const long period_length = lambda(a.numerator, a.denominator, o.numerator, o.denominator, 0, 1000000, false, dx);
+        // Generate omega = o_n / o_d covering a wide range:
+        //   ~33% in (0, 1), ~33% in [1, 2], ~34% in (2, MAX_RANDOM]
+        rational_t o;
+        const int omega_range = rand() % 3;
+        if (omega_range == 0)
+            o = rational_random_gt_0_lt_1();  // omega in (0, 1)
+        else if (omega_range == 1)
+        {
+            // omega in [1, 2]: numerator in [denominator, 2*denominator]
+            number_t d = random_number_including(1, MAX_RANDOM / 2);
+            number_t n = random_number_including(d, 2 * d);
+            o = rational_create(n, d);
+        }
+        else
+            o = rational_random_gt_1();       // omega > 1
+
+        // Generate alpha/beta: random coprime pair with alpha >= beta >= 1
+        number_t a_n = random_number_including(1, MAX_NOMINATOR_DENOMINATOR);
+        number_t a_d = random_number_including(1, MAX_NOMINATOR_DENOMINATOR);
+        rational_t a = rational_create(a_n, a_d);
+
+        // Skip degenerate case alpha = beta = 1 (after reduction)
+        if (a.numerator == 1 && a.denominator == 1)
+            continue;
+
+        const long period_length = lambda(a.numerator, a.denominator, o.numerator, o.denominator, 0, X_MAX, true, dx);
 
         if (is_legal_period_length(period_length))
         {
             fprintf(file, "%lld,%lld,%lld,%lld,%ld\n", o.numerator, o.denominator, a.numerator, a.denominator, period_length);
+            written++;
         }
     }
 
     fclose(file);
-    printf("Data to find patterns written to %s\n", filename);
+    double total_elapsed = (double)(clock() - total_start) / CLOCKS_PER_SEC;
+    printf("Data to find patterns written to %s (%d lines) [total: %.2f s]\n", filename, written, total_elapsed);
 }
 
 /**
