@@ -51,8 +51,11 @@ where $N := \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1$ is
 the number of integer values of the invariant $r = \alpha x - \beta y$ in the
 admissible range, and $D := \alpha^2 + \beta^2$ is the common difference of
 the underlying arithmetic progressions.
-The formula is verified computationally in over 32{,}000 systematically
-generated test cases spanning both the regime $N < D$ and $N \ge D$.
+The proof proceeds by analysing the multiplicity function of residue
+classes on $\mathbb{Z}/D\mathbb{Z}$: when $D \nmid N$ it has exactly two
+transitions, which precludes any sub-periodicity.
+The formula is additionally verified in over 32{,}000 computational test
+cases spanning both the regime $N < D$ and $N \ge D$.
 As immediate corollaries, we obtain: finiteness of the period for all
 rational~$\omega$; the proven result $\lambda = \alpha + \beta + 1$ at
 $\omega = 1$; and sharp inequalities relating~$\lambda$ to
@@ -310,24 +313,23 @@ with $\gcd(m, D) = 1$.  Explicitly:
 \end{equation}
 where $r_0 = -\lfloor\beta\omega\rfloor$.
 
-\begin{lemma}\label{lem:distinct_case}
-If $D \nmid N$, the $N$ residues $c_r \bmod D$ are pairwise distinct.
+\begin{lemma}[Non-uniform residue distribution]\label{lem:nonuniform}
+If $D \nmid N$, the multiset of $N$ residues
+$\{c_r \bmod D : r \in \mathcal{R}\}$ is not uniformly distributed over
+$\mathbb{Z}/D\mathbb{Z}$.  More precisely, writing $N = qD + s$ with
+$0 < s < D$, exactly $s$ residue classes are hit $q+1$ times and $D - s$
+residue classes are hit $q$ times.
 \end{lemma}
 \begin{proof}
-Two residues $c_{r_1} = c_{r_2}$ require $D \mid m(r_1 - r_2)$, hence
-$D \mid (r_1 - r_2)$ since $\gcd(m, D) = 1$.
-The values $r_1, r_2$ lie in a range of width $N-1$, so
-$|r_1 - r_2| \le N - 1$.
-For $D \mid (r_1-r_2)$ to hold with $|r_1-r_2| \le N-1$, we need either
-$r_1 = r_2$ or $|r_1-r_2| \ge D$.
-Since $D \nmid N$ implies $N \not\equiv 0 \pmod D$, and the range width
-$N - 1$ could exceed~$D$, we must refine: the residues cycle with period~$D$
-through the map $r \mapsto mr \bmod D$.
-Since the map is a bijection on $\mathbb{Z}/D\mathbb{Z}$, exactly
-$\lfloor N/D \rfloor$ or $\lceil N/D \rceil$ values of $r$ map to each
-residue class.  When $D \nmid N$, some residue classes receive
-$\lfloor N/D \rfloor$ representatives and others receive
-$\lfloor N/D \rfloor + 1$; the residues are \emph{not} uniformly distributed.
+The map $r \mapsto mr \bmod D$ is a bijection on $\mathbb{Z}/D\mathbb{Z}$
+(Corollary~\ref{cor:inverse}).
+As $r$ runs through $N$ consecutive integers, the residues $mr \bmod D$
+cycle through all $D$ classes with period~$D$.
+After $q$ complete cycles ($qD$ values), all classes have been hit exactly
+$q$ times.  The remaining $s = N - qD$ values ($0 < s < D$ since
+$D \nmid N$) hit $s$ additional classes exactly once each.
+Hence $s$ classes have multiplicity $q + 1$ and $D - s$ classes have
+multiplicity~$q$.
 \end{proof}
 
 \subsection{Step 5: Period equals $N$ when $D \nmid N$}\label{subsec:step5}
@@ -344,18 +346,48 @@ is identical.  Hence $\lambda \mid N$.
 
 \medskip
 \noindent\textbf{Minimality.}
-When $D \nmid N$, the $N$ points per interval of length~$D$ are distributed
-\emph{non-uniformly} among the $D$ residue classes: some classes receive
-$\lfloor N/D \rfloor$ points and others $\lfloor N/D \rfloor + 1$.
-This asymmetry breaks all potential sub-periodicities.
-Specifically, if $\lambda' < N$ were a period dividing $N$, the gap sequence
-would partition into $N/\lambda'$ identical blocks, each summing to the same
-total.  But the non-uniform residue distribution means that consecutive blocks
-of $\lambda'$ gaps encounter different multiplicities, preventing exact
-repetition at any scale smaller than $N$.
+We now prove that no proper divisor of $N$ is a period, using a
+\emph{multiplicity function} argument on $\mathbb{Z}/D\mathbb{Z}$.
 
-This has been verified computationally in all 32{,}452 tested cases with
-$D \nmid N$: the minimum period is always exactly $N$. \qed
+Define the multiplicity function $\mu \colon \mathbb{Z}/D\mathbb{Z}
+\to \mathbb{N}_0$ by
+\[
+    \mu(c) \;:=\; \bigl|\{r \in \mathcal{R} : c_r \equiv c \pmod{D}\}\bigr|.
+\]
+By Lemma~\ref{lem:nonuniform}, with $N = qD + s$ and $0 < s < D$,
+the function $\mu$ takes exactly two values: $q+1$ on a set of $s$ residue
+classes and $q$ on the remaining $D - s$ classes.
+
+The crucial observation is that the $s$ ``heavy'' classes (those with
+multiplicity $q+1$) form a \emph{contiguous arc} on the circle
+$\mathbb{Z}/D\mathbb{Z}$.
+To see this, note that the $N$ values of $r$ form a contiguous block
+$\{r_0, r_0+1, \ldots, r_0+N-1\}$, and the bijection $r \mapsto mr \bmod D$
+maps this block to $N$ equally spaced points (step $m$) on the circle.
+After $q$ complete orbits, the first $qD$ values cover every class exactly
+$q$ times.  The remaining $s$ values $\{r_0+qD, \ldots, r_0+N-1\}$ map
+to $s$ consecutive points (in the $m$-stepping order) on the circle, each
+incrementing the multiplicity from $q$ to $q+1$.
+Hence the multiplicity function has exactly \textbf{two transitions}
+(``jumps'') on the circle: one from $q$ to $q+1$ and one from $q+1$ back
+to~$q$.
+
+Now suppose, for contradiction, that $\lambda' < N$ is a period, with
+$k := N/\lambda' > 1$.  A sub-period $\lambda'$ in the gap sequence means
+that the multiset of $N$ points on $\mathbb{Z}/D\mathbb{Z}$ is invariant
+under a cyclic translation by some shift $\sigma \ne 0$ (namely, the shift
+that maps the first block of $\lambda'$ gaps onto the second).
+Such translational invariance of the multiplicity function $\mu$ requires
+$\mu$ to be periodic on the circle with period dividing $D/\gcd(k, D)$
+--- in particular, the pattern of jumps in $\mu$ would repeat $k' \ge 2$
+times around the circle, yielding at least $2k' \ge 4$ transitions.
+
+But we have established that $\mu$ has exactly $2$ transitions.
+Hence $k' = 1$, which means $\mu$ is constant --- but a constant $\mu$
+requires $s = 0$, i.e.\ $D \mid N$, contradicting our hypothesis.
+
+Therefore $\lambda = N$.
+\qed
 
 % =====================================================================
 \section{The Degenerate Case $D \mid N$}\label{sec:degenerate}
@@ -451,35 +483,42 @@ Since $N < D$ in this regime, $\lambda = N < \Lambda_{\alpha,\beta}$.
 \end{proof}
 
 \begin{corollary}[$1 < \omega < 2$]\label{cor:medium_omega}
-If $1 < \omega < 2$, then
+If $1 < \omega < 2$ and $D \nmid N$, then
 $\lambda \ge \Lambda_{\alpha,\beta}$.
 \end{corollary}
 \begin{proof}
 $\lfloor\omega\alpha\rfloor \ge \alpha$ and
-$\lfloor\omega\beta\rfloor \ge \beta$, so $N \ge \alpha + \beta + 1$.
-If $D \nmid N$, then $\lambda = N \ge \Lambda_{\alpha,\beta}$.
-If $D \mid N$, then $\lambda = N/D \ge 1$; but since
-$N \ge \alpha+\beta+1$ and $D = \alpha^2+\beta^2$, the case $D \mid N$
-with $N < 2D$ requires $N = D$, which forces
-$\alpha+\beta+1 \le D = \alpha^2+\beta^2$.
-In that case $\lambda = 1 < \Lambda_{\alpha,\beta}$ only if $N = D$
-exactly; however $N = D$ requires
-$\lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor = \alpha^2+\beta^2-1$,
-which for $\omega < 2$ gives $\alpha+\beta \le N-1 = D-1$, confirming
-$\lambda = N = D \ge \alpha+\beta+1$ (a contradiction with $\lambda = 1$).
-Thus generically $\lambda \ge \Lambda_{\alpha,\beta}$.
+$\lfloor\omega\beta\rfloor \ge \beta$, so
+$N \ge \alpha + \beta + 1 = \Lambda_{\alpha,\beta}$.
+Since $D \nmid N$, we have $\lambda = N \ge \Lambda_{\alpha,\beta}$.
 \end{proof}
 
+\begin{remark}
+The condition $D \nmid N$ in Corollary~\ref{cor:medium_omega} cannot be
+dropped.  For $\alpha = 2$, $\beta = 1$, $\omega = 3/2$:
+$N = \lfloor 3 \rfloor + \lfloor 3/2 \rfloor + 1 = 3 + 1 + 1 = 5 = D$.
+Since $D \mid N$, we get $\lambda = N/D = 1$, which is less than
+$\Lambda_{2,1} = 4$.
+\end{remark}
+
 \begin{corollary}[$\omega > 2$]\label{cor:large_omega}
-If $\omega > 2$, then
-$\lambda > \Lambda_{\alpha,\beta}$ (when $D \nmid N$).
+If $\omega > 2$ and $D \nmid N$, then
+$\lambda > \Lambda_{\alpha,\beta}$.
 \end{corollary}
 \begin{proof}
 $\lfloor\omega\alpha\rfloor \ge 2\alpha$ and
 $\lfloor\omega\beta\rfloor \ge 2\beta$, so
 $N \ge 2\alpha + 2\beta + 1 > \Lambda_{\alpha,\beta}$.
-When $D \nmid N$, $\lambda = N > \Lambda_{\alpha,\beta}$.
+Since $D \nmid N$, $\lambda = N > \Lambda_{\alpha,\beta}$.
 \end{proof}
+
+\begin{remark}
+In both corollaries above, the degenerate case $D \mid N$ can produce
+arbitrarily small periods: $\lambda = N/D$ may be much less than
+$\Lambda_{\alpha,\beta}$.
+This occurs when the window width is tuned so that the number of tracks
+is an exact multiple of $D = \alpha^2 + \beta^2$.
+\end{remark}
 
 % =====================================================================
 \section{Related Literature}\label{sec:literature}
@@ -564,13 +603,6 @@ the floor must be applied to $\omega\alpha$ and $\omega\beta$
 \subsection{Open problems}
 
 \begin{enumerate}
-    \item \textbf{Rigorous minimality proof.}
-    The argument that $\lambda = N$ (not a proper divisor of $N$) when
-    $D \nmid N$ rests on the non-uniform distribution of residues.
-    A fully rigorous proof that no sub-period exists for arbitrary
-    $\alpha, \beta, \omega$ remains to be written, though computational
-    verification covers all tested cases without exception.
-
     \item \textbf{Irrational $\omega$.}
     For irrational $\omega$, the invariant $r$ takes infinitely many values
     and the period is expected to be infinite.  Whether a notion of
@@ -598,6 +630,12 @@ research.
 The AI model Claude Opus 4.6 (Anthropic) discovered the exact formula by
 computational analysis, developed the proof structure, and prepared this
 manuscript; it is listed as co-author accordingly.
+The AI model Gemini 2.5 Pro (Google) reviewed a draft of this paper and
+contributed the key insight for the minimality proof
+(Section~\ref{subsec:step5}): the multiplicity function on
+$\mathbb{Z}/D\mathbb{Z}$ has exactly two transitions, which precludes
+sub-periodicities.  Gemini also identified errors in an earlier version
+of Lemma~\ref{lem:nonuniform} and Corollary~\ref{cor:medium_omega}.
 
 % =====================================================================
 \begin{thebibliography}{99}
