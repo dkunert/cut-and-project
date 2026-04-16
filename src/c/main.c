@@ -10,8 +10,9 @@ int main(int argc, const char *argv[])
 
     enum Tasks
     {
-        TEST = 1 << 0,             // 0b00000001
-        TEST_CONJECTURES = 1 << 1, // 0b00000010
+        TEST = 1 << 0,                        // 0b00000001
+        TEST_CONJECTURES = 1 << 1,            // 0b00000010
+        TEST_CONJECTURE_7_FROM_CSV = 1 << 2,  // 0b00000100
     };
 
     uint8_t tasks = TASKS;
@@ -23,6 +24,9 @@ int main(int argc, const char *argv[])
 
     if (tasks & TEST_CONJECTURES)
         test_conjectures(dx);
+
+    if (tasks & TEST_CONJECTURE_7_FROM_CSV)
+        test_conjecture_7_from_csv(CONJECTURE_7_CSV_FILE);
 
     free(dx);
     return 0;

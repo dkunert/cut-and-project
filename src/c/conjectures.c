@@ -14,10 +14,11 @@ typedef enum Conjecture
     CONJECTURE_5_0 = 1U << 6, // 0b0100 0000
     CONJECTURE_6_1 = 1U << 7, // 0b1000 0000
     CONJECTURE_6_2 = 1U << 8, // 0b0001 0000 0000
+    CONJECTURE_7_0 = 1U << 9, // 0b0010 0000 0000
 } Conjecture;
 
 /**
- * Tests conjectures 2 to 6.
+ * Tests conjectures 2 to 7.
  * The conjectures are:
  * 2.1: lambda < alpha + beta + 1 for omega in (0, 1)
  * 2.2: lambda < alpha + beta + 1 for omega in (0, 1) and near 1
@@ -28,6 +29,8 @@ typedef enum Conjecture
  * 5:   lambda > alpha + beta + 1 for omega >= 2
  * 6.1: lambda is about gamma/delta * (alpha + beta + 1)
  * 6.2: lambda is about gamma/delta * (alpha + beta + 1) with correction
+ * 7:   lambda = N if D does not divide N, else N / D,
+ *      where N = floor(omega*alpha) + floor(omega*beta) + 1 and D = alpha^2 + beta^2
  *
  * @param dx The array of numbers.
  * @param conjecture The conjecture to test.
@@ -107,6 +110,17 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
         case CONJECTURE_6_2:
             if (print)
                 printf("6 (lambda = gamma/delta * (alpha + beta + 1) + correction * (gamma - delta))\n");
+            do
+            {
+                gamma = number_random_gt_0();
+                delta = number_random_gt_0();
+            } while (delta == 0);
+            omega = rational_create(gamma, delta);
+            break;
+
+        case CONJECTURE_7_0:
+            if (print)
+                printf("7 (lambda = N if D does not divide N, else N / D)\n");
             do
             {
                 gamma = number_random_gt_0();
@@ -221,6 +235,22 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
                 ss_tot += ss_tot_part;
                 break;
 
+            case CONJECTURE_7_0:
+            {
+                // lambda = N if D does not divide N, else N / D,
+                // where N = floor(omega*alpha) + floor(omega*beta) + 1 and D = alpha^2 + beta^2
+                const number_t N = rational_floor((rational_t){omega.numerator * alpha, omega.denominator})
+                                 + rational_floor((rational_t){omega.numerator * beta, omega.denominator})
+                                 + 1;
+                const number_t D = alpha * alpha + beta * beta;
+                const number_t expected = (N % D == 0) ? N / D : N;
+                if (computed_period_length != expected)
+                {
+                    printf("Assertion for conjecture 7 (lambda = N if D does not divide N, else N / D) for a = %lld/%lld, omaga = %lld/%lld, N = %lld, D = %lld, expected = %lld and lambda = %ld!\n", alpha, beta, omega.numerator, omega.denominator, N, D, expected, computed_period_length);
+                }
+                break;
+            }
+
             default:
                 break;
             }
@@ -243,16 +273,75 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
 }
 
 /**
+ * Tests conjecture 7 against observed period lengths stored in a CSV file.
+ * The CSV must have the header "o_n,o_d,a_n,a_d,period" and one data row per line.
+ * For each row, computes N = floor(o_n*alpha/o_d) + floor(o_n*beta/o_d) + 1
+ * and D = alpha^2 + beta^2, then checks that the observed period equals
+ * N if D does not divide N, else N / D.
+ *
+ * @param path The path to the CSV file.
+ */
+void test_conjecture_7_from_csv(const char *path)
+{
+    FILE *f = fopen(path, "r");
+    if (f == NULL)
+    {
+        fprintf(stderr, "Error: could not open %s\n", path);
+        exit(EXIT_FAILURE);
+    }
+
+    // Skip header line
+    char buffer[256];
+    if (fgets(buffer, sizeof(buffer), f) == NULL)
+    {
+        fprintf(stderr, "Error: empty file %s\n", path);
+        fclose(f);
+        exit(EXIT_FAILURE);
+    }
+
+    long long o_n, o_d, a_n, a_d, period;
+    size_t total = 0, mismatches = 0;
+
+    while (fscanf(f, "%lld,%lld,%lld,%lld,%lld", &o_n, &o_d, &a_n, &a_d, &period) == 5)
+    {
+        const number_t alpha = (number_t)a_n;
+        const number_t beta = (number_t)a_d;
+        const number_t N = rational_floor((rational_t){(number_t)o_n * alpha, (number_t)o_d})
+                         + rational_floor((rational_t){(number_t)o_n * beta, (number_t)o_d})
+                         + 1;
+        const number_t D = alpha * alpha + beta * beta;
+        const number_t expected = (N % D == 0) ? N / D : N;
+
+        total++;
+        if (expected != (number_t)period)
+        {
+            mismatches++;
+            if (mismatches <= 10)
+            {
+                printf("Mismatch: omega = %lld/%lld, alpha = %lld, beta = %lld, N = %lld, D = %lld, expected = %lld, observed period = %lld\n",
+                       o_n, o_d, (long long)alpha, (long long)beta,
+                       (long long)N, (long long)D, (long long)expected, period);
+            }
+        }
+    }
+
+    fclose(f);
+
+    printf("Conjecture 7 test from CSV '%s': %zu rows checked, %zu mismatches.\n",
+           path, total, mismatches);
+}
+
+/**
  * Wrapper function for testing conjectures.
  *
  * @param *dx The pointer to the array that will hold the dx values.
  */
 void test_conjectures(number_t *dx)
 {
-    int conjecture = CONJECTURE_2_1 | CONJECTURE_2_2 | CONJECTURE_3_0 | CONJECTURE_4_1 | CONJECTURE_4_2 | CONJECTURE_4_3 | CONJECTURE_5_0 | CONJECTURE_6_1 | CONJECTURE_6_2;
+    int conjecture = CONJECTURE_2_1 | CONJECTURE_2_2 | CONJECTURE_3_0 | CONJECTURE_4_1 | CONJECTURE_4_2 | CONJECTURE_4_3 | CONJECTURE_5_0 | CONJECTURE_6_1 | CONJECTURE_6_2 | CONJECTURE_7_0;
     // conjecture = CONJECTURE_6_1 | CONJECTURE_6_2;
 
-    for (Conjecture c = CONJECTURE_2_1; c <= CONJECTURE_6_2; c = (Conjecture)(c << 1))
+    for (Conjecture c = CONJECTURE_2_1; c <= CONJECTURE_7_0; c = (Conjecture)(c << 1))
     {
         if (conjecture & c)
         {

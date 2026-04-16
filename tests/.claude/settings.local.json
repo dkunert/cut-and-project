@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make debug 2>&1 | tail -40)",
+      "Bash(make debug:*)",
+      "Bash(./cnp_debug 2>&1 | head -40)"
+    ]
+  }
+}
