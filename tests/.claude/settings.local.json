@@ -4,7 +4,13 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make debug 2>&1 | tail -40)",
       "Bash(make debug:*)",
       "Bash(./cnp_debug 2>&1 | head -40)",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/python && python3 test_conjecture_7.py)"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/python && python3 test_conjecture_7.py)",
+      "Bash(python3 test_conjecture_7.py)",
+      "Bash(./cnp_debug 2>&1 | tail -30)",
+      "Bash(make perf:*)",
+      "Bash(time ./cnp 2>&1 | tail -10)",
+      "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100)",
+      "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100 --sort)"
     ]
   }
 }

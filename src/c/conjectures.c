@@ -138,7 +138,7 @@ void test_concjeture2_to_6(number_t *dx, const Conjecture conjecture, const int 
         number_t beta = number_random_gt_0();
         shorten(&alpha, &beta);
 
-        long computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, false, dx);
+        long computed_period_length = lambda(alpha, beta, omega.numerator, omega.denominator, X_MIN, X_MAX, true, dx);
 
         if (computed_period_length == NO_PERIOD)
         {
@@ -329,6 +329,86 @@ void test_conjecture_7_from_csv(const char *path)
 
     printf("Conjecture 7 test from CSV '%s': %zu rows checked, %zu mismatches.\n",
            path, total, mismatches);
+}
+
+/**
+ * Generates a CSV of test cases that exercise the degenerate branch of
+ * conjecture 7 (D | N, so lambda = N / D).
+ * Scans small coprime (alpha, beta) and omega = p/q in lowest terms.
+ * For each (alpha, beta, omega) with D | N, computes the actual period via
+ * lambda() and writes a row "o_n,o_d,a_n,a_d,period".
+ * Stops after target_count successful rows.
+ *
+ * @param path The output CSV path.
+ * @param target_count The number of rows to generate.
+ * @param dx The work array required by lambda().
+ */
+void generate_conjecture_7_degenerate_csv(const char *path, int target_count, number_t *dx)
+{
+    FILE *f = fopen(path, "w");
+    if (f == NULL)
+    {
+        fprintf(stderr, "Error: could not open %s for writing\n", path);
+        exit(EXIT_FAILURE);
+    }
+    fprintf(f, "o_n,o_d,a_n,a_d,period\n");
+
+    int count = 0;
+    size_t lambda_failures = 0;
+    size_t formula_disagreements = 0;
+
+    const number_t ALPHA_MAX = 10;
+    const number_t BETA_MAX  = 10;
+    const number_t Q_MAX     = 50;
+    const number_t P_MAX     = 2000;
+
+    for (number_t alpha = 1; alpha <= ALPHA_MAX && count < target_count; alpha++)
+    {
+        for (number_t beta = 1; beta <= BETA_MAX && count < target_count; beta++)
+        {
+            if (gcd(alpha, beta) != 1)
+                continue;
+
+            const number_t D = alpha * alpha + beta * beta;
+
+            for (number_t q = 1; q <= Q_MAX && count < target_count; q++)
+            {
+                for (number_t p = 1; p <= P_MAX && count < target_count; p++)
+                {
+                    if (gcd(p, q) != 1)
+                        continue;
+
+                    const number_t N = (p * alpha) / q + (p * beta) / q + 1;
+                    if (N < D || N % D != 0)
+                        continue;
+
+                    long lam = lambda(alpha, beta, p, q, X_MIN, X_MAX, true, dx);
+                    if (!is_legal_period_length(lam))
+                    {
+                        lambda_failures++;
+                        continue;
+                    }
+
+                    const number_t expected = N / D;
+                    if (lam != expected)
+                    {
+                        formula_disagreements++;
+                        fprintf(stderr, "Warning: lambda = %ld != N/D = %lld for alpha=%lld, beta=%lld, omega=%lld/%lld, N=%lld, D=%lld\n",
+                                lam, (long long)expected, (long long)alpha, (long long)beta,
+                                (long long)p, (long long)q, (long long)N, (long long)D);
+                    }
+
+                    fprintf(f, "%lld,%lld,%lld,%lld,%ld\n",
+                            (long long)p, (long long)q, (long long)alpha, (long long)beta, lam);
+                    count++;
+                }
+            }
+        }
+    }
+
+    fclose(f);
+    printf("Wrote %d degenerate-case rows to '%s' (lambda() failures skipped: %zu, formula disagreements: %zu).\n",
+           count, path, lambda_failures, formula_disagreements);
 }
 
 /**

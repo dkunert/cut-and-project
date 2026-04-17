@@ -7,7 +7,7 @@
 #define NUMBER_OF_NUMBER_OF_CONJECTURE_TESTS 1000
 #define MAX_RANDOM 100000
 #define MAX_NOMINATOR_DENOMINATOR 100000
-#define TASKS TEST_CONJECTURE_7_FROM_CSV
+#define TASKS GENERATE_CONJECTURE_7_DEGENERATE_CSV
 #define CREATE_FILE_TO_FIND_A_PATTERN true
 #define NUMBER_OF_LINES_IN_THE_PATTERN_FILE 5002
 #define FRACTION_OF_REMAINING_ELEMENTS 0.9
@@ -15,6 +15,8 @@
 #define TEST_FILE "./pattern_x_max_1000000_1000_lines.csv"
 #define FILE_TO_FIND_PATTERN "./find_pattern_x_max_1000000_%d_lines.csv"
 #define CONJECTURE_7_CSV_FILE "../../tests/new_find_patterns_x_max_1000000_51012_lines.csv"
+#define CONJECTURE_7_DEGENERATE_CSV_FILE "../../tests/degenerate_patterns_5000_lines.csv"
+#define CONJECTURE_7_DEGENERATE_TARGET_COUNT 5000
 
 /* Error Codes */
 #define NO_PERIOD -1

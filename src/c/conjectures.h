@@ -4,5 +4,6 @@
 
 void test_conjectures(number_t *dx);
 void test_conjecture_7_from_csv(const char *path);
+void generate_conjecture_7_degenerate_csv(const char *path, int target_count, number_t *dx);
 
 #endif /* CONJECTURES_H */

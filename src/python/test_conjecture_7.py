@@ -18,6 +18,8 @@ CSV_PATH = "../../tests/new_find_patterns_x_max_1000000_51012_lines.csv"
 def test_conjecture_7_from_csv(path: str) -> int:
     total = 0
     mismatches = 0
+    count_divides = 0      # rows where D | N  (degenerate branch: lambda = N/D)
+    count_not_divides = 0  # rows where D does not divide N (generic branch: lambda = N)
 
     with open(path, newline="") as f:
         reader = csv.reader(f)
@@ -29,7 +31,13 @@ def test_conjecture_7_from_csv(path: str) -> int:
 
             N = (o_n * alpha) // o_d + (o_n * beta) // o_d + 1
             D = alpha * alpha + beta * beta
-            expected = N // D if N % D == 0 else N
+
+            if N % D == 0:
+                count_divides += 1
+                expected = N // D
+            else:
+                count_not_divides += 1
+                expected = N
 
             total += 1
             if expected != period:
@@ -45,6 +53,8 @@ def test_conjecture_7_from_csv(path: str) -> int:
         f"Conjecture 7 test from CSV '{path}': "
         f"{total} rows checked, {mismatches} mismatches."
     )
+    print(f"  Branch coverage: D | N       (lambda = N/D): {count_divides} rows")
+    print(f"                   D does not divide N (lambda = N  ): {count_not_divides} rows")
     return mismatches
 
 
