@@ -345,15 +345,42 @@ void test_conjecture_7_from_csv(const char *path)
  */
 void generate_conjecture_7_degenerate_csv(const char *path, int target_count, number_t *dx)
 {
-    FILE *f = fopen(path, "w");
+    // Resume support: append if file exists and has content, else write fresh
+    FILE *f_check = fopen(path, "r");
+    bool resume = false;
+    int existing_count = 0;
+    if (f_check != NULL)
+    {
+        char buf[256];
+        if (fgets(buf, sizeof(buf), f_check) != NULL)  // header
+        {
+            while (fgets(buf, sizeof(buf), f_check) != NULL)
+                existing_count++;
+        }
+        fclose(f_check);
+        if (existing_count > 0)
+            resume = true;
+    }
+
+    FILE *f;
+    if (resume)
+    {
+        f = fopen(path, "a");
+        printf("Resuming: appending to '%s' (%d existing rows)\n", path, existing_count);
+    }
+    else
+    {
+        f = fopen(path, "w");
+        fprintf(f, "o_n,o_d,a_n,a_d,period\n");
+    }
     if (f == NULL)
     {
         fprintf(stderr, "Error: could not open %s for writing\n", path);
         exit(EXIT_FAILURE);
     }
-    fprintf(f, "o_n,o_d,a_n,a_d,period\n");
 
-    int count = 0;
+    int count = existing_count;
+    int generated = 0;
     size_t lambda_failures = 0;
     size_t formula_disagreements = 0;
 
@@ -361,6 +388,9 @@ void generate_conjecture_7_degenerate_csv(const char *path, int target_count, nu
     const number_t BETA_MAX  = 10;
     const number_t Q_MAX     = 50;
     const number_t P_MAX     = 2000;
+
+    // Skip counter for resume: skip the first existing_count matching candidates
+    int skip = existing_count;
 
     for (number_t alpha = 1; alpha <= ALPHA_MAX && count < target_count; alpha++)
     {
@@ -382,10 +412,35 @@ void generate_conjecture_7_degenerate_csv(const char *path, int target_count, nu
                     if (N < D || N % D != 0)
                         continue;
 
-                    long lam = lambda(alpha, beta, p, q, X_MIN, X_MAX, true, dx);
+                    // Skip already-computed rows when resuming
+                    if (skip > 0)
+                    {
+                        skip--;
+                        continue;
+                    }
+
+                    // x_max must be >> omega so the 10% edge trim in lambda()
+                    // covers the boundary corruption (which spans ~omega x-values).
+                    const number_t omega_int = p / q + 1;
+                    const number_t x_max_degenerate = MAX(1000, 25 * omega_int);
+                    const number_t estimated_points = x_max_degenerate * N / D;
+                    if (estimated_points > 10000000)
+                    {
+                        lambda_failures++;
+                        continue;
+                    }
+                    printf("\rComputing: alpha=%lld, beta=%lld, omega=%lld/%lld, N=%lld, D=%lld, x_max=%lld ...          ",
+                           (long long)alpha, (long long)beta, (long long)p, (long long)q,
+                           (long long)N, (long long)D, (long long)x_max_degenerate);
+                    fflush(stdout);
+                    long lam = lambda(alpha, beta, p, q, X_MIN, x_max_degenerate, true, dx);
                     if (!is_legal_period_length(lam))
                     {
                         lambda_failures++;
+                        printf("\rSkipped: alpha=%lld, beta=%lld, omega=%lld/%lld, N=%lld, D=%lld (lambda=%ld, failures=%zu)    ",
+                               (long long)alpha, (long long)beta, (long long)p, (long long)q,
+                               (long long)N, (long long)D, lam, lambda_failures);
+                        fflush(stdout);
                         continue;
                     }
 
@@ -400,15 +455,19 @@ void generate_conjecture_7_degenerate_csv(const char *path, int target_count, nu
 
                     fprintf(f, "%lld,%lld,%lld,%lld,%ld\n",
                             (long long)p, (long long)q, (long long)alpha, (long long)beta, lam);
+                    fflush(f);
                     count++;
+                    generated++;
+                    printf("\r%d / %d", count, target_count);
+                    fflush(stdout);
                 }
             }
         }
     }
 
     fclose(f);
-    printf("Wrote %d degenerate-case rows to '%s' (lambda() failures skipped: %zu, formula disagreements: %zu).\n",
-           count, path, lambda_failures, formula_disagreements);
+    printf("\nWrote %d new rows (%d total) to '%s' (lambda() failures skipped: %zu, formula disagreements: %zu).\n",
+           generated, count, path, lambda_failures, formula_disagreements);
 }
 
 /**

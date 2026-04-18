@@ -10,7 +10,8 @@
       "Bash(make perf:*)",
       "Bash(time ./cnp 2>&1 | tail -10)",
       "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100)",
-      "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100 --sort)"
+      "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100 --sort)",
+      "Bash(time ./cnp 2>&1)"
     ]
   }
 }
