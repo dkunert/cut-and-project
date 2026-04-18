@@ -13,7 +13,21 @@
       "Bash(python3 test_lambda.py 2 1 3 1 --debug --x_max 100 --sort)",
       "Bash(time ./cnp 2>&1)",
       "Bash(timeout 60 ./cnp 2>&1)",
-      "Bash(timeout 120 ./cnp 2>&1)"
+      "Bash(timeout 120 ./cnp 2>&1)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/python && python3 test_conjecture_7.py ../../tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/python && python3 test_conjecture_7.py ../../tests/degenerate_patterns_5000_lines.csv)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && python3 test_lambda.py 2 1 3 1 --sort --x_max 100 2>&1 | head -6)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && python3 test_lambda.py 3 2 5 1 --sort --x_max 100 2>&1 | head -6)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && python3 test_lambda.py 2 1 3 2 --sort --x_max 100 2>&1 | head -6)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/python && python3 verify_paper.py)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX && pdflatex -interaction=nonstopmode conjecture_6.tex 2>&1 | tail -5)",
+      "Bash(pdflatex -interaction=nonstopmode conjecture_6.tex 2>&1 | tail -5)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project && python3 src/python/verify_paper.py)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project && python3 src/python/verify_paper.py tests/new_find_patterns_x_max_1000000_51012_lines.csv tests/degenerate_patterns_5000_lines.csv)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make clean && make perf 2>&1)",
+      "Bash(./cnp 2>&1)",
+      "Bash(kill 28661 2>/dev/null; wc -c /private/tmp/claude-501/-Users-dirk-Documents-knowHow-mathematics-cut-and-project-published-cut-and-project-tests/be15a470-5f38-4f6d-b861-b8043f9b212a/tasks/by26dbbnv.output)",
+      "Bash(make clean:*)"
     ]
   }
 }
