@@ -173,6 +173,8 @@ $(x, y) = k(\beta, \alpha)$ for $k \in \mathbb{Z}$.
 Then $\tilde{p} = \beta \cdot k\beta + \alpha \cdot k\alpha
 = k(\alpha^2+\beta^2)$, so all differences equal $\alpha^2+\beta^2$ and
 $\lambda = 1$.
+Note that the formula~\eqref{eq:formula} agrees: $N = 0 + 0 + 1 = 1$
+and $D = \alpha^2+\beta^2 \ge 2$, so $D \nmid 1$ and $\lambda = N = 1$.
 
 % =====================================================================
 \section{Main Result}\label{sec:mainresult}
@@ -180,7 +182,7 @@ $\lambda = 1$.
 
 \begin{theorem}[Period length formula]\label{thm:main}
 Let $\alpha, \beta \in \mathbb{N}$ with $\gcd(\alpha, \beta) = 1$ and let
-$\omega \in \mathbb{Q}_{> 0}$.  Define
+$\omega \in \mathbb{Q}_{\ge 0}$.  Define
 \begin{equation}\label{eq:ND}
     N \;:=\; \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1,
     \qquad
@@ -214,16 +216,15 @@ direction vector of~$f$.
 \begin{remark}[Computational verification]\label{rem:verification}
 The formula has been verified against:
 \begin{itemize}
-    \item 1{,}000 test cases from~\cite{Kunert2025} with large parameters
-          ($\alpha, \beta$ up to ${\sim}10{,}000$, $\omega$ up to
-          ${\sim}10$), all satisfying $N < D$;
-    \item 28{,}267 systematically generated cases with
-          $\alpha, \beta \le 14$ and rational $\omega$ up to $19$,
-          restricted to $N < D$;
-    \item 4{,}185 cases in the regime $N \ge D$
-          (with $\alpha \le 8$ and $N \le 4D$).
+    \item 51{,}012 test cases from~\cite{Kunert2025} with
+          $\alpha, \beta$ up to ${\sim}100{,}000$ and rational $\omega$
+          up to ${\sim}10$, all satisfying $D \nmid N$
+          (51{,}011 with $N < D$, one with $N \ge D$);
+    \item 450 deliberately constructed cases in the degenerate regime
+          $D \mid N$ (with $\alpha, \beta \le 10$ and $N$ up to
+          ${\sim}500$), verifying the $\lambda = N/D$ branch.
 \end{itemize}
-All cases produce exact matches with zero failures.
+All 51{,}462 cases produce exact matches with zero failures.
 \end{remark}
 
 % =====================================================================
@@ -377,6 +378,10 @@ $k := N/\lambda' > 1$.  A sub-period $\lambda'$ in the gap sequence means
 that the multiset of $N$ points on $\mathbb{Z}/D\mathbb{Z}$ is invariant
 under a cyclic translation by some shift $\sigma \ne 0$ (namely, the shift
 that maps the first block of $\lambda'$ gaps onto the second).
+Concretely, the sorted differences repeat every $\lambda'$ steps, so the
+residues of the $N$ points within each interval $[kD, (k+1)D)$ must be
+identical when partitioned into consecutive blocks of size~$\lambda'$;
+this forces $\mu(c) = \mu(c + \sigma)$ for all $c \in \mathbb{Z}/D\mathbb{Z}$.
 Such translational invariance of the multiplicity function $\mu$ requires
 $\mu$ to be periodic on the circle with period dividing $D/\gcd(k, D)$
 --- in particular, the pattern of jumps in $\mu$ would repeat $k' \ge 2$
@@ -479,7 +484,10 @@ $\lambda < \Lambda_{\alpha,\beta}$.
 $\lfloor\omega\alpha\rfloor \le \alpha - 1$ and
 $\lfloor\omega\beta\rfloor \le \beta - 1$, so
 $N \le \alpha + \beta - 1 < \Lambda_{\alpha,\beta}$.
-Since $N < D$ in this regime, $\lambda = N < \Lambda_{\alpha,\beta}$.
+Since $\alpha + \beta - 1 < \alpha^2 + \beta^2 = D$ for all
+$\alpha, \beta \ge 1$ (because $\alpha(\alpha-1) + \beta(\beta-1) \ge 0$),
+we have $N < D$, hence $D \nmid N$ and
+$\lambda = N < \Lambda_{\alpha,\beta}$.
 \end{proof}
 
 \begin{corollary}[$1 < \omega < 2$]\label{cor:medium_omega}
