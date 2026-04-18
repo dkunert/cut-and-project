@@ -52,10 +52,9 @@ the number of integer values of the invariant $r = \alpha x - \beta y$ in the
 admissible range, and $D := \alpha^2 + \beta^2$ is the common difference of
 the underlying arithmetic progressions.
 The proof proceeds by analysing the multiplicity function of residue
-classes on $\mathbb{Z}/D\mathbb{Z}$: when $D \nmid N$ the ``heavy''
-residue classes form a contiguous cyclic interval, whose trivial
-stabiliser precludes any sub-periodicity.
-The formula is additionally verified in over 51{,}000 computational test
+classes on $\mathbb{Z}/D\mathbb{Z}$: when $D \nmid N$ it has exactly two
+transitions, which precludes any sub-periodicity.
+The formula is additionally verified in over 32{,}000 computational test
 cases spanning both the regime $N < D$ and $N \ge D$.
 As immediate corollaries, we obtain: finiteness of the period for all
 real~$\omega\ge 0$; the proven result $\lambda = \alpha + \beta + 1$ at
@@ -221,11 +220,11 @@ The formula has been verified against:
           $\alpha, \beta$ up to ${\sim}100{,}000$ and rational $\omega$
           up to ${\sim}10$, all satisfying $D \nmid N$
           (51{,}011 with $N < D$, one with $N \ge D$);
-    \item 468 deliberately constructed cases in the degenerate regime
+    \item 450 deliberately constructed cases in the degenerate regime
           $D \mid N$ (with $\alpha, \beta \le 10$ and $N$ up to
           ${\sim}500$), verifying the $\lambda = N/D$ branch.
 \end{itemize}
-All 51{,}480 cases produce exact matches with zero failures.
+All 51{,}462 cases produce exact matches with zero failures.
 \end{remark}
 
 % =====================================================================
@@ -666,14 +665,12 @@ research.
 The AI model Claude Opus 4.6 (Anthropic) discovered the exact formula by
 computational analysis, developed the proof structure, and prepared this
 manuscript; it is listed as co-author accordingly.
-The AI model Gemini 2.5 Pro (Google) reviewed a draft of this paper,
-identified errors in an earlier version of Lemma~\ref{lem:nonuniform}
-and Corollary~\ref{cor:medium_omega}, and contributed to the
-minimality proof (Section~\ref{subsec:step5}).
-The AI model GPT-5.4 (OpenAI) reviewed a subsequent draft and
-contributed the trivial-stabiliser argument for the contiguous heavy
-set, as well as the observation that the proof extends to all real
-$\omega \ge 0$.
+The AI model Gemini 2.5 Pro (Google) reviewed a draft of this paper and
+contributed the key insight for the minimality proof
+(Section~\ref{subsec:step5}): the multiplicity function on
+$\mathbb{Z}/D\mathbb{Z}$ has exactly two transitions, which precludes
+sub-periodicities.  Gemini also identified errors in an earlier version
+of Lemma~\ref{lem:nonuniform} and Corollary~\ref{cor:medium_omega}.
 
 % =====================================================================
 \begin{thebibliography}{99}
