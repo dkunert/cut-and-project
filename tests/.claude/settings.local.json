@@ -27,7 +27,9 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make clean && make perf 2>&1)",
       "Bash(./cnp 2>&1)",
       "Bash(kill 28661 2>/dev/null; wc -c /private/tmp/claude-501/-Users-dirk-Documents-knowHow-mathematics-cut-and-project-published-cut-and-project-tests/be15a470-5f38-4f6d-b861-b8043f9b212a/tasks/by26dbbnv.output)",
-      "Bash(make clean:*)"
+      "Bash(make clean:*)",
+      "Bash(find /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/ -name \"*.lean\" -newer /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/test.lean 2>/dev/null | sort)",
+      "Bash(git -C /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project log --oneline -5 -- LEAN/)"
     ]
   }
 }
