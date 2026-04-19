@@ -51,8 +51,13 @@ def residue_bijection (α β : ℕ) (h : Nat.Coprime α β) [NeZero (α^2 + β^2
     dsimp
     rw [← mul_assoc, Units.mul_inv, one_mul]
 
+section ResidueDistribution
+
 /--
 Lemma 4.3: Non-uniform residue distribution.
+
+`count_hits D r0 N x` counts the number of times the residue `x` (modulo `D`) is hit
+by the arithmetic progression `r0, r0+1, ..., r0+N-1` of length `N`.
 -/
 def count_hits (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) : ℕ :=
   (Finset.range N).filter (fun (i : ℕ) => (r0 + i : ZMod D) = x) |>.card
@@ -197,6 +202,8 @@ theorem non_uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
       rw [heq x]
       omega
     rw [h_eq_set0, h_card0]
+
+end ResidueDistribution
 
 /--
 Definition of a sequence having a period L.
