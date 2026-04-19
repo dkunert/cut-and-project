@@ -115,7 +115,7 @@ theorem non_uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
   have h_card0 : (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card = D - s := by
     have h_union : Finset.univ = Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0) ∪ Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1) := by
       ext x
-      simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_filter, true_and]
+      simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_filter, true_and, true_iff]
       have h2 := hc_le x
       omega
     have h_disj : Disjoint (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)) (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)) := by

@@ -92,6 +92,12 @@ lemma count_hits_lt_D (D : ℕ) [NeZero D] (r0 N : ℕ) (h : N < D) (x : ZMod D)
   have hj_lt : j < D := lt_trans hj.1 h
   have h_mod : i ≡ j [MOD D] := (ZMod.natCast_eq_natCast_iff i j D).mp h_eq2
   exact Nat.ModEq.eq_of_lt_of_lt h_mod hi_lt hj_lt
+lemma sum_count_hits (D : ℕ) [NeZero D] (r0 N : ℕ) :
+    ∑ x : ZMod D, count_hits D r0 N x = N := by
+  dsimp [count_hits]
+  have h := @Finset.card_eq_sum_card_fiberwise ℕ (ZMod D) _ (fun i => (r0 + i : ZMod D)) (Finset.range N) Finset.univ (fun x _ => Finset.mem_univ _)
+  rw [← h]
+  exact Finset.card_range N
 
 lemma count_hits_succ (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) : 
     count_hits D r0 (N + 1) x = count_hits D r0 N x + if (r0 + N : ZMod D) = x then 1 else 0 := by
@@ -131,7 +137,66 @@ theorem non_uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
     let s := N % D
     (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q + 1)).card = s ∧
     (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q)).card = D - s := by
-  sorry
+  intro q s
+  have h_s_lt : s < D := Nat.mod_lt N (NeZero.pos D)
+  have hc_le : ∀ x, count_hits D (r0 + q * D) s x ≤ 1 := fun x => count_hits_lt_D D (r0 + q * D) s h_s_lt x
+  have h_sum : ∑ x : ZMod D, count_hits D (r0 + q * D) s x = s := sum_count_hits D (r0 + q * D) s
+  have heq : ∀ x, count_hits D r0 N x = q + count_hits D (r0 + q * D) s x := fun x => count_hits_eq D r0 N x
+  
+  have h_card1 : (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)).card = s := by
+    calc (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)).card
+      _ = ∑ x ∈ Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1), 1 := by
+        symm
+        exact Finset.sum_const_nat (fun _ _ => rfl) |>.trans (mul_one _)
+      _ = ∑ x ∈ Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1), count_hits D (r0 + q * D) s x := by
+        apply Finset.sum_congr rfl
+        intro x hx
+        rw [Finset.mem_filter] at hx
+        rw [hx.2]
+      _ = ∑ x ∈ Finset.univ, count_hits D (r0 + q * D) s x := by
+        apply Finset.sum_subset
+        · exact Finset.filter_subset _ _
+        · intro x _ hx
+          rw [Finset.mem_filter, not_and] at hx
+          have h1 := hx (Finset.mem_univ x)
+          have h2 := hc_le x
+          omega
+      _ = s := h_sum
+
+  have h_card0 : (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card = D - s := by
+    have h_union : Finset.univ = Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0) ∪ Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1) := by
+      ext x
+      simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_filter, true_and, true_iff]
+      have h2 := hc_le x
+      omega
+    have h_disj : Disjoint (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)) (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)) := by
+      simp only [Finset.disjoint_filter]
+      intro x _ h0 h1
+      omega
+    have h_card_univ := Finset.card_union_of_disjoint h_disj
+    rw [← h_union] at h_card_univ
+    have hd : (Finset.univ : Finset (ZMod D)).card = D := ZMod.card D
+    have h_eq_card : D = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card + s := by
+      calc D = (Finset.univ : Finset (ZMod D)).card := hd.symm
+           _ = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card + (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)).card := h_card_univ
+           _ = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card + s := by rw [h_card1]
+    calc (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card
+      _ = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card + s - s := by rw [Nat.add_sub_cancel]
+      _ = D - s := by rw [← h_eq_card]
+
+  constructor
+  · have h_eq_set1 : (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q + 1)) = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)) := by
+      ext x
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [heq x]
+      omega
+    rw [h_eq_set1, h_card1]
+  · have h_eq_set0 : (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q)) = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)) := by
+      ext x
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [heq x]
+      omega
+    rw [h_eq_set0, h_card0]
 
 /--
 Definition of a sequence having a period L.
