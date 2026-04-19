@@ -1,0 +1,146 @@
+✖ [8248/8250] Building CutAndProject.Basic (8.0s)
+trace: .> LEAN_PATH=/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/Cli/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/batteries/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/Qq/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/aesop/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/importGraph/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/plausible/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/packages/mathlib/.lake/build/lib/lean:/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/build/lib/lean /Users/dirk/.elan/toolchains/leanprover--lean4---v4.29.1/bin/lean /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/CutAndProject/Basic.lean -o /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/build/lib/lean/CutAndProject/Basic.olean -i /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/build/lib/lean/CutAndProject/Basic.ilean -c /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/build/ir/CutAndProject/Basic.c --setup /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/.lake/build/ir/CutAndProject/Basic.setup.json --json
+warning: CutAndProject/Basic.lean:34:56: missing space in the source
+
+This part of the code
+  '(α^2 + β^2)]'
+should be written as
+  '(α ^ 2'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:34:62: missing space in the source
+
+This part of the code
+  'β^2)] :'
+should be written as
+  'β ^ 2)]'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:37:57: missing space in the source
+
+This part of the code
+  '(α^2 + β^2)]'
+should be written as
+  '(α ^ 2'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:37:63: missing space in the source
+
+This part of the code
+  'β^2)] :'
+should be written as
+  'β ^ 2)]'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:40:57: missing space in the source
+
+This part of the code
+  '(α^2 + β^2)]'
+should be written as
+  '(α ^ 2'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:40:63: missing space in the source
+
+This part of the code
+  'β^2)] :'
+should be written as
+  'β ^ 2)]'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:43:64: missing space in the source
+
+This part of the code
+  '(α^2 + β^2)]'
+should be written as
+  '(α ^ 2'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: CutAndProject/Basic.lean:43:70: missing space in the source
+
+This part of the code
+  'β^2)] :'
+should be written as
+  'β ^ 2)]'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+error: CutAndProject/Basic.lean:56:2: unexpected token 'section'; expected 'lemma'
+warning: CutAndProject/Basic.lean:69:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:84:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:104:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:119:2: The `induction'` tactic is discouraged: please strongly consider using `induction` instead.
+
+Note: This linter can be disabled with `set_option linter.style.induction false`
+warning: CutAndProject/Basic.lean:130:2: The `induction'` tactic is discouraged: please strongly consider using `induction` instead.
+
+Note: This linter can be disabled with `set_option linter.style.induction false`
+warning: CutAndProject/Basic.lean:171:0: Please, write a comment here or remove this line, but do not place empty lines within commands!
+Context:
+                       ↓
+  ⏎      _ = s := h_sum⏎⏎  have h_card0 : (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card = D - s := by⏎
+
+Note: This linter can be disabled with `set_option linter.style.emptyLine false`
+warning: CutAndProject/Basic.lean:192:0: Please, write a comment here or remove this line, but do not place empty lines within commands!
+Context:
+                                         ↓
+  ⏎      _ = D - s := by rw [← h_eq_card]⏎⏎  constructor⏎
+
+Note: This linter can be disabled with `set_option linter.style.emptyLine false`
+warning: CutAndProject/Basic.lean:148:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:150:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:152:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:157:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:172:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:173:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:178:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:185:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:187:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:188:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:190:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:194:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:200:100: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+warning: CutAndProject/Basic.lean:228:8: declaration uses `sorry`
+error: Lean exited with code 1
+Some required targets logged failures:
+- CutAndProject.Basic
+error: build failed
