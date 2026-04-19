@@ -3,6 +3,16 @@ import Mathlib
 
 open Nat CutAndProject Minimality
 
+class GeometricProjection (α β : ℕ) (ω : ℝ) (s : ℤ → ℤ) where
+  N_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  period_N : IsPeriod s (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  period_degenerate : let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat; let D := α^2 + β^2;
+    D ∣ N → HasPeriodLength s (N / D)
+  sigma_of_period : let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat; let D := α^2 + β^2;
+    ∀ L > 0, IsPeriod s L →
+    ∃ σ : ℕ, σ * N = L * D ∧ 
+    ∃ r0 : ℕ, ∀ x : ZMod D, count_hits D r0 N (x + (σ : ZMod D)) = count_hits D r0 N x
+
 lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [GeometricProjection α β ω seq]
     (h_D_pos : 0 < α^2 + β^2) :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
@@ -16,7 +26,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [Geometric
   let q := N / D
   let s := N % D
   have h_s_pos : 0 < s := Nat.pos_of_ne_zero (fun h => hdvd (Nat.dvd_of_mod_eq_zero h))
-  have h_s_lt : s < D := Nat.mod_lt N (NeZero.pos D (neZero := hD))
+  have h_s_lt : s < D := Nat.mod_lt N (@NeZero.pos D hD)
   
   have h_heavy_eq : ∀ x : ZMod D, count_hits D r0 N x = q + 1 ↔ x ∈ @cyclic_interval D s hD ((r0 + q * D : ℕ) : ZMod D) := 
     @heavy_set_is_cyclic_interval D hD r0 N
@@ -38,7 +48,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [Geometric
   have h_eq2 : k * N * D = L * D := by
     calc k * N * D = k * D * N := by ring
          _ = L * D := h_eq
-  have h_eq3 : k * N = L := mul_right_cancel₀ (NeZero.ne D (neZero := hD)) h_eq2
+  have h_eq3 : k * N = L := mul_right_cancel₀ (@NeZero.ne D hD) h_eq2
   
   have h_k_pos : 0 < k := by
     by_contra h_k

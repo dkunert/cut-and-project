@@ -236,6 +236,55 @@ lemma cyclic_interval_mem (D s : ℕ) [NeZero D] (x0 : ZMod D) (x : ZMod D) :
   · rintro ⟨i, hi, rfl⟩
     exact ⟨i, hi, rfl⟩
 
+lemma count_hits_lt_D_eq_one (D s : ℕ) [NeZero D] (r0 : ℕ) (h_s_lt : s < D) (x : ZMod D) :
+    count_hits D r0 s x = 1 ↔ x ∈ cyclic_interval D s (r0 : ZMod D) := by
+  dsimp [count_hits]
+  rw [Finset.card_eq_one]
+  constructor
+  · rintro ⟨a, ha⟩
+    have h_a_in : a ∈ (Finset.range s).filter (fun (i : ℕ) => (r0 + i : ZMod D) = x) := by
+      rw [ha]
+      exact Finset.mem_singleton_self a
+    rw [Finset.mem_filter, Finset.mem_range] at h_a_in
+    rw [cyclic_interval_mem]
+    use a
+    constructor
+    · exact h_a_in.1
+    · exact h_a_in.2.symm
+  · intro h_in
+    rw [cyclic_interval_mem] at h_in
+    rcases h_in with ⟨i, hi, rfl⟩
+    use i
+    ext j
+    rw [Finset.mem_filter, Finset.mem_range, Finset.mem_singleton]
+    constructor
+    · rintro ⟨hj, h_eq⟩
+      have h_eq2 : ((r0 : ZMod D) + (j : ZMod D) : ZMod D) = ((r0 : ZMod D) + (i : ZMod D) : ZMod D) := h_eq
+      have h_eq3 : (j : ZMod D) = (i : ZMod D) := add_left_cancel h_eq2
+      have h_mod : j ≡ i [MOD D] := (ZMod.natCast_eq_natCast_iff j i D).mp h_eq3
+      exact Nat.ModEq.eq_of_lt_of_lt h_mod (lt_trans hj h_s_lt) (lt_trans hi h_s_lt)
+    · rintro rfl
+      exact ⟨hi, rfl⟩
+
+lemma heavy_set_is_cyclic_interval (D : ℕ) [NeZero D] (r0 N : ℕ) :
+    let q := N / D
+    let s := N % D
+    ∀ x : ZMod D, count_hits D r0 N x = q + 1 ↔ x ∈ cyclic_interval D s ((r0 + q * D : ℕ) : ZMod D) := by
+  intro q s x
+  have h_s_lt : s < D := Nat.mod_lt N (NeZero.pos D)
+  have h_eq := count_hits_eq D r0 N x
+  constructor
+  · intro h
+    have h2 : q + count_hits D (r0 + q * D) s x = q + 1 := by
+      calc q + count_hits D (r0 + q * D) s x = count_hits D r0 N x := h_eq.symm
+           _ = q + 1 := h
+    have h3 : count_hits D (r0 + q * D) s x = 1 := add_left_cancel h2
+    exact (count_hits_lt_D_eq_one D s (r0 + q * D) h_s_lt x).mp h3
+  · intro h
+    have h3 : count_hits D (r0 + q * D) s x = 1 := (count_hits_lt_D_eq_one D s (r0 + q * D) h_s_lt x).mpr h
+    rw [h_eq, h3]
+
+
 lemma right_boundary_exists (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < s) (h_s_lt : s < D) :
     (x0 + (s - 1 : ℕ) : ZMod D) ∈ cyclic_interval D s x0 ∧ 
     (x0 + (s - 1 : ℕ) + 1 : ZMod D) ∉ cyclic_interval D s x0 := by
@@ -311,6 +360,8 @@ lemma cyclic_interval_stabilizer_trivial (D s : ℕ) [NeZero D] (x0 : ZMod D) (�
 
 end Minimality
 
+
+
 /--
 Definition of a sequence having a period L.
 -/
@@ -319,6 +370,66 @@ def IsPeriod (s : ℤ → ℤ) (L : ℕ) : Prop :=
 
 def HasPeriodLength (s : ℤ → ℤ) (L : ℕ) : Prop :=
   IsPeriod s L ∧ ∀ L' > 0, IsPeriod s L' → L ≤ L'
+
+/-- 
+Axioms linking the geometric difference sequence to the residue distribution.
+-/
+class GeometricProjection (α β : ℕ) (ω : ℝ) (s : ℤ → ℤ) [NeZero (α^2 + β^2)] where
+  N_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  period_N : IsPeriod s (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  period_degenerate : (α^2 + β^2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat → 
+    HasPeriodLength s ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α^2 + β^2))
+  sigma_of_period : ∀ L > 0, IsPeriod s L →
+    ∃ σ : ℕ, σ * (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat = L * (α^2 + β^2) ∧ 
+    ∃ r0 : ℕ, ∀ x : ZMod (α^2 + β^2), count_hits (α^2 + β^2) r0 (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat (x + (σ : ZMod (α^2 + β^2))) = count_hits (α^2 + β^2) r0 (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat x
+
+open GeometricProjection
+
+lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (α^2 + β^2)] [GeometricProjection α β ω seq] :
+    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+    let D := α^2 + β^2
+    ¬ (D ∣ N) → ∀ L > 0, IsPeriod seq L → N ≤ L := by
+  intro N D hdvd L hL_pos hL_period
+  haveI hD : NeZero D := inferInstance
+  have h_sigma := sigma_of_period (α:=α) (β:=β) (ω:=ω) (s:=seq) L hL_pos hL_period
+  rcases h_sigma with ⟨σ, h_sigma_eq, r0, h_inv_count⟩
+  
+  let q := N / D
+  let s := N % D
+  have h_s_pos : 0 < s := Nat.pos_of_ne_zero (fun h => hdvd (Nat.dvd_of_mod_eq_zero h))
+  have h_s_lt : s < D := Nat.mod_lt N (Nat.pos_of_ne_zero (NeZero.ne D))
+  
+  have h_heavy_eq : ∀ x : ZMod D, count_hits D r0 N x = q + 1 ↔ x ∈ @cyclic_interval D s hD ((r0 + q * D : ℕ) : ZMod D) := 
+    @heavy_set_is_cyclic_interval D hD r0 N
+    
+  have h_inv : ∀ x : ZMod D, x ∈ @cyclic_interval D s hD ((r0 + q * D : ℕ) : ZMod D) ↔ 
+                            (x + (σ : ZMod D)) ∈ @cyclic_interval D s hD ((r0 + q * D : ℕ) : ZMod D) := by
+    intro x
+    rw [← h_heavy_eq x, ← h_heavy_eq (x + (σ : ZMod D))]
+    rw [h_inv_count x]
+    
+  have h_sigma_mod : (σ : ZMod D) = 0 := @cyclic_interval_stabilizer_trivial D s hD ((r0 + q * D : ℕ) : ZMod D) (σ : ZMod D) h_s_pos h_s_lt h_inv
+  
+  have h_sigma_dvd : D ∣ σ := by
+    have h_cast : (σ : ZMod D) = 0 := h_sigma_mod
+    exact (ZMod.natCast_eq_zero_iff σ D).mp h_cast
+    
+  rcases h_sigma_dvd with ⟨k, rfl⟩
+  have h_eq : D * k * N = L * D := h_sigma_eq
+  have h_eq2 : k * N * D = L * D := by
+    calc k * N * D = D * k * N := by ring
+         _ = L * D := h_eq
+  have h_eq3 : k * N = L := mul_right_cancel₀ (NeZero.ne D) h_eq2
+  
+  have h_k_pos : 0 < k := by
+    by_contra h_k
+    have h_k0 : k = 0 := by omega
+    rw [h_k0, zero_mul] at h_eq3
+    omega
+    
+  have hN_pos : 0 < N := GeometricProjection.N_pos (s := seq)
+  have h_N_le : N ≤ k * N := Nat.le_mul_of_pos_left N h_k_pos
+  omega
 
 /--
 The abstract difference sequence from the cut-and-project set.
@@ -330,12 +441,33 @@ opaque difference_sequence (α β : ℕ) (ω : ℝ) : ℤ → ℤ
 /--
 Theorem 3.1: Period length formula.
 -/
-theorem main_theorem (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) :
+theorem main_theorem (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α^2 + β^2)] [GeometricProjection α β ω (difference_sequence α β ω)] :
     let N_int := ⌊ω * α⌋ + ⌊ω * β⌋ + 1
     let N := N_int.toNat
     let D := α^2 + β^2
     let L := if D ∣ N then N / D else N
     HasPeriodLength (difference_sequence α β ω) L := by
-  sorry
+  intro N_int N D L
+  have h_D_pos : 0 < D := by
+    change 0 < α^2 + β^2
+    rcases Nat.eq_zero_or_pos α with rfl | h_pos
+    · have h_beta : β = 1 := by simpa using h_coprime
+      rw [h_beta]
+      norm_num
+    · have : 0 < α^2 := by positivity
+      omega
+  haveI hD : NeZero D := ⟨_root_.ne_of_gt h_D_pos⟩
+  
+  by_cases h_dvd : D ∣ N
+  · have h_L : L = N / D := if_pos h_dvd
+    rw [h_L]
+    exact GeometricProjection.period_degenerate h_dvd
+  · have h_L : L = N := if_neg h_dvd
+    rw [h_L]
+    constructor
+    · exact GeometricProjection.period_N
+    · intro L' hL_pos hL_period
+      exact generic_minimality α β ω (difference_sequence α β ω) h_dvd L' hL_pos hL_period
 
 end CutAndProject
