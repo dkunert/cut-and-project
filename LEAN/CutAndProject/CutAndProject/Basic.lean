@@ -736,6 +736,50 @@ lemma count_hits_eq_sorted_count (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 /--
 count_hits invariance under the sorted_multiset shift σ.
 -/
+private lemma mod_add_inj (N L j₁ j₂ : ℕ) (hN : 0 < N)
+    (hj₁ : j₁ < N) (hj₂ : j₂ < N)
+    (h : (j₁ + L) % N = (j₂ + L) % N) : j₁ = j₂ := by
+  have hLN := Nat.mod_lt L hN
+  have ha := Nat.add_mod j₁ L N
+  have hb := Nat.add_mod j₂ L N
+  rw [Nat.mod_eq_of_lt hj₁] at ha
+  rw [Nat.mod_eq_of_lt hj₂] at hb
+  rw [ha, hb] at h
+  -- h : (j₁ + L % N) % N = (j₂ + L % N) % N
+  -- In each case, reduce (x + L%N) % N in h and conclude with omega
+  have reduce : ∀ x, x < N → x + L % N ≥ N →
+      (x + L % N) % N = x + L % N - N := by
+    intro x hx hge
+    have h_lt : x + L % N - N < N := by omega
+    have h_eq : x + L % N = N + (x + L % N - N) := by omega
+    conv_lhs => rw [h_eq]
+    rw [Nat.add_mod_left, Nat.mod_eq_of_lt h_lt]
+  rcases Nat.lt_or_ge (j₁ + L % N) N with h1 | h1 <;>
+    rcases Nat.lt_or_ge (j₂ + L % N) N with h2 | h2
+  · rw [Nat.mod_eq_of_lt h1, Nat.mod_eq_of_lt h2] at h; omega
+  · rw [Nat.mod_eq_of_lt h1, reduce j₂ hj₂ h2] at h; omega
+  · rw [reduce j₁ hj₁ h1, Nat.mod_eq_of_lt h2] at h; omega
+  · rw [reduce j₁ hj₁ h1, reduce j₂ hj₂ h2] at h; omega
+
+private lemma mod_add_inv (N L k : ℕ) (hN : 0 < N) (hk : k < N) :
+    ((k + N - L % N) % N + L) % N = k := by
+  have hLN := Nat.mod_lt L hN
+  -- Step 1: (a%N + L) % N = (a + L) % N for a = k + N - L%N
+  have step1 : ((k + N - L % N) % N + L) % N =
+      (k + N - L % N + L) % N := by
+    set a := k + N - L % N
+    conv_rhs => rw [show a = a % N + N * (a / N) from (Nat.mod_add_div a N).symm]
+    rw [show a % N + N * (a / N) + L = a % N + L + N * (a / N) from by ring]
+    rw [Nat.add_mul_mod_self_left]
+  -- Step 2: (k + N - L%N + L) % N = k
+  have step2 : k + N - L % N + L = k + (1 + L / N) * N := by
+    have h_le : L % N ≤ k + N := by omega
+    have h_decomp : L = N * (L / N) + L % N := (Nat.div_add_mod L N).symm
+    have h1 : k + N - L % N + L = k + N + N * (L / N) := by omega
+    rw [h1]; ring
+  rw [step1, step2, show k + (1 + L / N) * N = k + N * (1 + L / N) from by ring,
+      Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hk]
+
 lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     [NeZero (α ^ 2 + β ^ 2)]
     (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence α β ω) L) :
@@ -769,13 +813,7 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     intro j₁ hj₁ j₂ hj₂ h_eq
     have hj₁' := Finset.mem_range.mp (Finset.mem_filter.mp hj₁).1
     have hj₂' := Finset.mem_range.mp (Finset.mem_filter.mp hj₂).1
-    -- (j₁ + L) % N = (j₂ + L) % N with j₁, j₂ < N implies j₁ = j₂
-    have h3 : (j₁ + L) % N = (j₁ % N + L % N) % N := Nat.add_mod j₁ L N
-    have h4 : (j₂ + L) % N = (j₂ % N + L % N) % N := Nat.add_mod j₂ L N
-    rw [Nat.mod_eq_of_lt hj₁'] at h3
-    rw [Nat.mod_eq_of_lt hj₂'] at h4
-    rw [h3, h4] at h_eq
-    omega
+    exact mod_add_inj N L j₁ j₂ hN hj₁' hj₂' h_eq
   · -- π surjective onto the (x+σ)-filter
     intro k hk
     have hkf := Finset.mem_filter.mp hk
@@ -788,7 +826,8 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
       -- sorted_residue_shift at preimage:
       -- sorted_multiset(((k+N-L%N)%N + L) % N) = sorted_multiset((k+N-L%N)%N) + σ
       -- And ((k+N-L%N)%N + L) % N = k
-      have h_inv : ((k + N - L % N) % N + L) % N = k := by omega
+      have h_inv : ((k + N - L % N) % N + L) % N = k :=
+        mod_add_inv N L k hN hk_range
       have h_shift := sorted_residue_shift α β ω h_ω L hL
           ((k + N - L % N) % N)
       simp only at h_shift; rw [h_inv] at h_shift
@@ -801,7 +840,7 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
         rw [← h_shift, hkf.2, h_σ_cast]
       exact add_right_cancel h_eq
     · -- ((k + N - L%N) % N + L) % N = k
-      omega
+      exact mod_add_inv N L k hN hk_range
 
 lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
