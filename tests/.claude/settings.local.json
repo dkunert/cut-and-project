@@ -80,7 +80,25 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A25 \"778:22\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -c \"sorry\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"742:41\")",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"809:20\")"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"809:20\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -v \"^$\" | grep -v \"^warning.*linter\" | grep -v \"^$\" | grep -v \"Note:\" | grep -v \"^Shell\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A8 \"723:53\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A3 \"723:53\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -B1 -A15 \"723:53\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A5 \"797:8\\\\|828:39\\\\|845:10\\\\|860:19\\\\|889:54\" | head -60)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A5 \"753:48\\\\|827:39\\\\|881:54\" | head -40)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"881:54\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A20 \"881:54\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && grep -r \"card_Ico\\\\|Ico_card\" .lake/packages/mathlib/Mathlib/Order/LocallyFiniteOrder.lean 2>/dev/null | head -5; grep -r \"theorem.*card_Ico\" .lake/packages/mathlib/Mathlib/ 2>/dev/null | grep \"Nat\" | head -5)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"808:6\\\\|862:2\\\\|864:32\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"868:33\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"866:2\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"error\\\\|sorry\\\\|unsolved\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 20 \"unsolved goals\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 15 \"unsolved goals\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -B2 -A15 \"declaration.*sorry\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 30 \"trace_state\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 30 \"case inl\")"
     ]
   }
 }
