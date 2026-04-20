@@ -54,7 +54,13 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"error\" | head -20)",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A25 \"611:17\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"error\" | head -10)",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"sorry\")"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"sorry\")",
+      "Read(//Users/dirk/.elan/toolchains/**)",
+      "Bash(lake env:*)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"732:7\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"732:7\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -B2 -A20 \"760:2\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"772:4\")"
     ]
   }
 }

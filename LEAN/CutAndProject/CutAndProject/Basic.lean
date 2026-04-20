@@ -639,27 +639,169 @@ Helper: the shift σ is nonneg (sorted_multiset is non-decreasing).
 lemma shift_nonneg (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
     (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence α β ω) L) :
     0 ≤ sorted_multiset α β ω ↑L - sorted_multiset α β ω 0 := by
-  -- σ = N * σ / N = L * D / N ≥ 0 since L, D, N > 0.
-  -- Alternatively: sorted_multiset is non-decreasing and L ≥ 1, so sorted(L) ≥ sorted(0).
-  -- We prove this using shift_times_N_eq: N * σ = L * D ≥ 0, and N > 0, so σ ≥ 0.
+  -- N * σ = L * D with L, D, N > 0, so σ ≥ 0.
+  set σ := sorted_multiset α β ω ↑L - sorted_multiset α β ω 0
+  have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
+    exact_mod_cast N_pos_concrete α β ω h_ω
+  have h_eq : ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat * σ =
+      ↑L * ↑(α ^ 2 + β ^ 2) :=
+    shift_times_N_eq α β ω h_ω L hL
+  have h_rhs : 0 ≤ ↑L * ↑(α ^ 2 + β ^ 2) := by positivity
+  nlinarith
+
+set_option maxHeartbeats 400000 in
+/--
+Generalization of sorted_multiset_add_N to multiple N-steps:
+sorted_multiset(i + m*N) = sorted_multiset(i) + m*D.
+-/
+lemma sorted_multiset_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) (m : ℕ) :
+    sorted_multiset α β ω (i + ↑m * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
+      sorted_multiset α β ω i + ↑m * ↑(α ^ 2 + β ^ 2) := by
+  induction m with
+  | zero => simp
+  | succ k ih =>
+    have ha : sorted_multiset α β ω
+        (i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat +
+          ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
+        sorted_multiset α β ω
+          (i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) +
+          ↑(α ^ 2 + β ^ 2) :=
+      sorted_multiset_add_N α β ω h_ω _
+    have h_eq : i + ↑(k + 1) * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat =
+        i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat +
+        ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by push_cast; ring
+    rw [h_eq, ha, ih]; push_cast; ring
+
+set_option maxHeartbeats 400000 in
+/--
+sorted_multiset mod D depends only on the index mod N.
+-/
+lemma sorted_multiset_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (k L : ℕ) :
+    (sorted_multiset α β ω ↑(k + L) : ZMod (α ^ 2 + β ^ 2)) =
+    (sorted_multiset α β ω ↑((k + L) %
+      (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+      ZMod (α ^ 2 + β ^ 2)) := by
+  set N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+  set D := α ^ 2 + β ^ 2
+  have hN := N_pos_concrete α β ω h_ω
+  have h_decomp : (↑(k + L) : ℤ) =
+      ↑((k + L) % N) + ↑((k + L) / N) * ↑N := by
+    have := Nat.div_add_mod (k + L) N
+    push_cast; linarith
+  conv_lhs => rw [h_decomp]
+  rw [sorted_multiset_add_mul_N α β ω h_ω _ ((k + L) / N)]
+  simp only [Int.cast_add, Int.cast_mul, Int.cast_natCast]
+  have : (↑D : ZMod D) = 0 := ZMod.natCast_self D
+  rw [this, mul_zero, add_zero]
+
+/--
+Key residue shift: sorted_multiset((j+L)%N) ≡ sorted_multiset(j) + σ (mod D).
+-/
+lemma sorted_residue_shift (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)]
+    (L : ℕ) (hL : IsPeriod (difference_sequence α β ω) L) (j : ℕ) :
+    let D := α ^ 2 + β ^ 2
+    let σ_ℤ := sorted_multiset α β ω ↑L - sorted_multiset α β ω 0
+    (sorted_multiset α β ω ↑((j + L) %
+      (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) : ZMod D) =
+    (sorted_multiset α β ω ↑j : ZMod D) + (σ_ℤ : ZMod D) := by
+  intro D σ_ℤ
+  have h1 := sorted_multiset_mod_D_eq α β ω h_ω j L
+  have h2 : sorted_multiset α β ω (↑j + ↑L) =
+      sorted_multiset α β ω ↑j + σ_ℤ := by
+    have := sorted_shift_constant α β ω L hL ↑j; linarith
+  have h3 : (↑(j + L) : ℤ) = ↑j + ↑L := by push_cast; ring
+  rw [← h1, h3]; simp only [h2, Int.cast_add]
+
+/--
+Bridge lemma: count_hits via the arithmetic progression equals
+counting sorted_multiset residues over one period.
+
+V is the quantile function (inverse CDF) of cumulative_hits.
+The number of k ∈ [0,N) with V(k) = v equals count_hits(v).
+Since sorted_multiset(k) = V(k) for k ∈ [0,N), the residue counts agree.
+-/
+lemma count_hits_eq_sorted_count (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    ∀ x : ZMod D, count_hits D r0 N x =
+      ((Finset.range N).filter
+        (fun (k : ℕ) => (sorted_multiset α β ω (↑k : ℤ) : ZMod D) = x)).card := by
   sorry
 
 /--
-Helper: count_hits invariance under the sorted_multiset shift.
-
-Proof idea: The multiset {V(k) mod D : k ∈ [0,N)} of residues is invariant
-under +σ because a shifted window [L, L+N) of sorted_multiset values
-contains the same residues mod D as [0, N), while also being the
-+σ translate of the original window.
+count_hits invariance under the sorted_multiset shift σ.
 -/
-lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)]
     (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence α β ω) L) :
     let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
     let D := α ^ 2 + β ^ 2
     let σ := (sorted_multiset α β ω ↑L - sorted_multiset α β ω 0).toNat
     let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
     ∀ x : ZMod D, count_hits D r0 N (x + ↑σ) = count_hits D r0 N x := by
-  sorry
+  intro N D σ r0 x
+  have hN := N_pos_concrete α β ω h_ω
+  set σ_ℤ := sorted_multiset α β ω ↑L - sorted_multiset α β ω 0
+    with hσ_def
+  have h_nn : 0 ≤ σ_ℤ := shift_nonneg α β ω h_ω L hL_pos hL
+  have h_σ_cast : (↑σ : ZMod D) = (σ_ℤ : ZMod D) := by
+    have h_eq : (σ_ℤ.toNat : ℤ) = σ_ℤ := Int.toNat_of_nonneg h_nn
+    have : (↑σ : ZMod D) = ((σ_ℤ.toNat : ℤ) : ZMod D) := by push_cast; rfl
+    rw [this, h_eq]
+  rw [count_hits_eq_sorted_count α β ω h_ω x,
+      count_hits_eq_sorted_count α β ω h_ω (x + ↑σ)]
+  -- Goal: (x+σ)-filter.card = x-filter.card
+  -- Flip to x-filter.card = (x+σ)-filter.card, then use π(j) = (j+L)%N
+  symm
+  apply Finset.card_bij (fun (j : ℕ) (_ : j ∈ _) => (j + L) % N)
+  · -- π(j) maps x-filter into (x+σ)-filter
+    intro j hj
+    have hjf := Finset.mem_filter.mp hj
+    apply Finset.mem_filter.mpr
+    refine ⟨Finset.mem_range.mpr (Nat.mod_lt _ hN), ?_⟩
+    rw [sorted_residue_shift α β ω h_ω L hL j, hjf.2, h_σ_cast]
+  · -- π injective on the x-filter
+    intro j₁ hj₁ j₂ hj₂ h_eq
+    have hj₁' := Finset.mem_range.mp (Finset.mem_filter.mp hj₁).1
+    have hj₂' := Finset.mem_range.mp (Finset.mem_filter.mp hj₂).1
+    -- (j₁ + L) % N = (j₂ + L) % N with j₁, j₂ < N implies j₁ = j₂
+    have h3 : (j₁ + L) % N = (j₁ % N + L % N) % N := Nat.add_mod j₁ L N
+    have h4 : (j₂ + L) % N = (j₂ % N + L % N) % N := Nat.add_mod j₂ L N
+    rw [Nat.mod_eq_of_lt hj₁'] at h3
+    rw [Nat.mod_eq_of_lt hj₂'] at h4
+    rw [h3, h4] at h_eq
+    omega
+  · -- π surjective onto the (x+σ)-filter
+    intro k hk
+    have hkf := Finset.mem_filter.mp hk
+    have hk_range := Finset.mem_range.mp hkf.1
+    -- Inverse: j = (k + N - L % N) % N
+    refine ⟨(k + N - L % N) % N, ?_, ?_⟩
+    · -- preimage is in the x-filter
+      apply Finset.mem_filter.mpr
+      refine ⟨Finset.mem_range.mpr (Nat.mod_lt _ hN), ?_⟩
+      -- sorted_residue_shift at preimage:
+      -- sorted_multiset(((k+N-L%N)%N + L) % N) = sorted_multiset((k+N-L%N)%N) + σ
+      -- And ((k+N-L%N)%N + L) % N = k
+      have h_inv : ((k + N - L % N) % N + L) % N = k := by omega
+      have h_shift := sorted_residue_shift α β ω h_ω L hL
+          ((k + N - L % N) % N)
+      simp only at h_shift; rw [h_inv] at h_shift
+      -- h_shift: sorted(k) = sorted(preimage) + σ_ℤ in ZMod D
+      -- hkf.2: sorted(k) = x + σ in ZMod D
+      -- So sorted(preimage) + σ_ℤ = x + σ_ℤ, hence sorted(preimage) = x
+      have h_eq : (sorted_multiset α β ω
+          ↑((k + N - L % N) % N) : ZMod D) +
+          (σ_ℤ : ZMod D) = x + (σ_ℤ : ZMod D) := by
+        rw [← h_shift, hkf.2, h_σ_cast]
+      exact add_right_cancel h_eq
+    · -- ((k + N - L%N) % N + L) % N = k
+      omega
 
 lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
