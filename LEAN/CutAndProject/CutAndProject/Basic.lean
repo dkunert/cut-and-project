@@ -371,7 +371,7 @@ def IsPeriod (s : ℤ → ℤ) (L : ℕ) : Prop :=
 def HasPeriodLength (s : ℤ → ℤ) (L : ℕ) : Prop :=
   IsPeriod s L ∧ ∀ L' > 0, IsPeriod s L' → L ≤ L'
 
-/-- 
+/--
 Axioms linking the geometric difference sequence to the residue distribution.
 -/
 class GeometricProjection (α β : ℕ) (ω : ℝ) (s : ℤ → ℤ) [NeZero (α^2 + β^2)] where
@@ -431,12 +431,14 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (�
   have h_N_le : N ≤ k * N := Nat.le_mul_of_pos_left N h_k_pos
   omega
 
+open Classical in
 noncomputable def cumulative_hits (α β : ℕ) (ω : ℝ) [NeZero (α^2 + β^2)] (x : ℕ) : ℕ :=
   let D := α^2 + β^2
   let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
   let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
   (Finset.range (x + 1)).sum (fun y => count_hits D r0 N (y : ZMod D))
 
+open Classical in
 noncomputable def V (α β : ℕ) (ω : ℝ) [NeZero (α^2 + β^2)] (k : ℕ) : ℕ :=
   if h : ∃ x, k < cumulative_hits α β ω x then
     Nat.find h
@@ -501,6 +503,164 @@ lemma period_N_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2
     rw [h_mod1, h_mod2, h_div1, h_div2]
     ring
 
+/--
+Helper: sorted_multiset shifts by D when index shifts by N.
+-/
+lemma sorted_multiset_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    sorted_multiset α β ω (i + ↑N) = sorted_multiset α β ω i + ↑D := by
+  intro N D
+  -- sorted_multiset(i + N) = V((i+N) % N) + ((i+N)/N) * D
+  --                        = V(i % N) + (i/N + 1) * D
+  --                        = V(i % N) + (i/N) * D + D
+  --                        = sorted_multiset(i) + D
+  dsimp only [sorted_multiset]
+  have hN : 0 < N := N_pos_concrete α β ω h_ω
+  have hN_ne : (N : ℤ) ≠ 0 := by omega
+  have h_mod : (i + (N : ℤ)) % (N : ℤ) = i % (N : ℤ) := by
+    have hm1 : (i + (N : ℤ)) % (N : ℤ) =
+        (i % (N : ℤ) + (N : ℤ) % (N : ℤ)) % (N : ℤ) :=
+      Int.add_emod i (N : ℤ) (N : ℤ)
+    have hm2 : (N : ℤ) % (N : ℤ) = 0 := Int.emod_self
+    have hm3 : (i % (N : ℤ)) % (N : ℤ) = i % (N : ℤ) :=
+      Int.emod_emod i (N : ℤ)
+    rw [hm2, add_zero, hm3] at hm1; exact hm1
+  have h_div : (i + (N : ℤ)) / (N : ℤ) = i / (N : ℤ) + 1 := by
+    have hd1 : (i + (N : ℤ)) / (N : ℤ) =
+        i / (N : ℤ) + (N : ℤ) / (N : ℤ) :=
+      Int.add_ediv_of_dvd_right (dvd_refl (N : ℤ))
+    have hd2 : (N : ℤ) / (N : ℤ) = 1 := Int.ediv_self hN_ne
+    rw [hd2] at hd1; exact hd1
+  rw [h_mod, h_div]; ring
+
+/--
+Helper: If the difference sequence has period L, the sorted_multiset shift
+by L is constant (independent of i).
+
+Proof idea: Define f(i) = sorted_multiset(i+L) - sorted_multiset(i).
+Then f(i+1) - f(i) = difference_sequence(i+L) - difference_sequence(i) = 0
+by periodicity. So f is constant = f(0).
+-/
+lemma sorted_shift_constant (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (L : ℕ) (hL : IsPeriod (difference_sequence α β ω) L) (i : ℤ) :
+    sorted_multiset α β ω (i + ↑L) - sorted_multiset α β ω i =
+    sorted_multiset α β ω ↑L - sorted_multiset α β ω 0 := by
+  -- f(i) := sorted_multiset(i + L) - sorted_multiset(i) is constant
+  -- because f(i+1) - f(i) = diff_seq(i+L) - diff_seq(i) = 0.
+  -- Step lemma: f(j+1) = f(j) where f(j) = sorted(j+L) - sorted(j)
+  have h_step : ∀ j : ℤ,
+      sorted_multiset α β ω (j + 1 + ↑L) - sorted_multiset α β ω (j + 1) =
+      sorted_multiset α β ω (j + ↑L) - sorted_multiset α β ω j := by
+    intro j
+    have hper := hL.2 j
+    simp only [difference_sequence] at hper
+    have h1 : j + 1 + ↑L = j + ↑L + 1 := by ring
+    rw [h1]; linarith
+  -- Forward: f(n) = f(0) for n : ℕ
+  have h_nat : ∀ n : ℕ, sorted_multiset α β ω (↑n + ↑L) - sorted_multiset α β ω ↑n =
+      sorted_multiset α β ω ↑L - sorted_multiset α β ω 0 := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have := h_step ↑k
+      have h1 : (↑k : ℤ) + 1 + ↑L = ↑(k + 1) + ↑L := by push_cast; ring
+      have h2 : (↑k : ℤ) + 1 = ↑(k + 1) := by push_cast; ring
+      rw [h1, h2] at this; linarith
+  -- Backward: f(-n) = f(0) for n : ℕ
+  have h_neg : ∀ n : ℕ, sorted_multiset α β ω (-↑n + ↑L) - sorted_multiset α β ω (-↑n) =
+      sorted_multiset α β ω ↑L - sorted_multiset α β ω 0 := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      -- h_step at j = -↑k - 1 gives:
+      -- sorted(-↑k - 1 + 1 + L) - sorted(-↑k - 1 + 1) = sorted(-↑k - 1 + L) - sorted(-↑k - 1)
+      -- i.e., sorted(-↑k + L) - sorted(-↑k) = sorted(-↑(k+1) + L) - sorted(-↑(k+1))
+      have h_eq : sorted_multiset α β ω (-↑k + ↑L) - sorted_multiset α β ω (-↑k) =
+          sorted_multiset α β ω (-↑(k + 1) + ↑L) - sorted_multiset α β ω (-↑(k + 1)) := by
+        have := h_step (-↑(k + 1))
+        have ha : (-↑(k + 1) : ℤ) + 1 + ↑L = -↑k + ↑L := by push_cast; omega
+        have hb : (-↑(k + 1) : ℤ) + 1 = -↑k := by push_cast; omega
+        simp only [ha, hb] at this; linarith
+      linarith
+  -- Case split on i
+  cases i with
+  | ofNat n => exact h_nat n
+  | negSucc n =>
+    have : (Int.negSucc n : ℤ) = -↑(n + 1) := by omega
+    simp only [this]
+    exact h_neg (n + 1)
+
+/--
+Helper: N * shift = L * D.
+From sorted_multiset(i+N) = sorted_multiset(i) + D and
+sorted_multiset(i+L) = sorted_multiset(i) + σ, applied NL times both ways.
+-/
+lemma shift_times_N_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (L : ℕ) (hL : IsPeriod (difference_sequence α β ω) L) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let σ := sorted_multiset α β ω ↑L - sorted_multiset α β ω 0
+    ↑N * σ = ↑L * ↑D := by
+  intro N D σ
+  -- Iterate the L-shift N times: sorted(N*L) = sorted(0) + N*σ
+  have h_shift_L : ∀ n : ℕ, sorted_multiset α β ω (↑n * ↑L) =
+      sorted_multiset α β ω 0 + ↑n * σ := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have hsc := sorted_shift_constant α β ω L hL (↑k * ↑L)
+      -- hsc : sorted(k*L + L) - sorted(k*L) = σ
+      -- Goal: sorted((k+1)*L) = sorted(0) + (k+1)*σ
+      -- Since (k+1)*L = k*L + L and sorted(k*L) = sorted(0) + k*σ:
+      have h_eq : (↑(k + 1) : ℤ) * ↑L = ↑k * ↑L + ↑L := by push_cast; ring
+      rw [h_eq]; push_cast at ih ⊢; linarith
+  -- Iterate the N-shift L times: sorted(L*N) = sorted(0) + L*D
+  have h_shift_N : ∀ n : ℕ, sorted_multiset α β ω (↑n * ↑N) =
+      sorted_multiset α β ω 0 + ↑n * ↑D := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have hsa : sorted_multiset α β ω (↑k * ↑N + ↑N) =
+          sorted_multiset α β ω (↑k * ↑N) + ↑D :=
+        sorted_multiset_add_N α β ω h_ω (↑k * (↑N : ℤ))
+      have h_eq : (↑(k + 1) : ℤ) * ↑N = ↑k * ↑N + ↑N := by push_cast; ring
+      have h_eq2 : (↑(k + 1) : ℤ) * ↑D = ↑k * ↑D + ↑D := by push_cast; ring
+      rw [h_eq]; linarith
+  -- N*L = L*N, so sorted(N*L) = sorted(L*N), giving N*σ = L*D
+  have h1 := h_shift_L N
+  have h2 := h_shift_N L
+  have h3 : (↑N : ℤ) * ↑L = ↑L * ↑N := by ring
+  rw [h3] at h1; linarith
+
+/--
+Helper: the shift σ is nonneg (sorted_multiset is non-decreasing).
+-/
+lemma shift_nonneg (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence α β ω) L) :
+    0 ≤ sorted_multiset α β ω ↑L - sorted_multiset α β ω 0 := by
+  -- σ = N * σ / N = L * D / N ≥ 0 since L, D, N > 0.
+  -- Alternatively: sorted_multiset is non-decreasing and L ≥ 1, so sorted(L) ≥ sorted(0).
+  -- We prove this using shift_times_N_eq: N * σ = L * D ≥ 0, and N > 0, so σ ≥ 0.
+  sorry
+
+/--
+Helper: count_hits invariance under the sorted_multiset shift.
+
+Proof idea: The multiset {V(k) mod D : k ∈ [0,N)} of residues is invariant
+under +σ because a shifted window [L, L+N) of sorted_multiset values
+contains the same residues mod D as [0, N), while also being the
++σ translate of the original window.
+-/
+lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence α β ω) L) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let σ := (sorted_multiset α β ω ↑L - sorted_multiset α β ω 0).toNat
+    let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    ∀ x : ZMod D, count_hits D r0 N (x + ↑σ) = count_hits D r0 N x := by
+  sorry
+
 lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
     let D := α^2 + β^2
@@ -508,13 +668,32 @@ lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (
   intro N D h_dvd
   sorry
 
-lemma sigma_of_period_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
-    ∀ L > 0, IsPeriod (difference_sequence α β ω) L → 
-    ∃ σ : ℕ, σ * (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat = L * (α^2 + β^2) ∧ 
-    ∃ r0 : ℕ, ∀ x : ZMod (α^2 + β^2), 
-      count_hits (α^2 + β^2) r0 (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat (x + (σ : ZMod (α^2 + β^2))) = count_hits (α^2 + β^2) r0 (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat x := by
+lemma sigma_of_period_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] :
+    ∀ L > 0, IsPeriod (difference_sequence α β ω) L →
+    ∃ σ : ℕ, σ * (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat = L * (α ^ 2 + β ^ 2) ∧
+    ∃ r0 : ℕ, ∀ x : ZMod (α ^ 2 + β ^ 2),
+      count_hits (α ^ 2 + β ^ 2) r0 (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat (x + (σ : ZMod (α ^ 2 + β ^ 2))) = count_hits (α ^ 2 + β ^ 2) r0 (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat x := by
   intro L hL_pos hL_period
-  sorry
+  set N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+  set D := α ^ 2 + β ^ 2
+  set σ_ℤ := sorted_multiset α β ω ↑L - sorted_multiset α β ω 0
+  have h_nonneg : 0 ≤ σ_ℤ := shift_nonneg α β ω h_ω L hL_pos hL_period
+  set σ := σ_ℤ.toNat
+  use σ
+  constructor
+  · -- σ * N = L * D
+    have h_eq : ↑N * σ_ℤ = ↑L * ↑D := shift_times_N_eq α β ω h_ω L hL_period
+    have h_cast : (↑σ : ℤ) = σ_ℤ := by
+      simp only [σ]
+      exact Int.toNat_of_nonneg h_nonneg
+    have h_eq_int : (↑(σ * N) : ℤ) = ↑(L * D) := by
+      push_cast
+      rw [h_cast]
+      linarith
+    exact_mod_cast h_eq_int
+  · -- count_hits invariance
+    use ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    exact count_hits_shift_invariant α β ω h_ω L hL_pos hL_period
 
 /-
 instance GeometricProjectionConcrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] : 
