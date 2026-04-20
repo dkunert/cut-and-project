@@ -60,7 +60,16 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"732:7\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"732:7\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -B2 -A20 \"760:2\")",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"772:4\")"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"772:4\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A20 \"778:4\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A15 \"779:4\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A12 \"741:54\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A10 \"743:58\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A8 \"743:31\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | tail -80)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | tail -40)",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep \"^error\")",
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A5 \"^error: CutAndProject\")"
     ]
   }
 }
