@@ -126,7 +126,8 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 40 \"1155:67\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 25 \"1198:37\")",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -A 25 \"1202:37\")",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -c \"error\\\\|sorry\\\\|unsolved\" ; echo \"---\" ; lake build 2>&1 | tail -5)"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject && lake build 2>&1 | grep -c \"error\\\\|sorry\\\\|unsolved\" ; echo \"---\" ; lake build 2>&1 | tail -5)",
+      "Bash(ls /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/*.lean /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LEAN/CutAndProject/**/*.lean 2>/dev/null)"
     ]
   }
 }
