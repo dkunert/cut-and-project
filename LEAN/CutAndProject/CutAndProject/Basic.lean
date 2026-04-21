@@ -1025,12 +1025,183 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     · -- ((k + N - L%N) % N + L) % N = k
       exact mod_add_inv N L k hN hk_range
 
-lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
-    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
-    let D := α^2 + β^2
-    D ∣ N → HasPeriodLength (difference_sequence α β ω) (N / D) := by
-  intro N D h_dvd
-  sorry
+private lemma cumulative_hits_uniform (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (v : ℕ)
+    (hv : v < α ^ 2 + β ^ 2) :
+    cumulative_hits α β ω v = (v + 1) * ((⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat / (α ^ 2 + β ^ 2)) := by
+  set D := α ^ 2 + β ^ 2
+  set N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+  set q := N / D
+  set r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+  have h_unif : ∀ x : ZMod D, count_hits D r0 N x = q :=
+    uniform_residue_distribution D r0 N h_dvd
+  have : cumulative_hits α β ω v =
+      (Finset.range (v + 1)).sum (fun y => count_hits D r0 N (↑y : ZMod D)) := rfl
+  rw [this]
+  simp [h_unif, Finset.sum_const, Finset.card_range]
+
+private lemma V_uniform (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat)
+    (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+    V α β ω k = k / ((⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat / (α ^ 2 + β ^ 2)) := by
+  set D := α ^ 2 + β ^ 2
+  set N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+  set q := N / D
+  have hD_pos : 0 < D := NeZero.pos D
+  have hN_pos : 0 < N := N_pos_concrete α β ω h_ω
+  have hq_pos : 0 < q := Nat.div_pos (Nat.le_of_dvd hN_pos h_dvd) hD_pos
+  have hN_eq : N = q * D := (Nat.div_mul_cancel h_dvd).symm
+  -- V(k) = Nat.find (∃ x, k < cumulative_hits x)
+  -- cumulative_hits(v) = (v+1)*q, so k < (v+1)*q iff v ≥ k/q
+  -- Therefore V(k) = k/q
+  set v := k / q
+  have hv_lt_D : v < D := by
+    rw [Nat.div_lt_iff_lt_mul hq_pos]; rw [hN_eq] at hk; linarith
+  have h_find : V α β ω k = v := by
+    have h_exists : ∃ x, k < cumulative_hits α β ω x := by
+      use D - 1
+      rw [cumulative_hits_eq_N α β ω]; exact hk
+    unfold V; rw [dif_pos h_exists]
+    apply le_antisymm
+    · apply Nat.find_min'
+      rw [cumulative_hits_uniform α β ω h_dvd v hv_lt_D]
+      calc k = q * v + k % q := (Nat.div_add_mod k q).symm
+        _ < q * v + q := by have := Nat.mod_lt k hq_pos; omega
+        _ = (v + 1) * q := by ring
+    · by_contra h_lt; push_neg at h_lt
+      have h_prev := Nat.find_spec h_exists
+      have h_find_lt : Nat.find h_exists < v := h_lt
+      have h_find_lt_D : Nat.find h_exists < D := lt_trans h_find_lt hv_lt_D
+      rw [cumulative_hits_uniform α β ω h_dvd _ h_find_lt_D] at h_prev
+      have : k < (Nat.find h_exists + 1) * q := h_prev
+      have : v ≤ Nat.find h_exists := by
+        have : k / q < Nat.find h_exists + 1 :=
+          (Nat.div_lt_iff_lt_mul hq_pos).mpr this
+        omega
+      omega
+  exact h_find
+
+set_option maxHeartbeats 800000 in
+private lemma sorted_multiset_add_q (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)]
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (i : ℤ) :
+    let q := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+    sorted_multiset α β ω (i + ↑q) = sorted_multiset α β ω i + 1 := by
+  intro q
+  set N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat with hN_def
+  set D := α ^ 2 + β ^ 2 with hD_def
+  have hD_pos : 0 < D := NeZero.pos D
+  have hN_pos : 0 < N := N_pos_concrete α β ω h_ω
+  have hN_ne : (N : ℤ) ≠ 0 := Int.natCast_ne_zero.mpr (by omega)
+  have hq_pos : 0 < q := Nat.div_pos (Nat.le_of_dvd hN_pos h_dvd) hD_pos
+  have hN_eq : N = q * D := (Nat.div_mul_cancel h_dvd).symm
+  -- r is the remainder of i modulo N
+  set r := (i % (N : ℤ)).toNat with hr_def
+  have hr_nonneg : 0 ≤ i % (N : ℤ) := Int.emod_nonneg i hN_ne
+  have hr_lt : r < N := by
+    rw [hr_def]; exact Int.toNat_lt hr_nonneg |>.mpr (Int.emod_lt_of_pos i (by omega))
+  have hr_cast : (r : ℤ) = i % (N : ℤ) := Int.toNat_of_nonneg hr_nonneg
+  have h_decomp : i = ↑N * (i / ↑N) + ↑r := by
+    rw [hr_cast]; exact (Int.ediv_add_emod i ↑N).symm
+  -- Key helper: rewrite (i + q) as N * quot + remainder
+  -- We split into two cases depending on whether r + q < N
+  by_cases h_case : r + q < N
+  · -- Case 1: r + q < N, so the N-quotient doesn't change
+    -- i + q = N * (i/N) + (r + q), with r + q < N
+    have h_iq : (i + ↑q : ℤ) = ↑N * (i / ↑N) + (↑r + ↑q) := by linarith [h_decomp]
+    have h_rq_nonneg : (0 : ℤ) ≤ ↑r + ↑q := by positivity
+    have h_rq_lt : (↑r + ↑q : ℤ) < ↑N := by exact_mod_cast h_case
+    have h_mod : (i + ↑q) % (↑N : ℤ) = ↑(r + q) := by
+      conv_lhs => rw [h_iq]
+      rw [show ↑N * (i / ↑N) + (↑r + ↑q) = (↑r + ↑q) + ↑N * (i / ↑N) from by ring]
+      rw [Int.add_mul_emod_self_left]
+      exact Int.emod_eq_of_lt h_rq_nonneg h_rq_lt
+    have h_div : (i + ↑q) / (↑N : ℤ) = i / ↑N := by
+      conv_lhs => rw [h_iq]
+      rw [show ↑N * (i / ↑N) + (↑r + ↑q) = (↑r + ↑q) + ↑N * (i / ↑N) from by ring]
+      rw [Int.add_mul_ediv_left _ _ hN_ne]
+      have : (↑r + ↑q : ℤ) / ↑N = 0 :=
+        Int.ediv_eq_zero_of_lt h_rq_nonneg h_rq_lt
+      omega
+    -- Now compute both sides
+    show (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
+         (V α β ω (i % ↑N).toNat : ℤ) + i / ↑N * ↑D + 1
+    -- fold (i % ↑N).toNat back to r
+    rw [show (i % (↑N : ℤ)).toNat = r from rfl]
+    rw [h_mod, h_div, Int.toNat_natCast]
+    -- V_uniform gives V(k) = k / q for k < N
+    have hV_rq := V_uniform α β ω h_ω h_dvd (r + q) h_case
+    have hV_r := V_uniform α β ω h_ω h_dvd r hr_lt
+    -- q = N / D by definition
+    have hq_fold : N / D = q := rfl
+    rw [hq_fold] at hV_rq hV_r
+    rw [hV_rq, hV_r]
+    have h_div_q : (r + q) / q = r / q + 1 := Nat.add_div_right r hq_pos
+    rw [h_div_q]; push_cast; ring
+  · -- Case 2: r + q ≥ N, so the N-quotient increases by 1
+    push_neg at h_case
+    -- In this case, r ≥ N - q = q * (D - 1)
+    have hD_ge_one : D ≥ 1 := by omega
+    have h_r_large : (D - 1) * q ≤ r := by
+      have h1 : (D - 1) * q = D * q - q := Nat.sub_one_mul D q
+      rw [h1, show D * q = q * D from Nat.mul_comm D q, hN_eq.symm]; omega
+    have h_r_div : r / q = D - 1 := by
+      apply Nat.div_eq_of_lt_le h_r_large
+      have h1 : D - 1 + 1 = D := Nat.succ_pred_eq_of_pos hD_pos
+      rw [h1, show D * q = N from by rw [hN_eq]; ring]; exact hr_lt
+    -- r + q - N is a natural number since r + q ≥ N
+    have h_rqN_ge : r + q ≥ N := h_case
+    have hq_le_N : q ≤ N := Nat.div_le_self N D
+    have h_rqN_lt_N : r + q - N < N := by omega
+    -- i + q = N * (i/N + 1) + (r + q - N)
+    have h_iq : (i + ↑q : ℤ) = ↑N * (i / ↑N + 1) + ↑(r + q - N) := by
+      have h_cast : (↑(r + q - N) : ℤ) = ↑r + ↑q - ↑N := by
+        rw [Nat.cast_sub h_rqN_ge]; push_cast; ring
+      rw [h_cast]; linarith [h_decomp]
+    have h_rem_nonneg : (0 : ℤ) ≤ ↑(r + q - N) := Int.natCast_nonneg _
+    have h_rem_lt : (↑(r + q - N) : ℤ) < ↑N := by exact_mod_cast h_rqN_lt_N
+    have h_mod : (i + ↑q) % (↑N : ℤ) = ↑(r + q - N) := by
+      conv_lhs => rw [h_iq]
+      rw [show ↑N * (i / ↑N + 1) + ↑(r + q - N) =
+          ↑(r + q - N) + ↑N * (i / ↑N + 1) from by ring]
+      rw [Int.add_mul_emod_self_left]
+      exact Int.emod_eq_of_lt h_rem_nonneg h_rem_lt
+    have h_div : (i + ↑q) / (↑N : ℤ) = i / ↑N + 1 := by
+      conv_lhs => rw [h_iq]
+      rw [show ↑N * (i / ↑N + 1) + ↑(r + q - N) =
+          ↑(r + q - N) + ↑N * (i / ↑N + 1) from by ring]
+      rw [Int.add_mul_ediv_left _ _ hN_ne]
+      have : (↑(r + q - N) : ℤ) / ↑N = 0 :=
+        Int.ediv_eq_zero_of_lt h_rem_nonneg h_rem_lt
+      omega
+    -- r + q - N = r mod q (since r/q = D-1 and N = q*D)
+    have h_rqN : r + q - N = r % q := by
+      have h1 := Nat.div_add_mod r q
+      rw [h_r_div] at h1
+      -- h1 : q * (D - 1) + r % q = r
+      -- Need: r + q - N = r % q, with N = q * D
+      rw [hN_eq]
+      -- r + q - q * D = r % q
+      -- From h1: r = q * (D - 1) + r % q
+      -- q * (D - 1) + r % q + q - q * D = r % q
+      -- q * (D - 1) + q = q * D, so this simplifies
+      have h2 : q * (D - 1) + q = q * D := by
+        rw [Nat.mul_sub_one]; omega
+      omega
+    show (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
+         (V α β ω (i % ↑N).toNat : ℤ) + i / ↑N * ↑D + 1
+    -- fold (i % ↑N).toNat back to r
+    rw [show (i % (↑N : ℤ)).toNat = r from rfl]
+    rw [h_mod, h_div, Int.toNat_natCast]
+    have hV_rqN := V_uniform α β ω h_ω h_dvd (r + q - N) h_rqN_lt_N
+    have hV_r := V_uniform α β ω h_ω h_dvd r hr_lt
+    have hq_fold : N / D = q := rfl
+    rw [hq_fold] at hV_rqN hV_r
+    rw [hV_rqN, hV_r, h_rqN]
+    have h_zero : r % q / q = 0 := Nat.div_eq_of_lt (Nat.mod_lt r hq_pos)
+    rw [h_zero, h_r_div]
+    have hD_sub_cast : (↑(D - 1) : ℤ) = ↑D - 1 := Nat.cast_sub hD_ge_one
+    rw [hD_sub_cast]; push_cast; ring
 
 lemma sigma_of_period_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] :
     ∀ L > 0, IsPeriod (difference_sequence α β ω) L →
@@ -1058,6 +1229,44 @@ lemma sigma_of_period_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω
   · -- count_hits invariance
     use ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
     exact count_hits_shift_invariant α β ω h_ω L hL_pos hL_period
+
+lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] :
+    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+    let D := α^2 + β^2
+    D ∣ N → HasPeriodLength (difference_sequence α β ω) (N / D) := by
+  intro N D h_dvd
+  set q := N / D
+  have hD_pos : 0 < D := NeZero.pos D
+  have hN_pos : 0 < N := N_pos_concrete α β ω h_ω
+  have hq_pos : 0 < q := Nat.div_pos (Nat.le_of_dvd hN_pos h_dvd) hD_pos
+  constructor
+  · -- IsPeriod (difference_sequence α β ω) q
+    constructor
+    · exact hq_pos
+    · intro i
+      simp only [difference_sequence]
+      have h1 := sorted_multiset_add_q α β ω h_ω h_dvd (i + 1)
+      have h2 := sorted_multiset_add_q α β ω h_ω h_dvd i
+      dsimp only at h1 h2
+      have h3 : i + 1 + ↑q = i + ↑q + 1 := by ring
+      rw [h3] at h1; linarith
+  · -- Minimality: ∀ L' > 0, IsPeriod → q ≤ L'
+    intro L' hL'_pos hL'_period
+    have h_sigma := sigma_of_period_concrete α β h_coprime ω h_ω L' hL'_pos hL'_period
+    rcases h_sigma with ⟨σ, h_eq, _⟩
+    have hN_eq : N = q * D := (Nat.div_mul_cancel h_dvd).symm
+    have h2 : σ * (q * D) = L' * D := by rw [← hN_eq]; exact h_eq
+    have h3 : σ * q = L' := by
+      have : σ * q * D = L' * D := by linarith [mul_assoc σ q D]
+      exact Nat.eq_of_mul_eq_mul_right hD_pos this
+    have hσ_pos : 0 < σ := by
+      by_contra h; push_neg at h
+      have : σ = 0 := by omega
+      rw [this, zero_mul] at h3; omega
+    -- L' = σ * q ≥ 1 * q = q
+    calc q = 1 * q := (one_mul q).symm
+      _ ≤ σ * q := Nat.mul_le_mul_right q hσ_pos
+      _ = L' := h3
 
 /-
 instance GeometricProjectionConcrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α^2 + β^2)] : 
