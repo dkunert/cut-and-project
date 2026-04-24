@@ -57,6 +57,9 @@ residue classes form a contiguous cyclic interval, whose trivial
 stabiliser precludes any sub-periodicity.
 The formula is additionally verified in over 51{,}000 computational test
 cases spanning both the regime $N < D$ and $N \ge D$.
+The algebraic core of the proof has been machine-checked in
+Lean~4 with the Mathlib library (approximately 1{,}300 lines, no
+\texttt{sorry} axioms).
 As immediate corollaries, we obtain: finiteness of the period for all
 real~$\omega\ge 0$; the proven result $\lambda = \alpha + \beta + 1$ at
 $\omega = 1$; and sharp inequalities relating~$\lambda$ to
@@ -65,12 +68,12 @@ $\Lambda_{\alpha,\beta} := \alpha + \beta + 1$ for various ranges of~$\omega$.
 
 \medskip
 \noindent\textbf{Mathematics Subject Classification (2020):}
-11B25, 52C23, 11J71, 11A05.
+11B25, 52C23, 11J71, 11A05, 68V20.
 
 \medskip
 \noindent\textbf{Keywords:}
 cut-and-project sequences, period length, floor function, rational slope,
-B\'{e}zout's identity, lattice projection.
+B\'{e}zout's identity, lattice projection, Lean~4 formalisation.
 
 % =====================================================================
 \section{Introduction}\label{sec:intro}
@@ -99,6 +102,7 @@ Section~\ref{sec:mainresult} states the main result.
 Section~\ref{sec:proof} contains the proof for the generic case $D \nmid N$.
 Section~\ref{sec:degenerate} treats the degenerate case $D \mid N$.
 Section~\ref{sec:corollaries} derives corollaries.
+Section~\ref{sec:lean} describes the machine-checked formalisation in Lean~4.
 Section~\ref{sec:literature} surveys related results.
 Section~\ref{sec:discussion} discusses open problems.
 
@@ -555,6 +559,103 @@ is an exact multiple of $D = \alpha^2 + \beta^2$.
 \end{remark}
 
 % =====================================================================
+\section{Machine-Checked Formalisation}\label{sec:lean}
+% =====================================================================
+
+The algebraic core of the proof has been fully formalised in
+Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
+The formalisation comprises approximately 1{,}300 lines of verified code
+with no \texttt{sorry} axioms, and is available in the companion
+repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
+
+\subsection{Architecture}\label{subsec:lean_arch}
+
+The proof is structured in two layers.  The first layer proves
+Theorem~\ref{thm:main} from four abstract axioms collected in a
+typeclass \texttt{GeometricProjection}:
+\begin{enumerate}
+    \item $N > 0$ \hfill (\texttt{N\_pos})
+    \item The difference sequence has period $N$
+          \hfill (\texttt{period\_N})
+    \item If $D \mid N$, the minimal period is $N/D$
+          \hfill (\texttt{period\_degenerate})
+    \item Every period $L$ induces a residue-preserving translation
+          by some $\sigma$ with $\sigma N = LD$
+          \hfill (\texttt{sigma\_of\_period})
+\end{enumerate}
+Given these axioms, the generic minimality argument
+(\texttt{generic\_minimality}, corresponding to
+Section~\ref{subsec:step5}) and the case dispatch
+(\texttt{main\_theorem}, corresponding to Theorem~\ref{thm:main})
+are proved purely algebraically.
+
+The second layer constructs a concrete instance of this typeclass
+by defining the sorted multiset and difference sequence explicitly.
+Each axiom is discharged by a separate lemma
+(\texttt{N\_pos\_concrete}, \texttt{period\_N\_concrete},
+\texttt{period\_degenerate\_concrete},
+\texttt{sigma\_of\_period\_concrete}).
+
+\subsection{Correspondence with the paper}\label{subsec:lean_corr}
+
+Table~\ref{tab:lean} gives the correspondence between the main
+results of this paper and the Lean declarations in
+\texttt{Basic.lean}.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lll}
+\hline
+\textbf{Paper} & \textbf{Lean name} & \textbf{Line} \\
+\hline
+Lemma~\ref{lem:gcd} ($\gcd(\alpha,D)=1$)
+  & \texttt{coprime\_alpha\_D} & 11 \\
+Lemma~\ref{lem:gcd} ($\gcd(\beta,D)=1$)
+  & \texttt{coprime\_beta\_D} & 20 \\
+Corollary~\ref{cor:inverse} (residue bijection)
+  & \texttt{residue\_bijection} & 43 \\
+Lemma~\ref{lem:nonuniform} (non-uniform distribution)
+  & \texttt{non\_uniform\_residue\_distribution} & 140 \\
+Uniform distribution ($D \mid N$)
+  & \texttt{uniform\_residue\_distribution} & 215 \\
+Heavy set is cyclic interval
+  & \texttt{heavy\_set\_is\_cyclic\_interval} & 269 \\
+Trivial stabiliser
+  & \texttt{cyclic\_interval\_stabilizer\_trivial} & 334 \\
+Section~\ref{subsec:step5} (generic minimality)
+  & \texttt{generic\_minimality} & 388 \\
+Theorem~\ref{thm:degenerate} ($D \mid N$ case)
+  & \texttt{period\_degenerate\_concrete} & 1233 \\
+$\sigma N = LD$ from periodicity
+  & \texttt{sigma\_of\_period\_concrete} & 1206 \\
+Theorem~\ref{thm:main} (main result)
+  & \texttt{main\_theorem} & 1283 \\
+\hline
+\end{tabular}
+\caption{Correspondence between paper results and Lean~4 declarations.}
+\label{tab:lean}
+\end{table}
+
+\subsection{Scope of the formalisation}\label{subsec:lean_scope}
+
+The formalised proof covers the full algebraic/combinatorial argument:
+coprimality, residue distribution, cyclic interval structure, the
+trivial stabiliser lemma, the generic minimality argument, the
+degenerate case, and the final case dispatch.
+
+The geometric construction (defining the cut-and-project set,
+projecting lattice points, and sorting the multiset of
+$\tilde{p}$-values) is modelled abstractly via the
+\texttt{GeometricProjection} typeclass rather than formalised from
+first principles.  Concretely, the sorted multiset is defined
+combinatorially as $\tilde{p}^{(i)}_s := V(i \bmod N) + \lfloor i/N
+\rfloor \cdot D$, where $V$ is the quantile function of the
+cumulative residue distribution.  The bridge lemma
+\texttt{count\_hits\_eq\_sorted\_count} verifies that this
+construction is consistent with the residue counting function.
+
+% =====================================================================
 \section{Related Literature}\label{sec:literature}
 % =====================================================================
 
@@ -664,8 +765,9 @@ The first author gratefully acknowledges the use of \emph{OpenAI
 ChatGPT}~\cite{ChatGPT} for assistance during earlier stages of this
 research.
 The AI model Claude Opus 4.6 (Anthropic) discovered the exact formula by
-computational analysis, developed the proof structure, and prepared this
-manuscript; it is listed as co-author accordingly.
+computational analysis, developed the proof structure, prepared this
+manuscript, and carried out the Lean~4 formalisation
+(Section~\ref{sec:lean}); it is listed as co-author accordingly.
 The AI model Gemini 2.5 Pro (Google) reviewed a draft of this paper,
 identified errors in an earlier version of Lemma~\ref{lem:nonuniform}
 and Corollary~\ref{cor:medium_omega}, and contributed to the
@@ -709,11 +811,29 @@ Dirk Kunert,
 \emph{Repository cut-and-project}, 2025.
 Available at: \url{https://github.com/dkunert/cut-and-project}.
 
+\bibitem{Mathlib2020}
+The mathlib Community,
+``The Lean mathematical library,''
+\emph{Proceedings of the 9th ACM SIGPLAN International Conference on
+Certified Programs and Proofs (CPP 2020)},
+pp.~367--381, 2020.
+\textsc{doi}: \href{https://doi.org/10.1145/3372885.3373824}%
+{10.1145/3372885.3373824}.
+
 \bibitem{MarklofStrombergsson2017}
 Jens Marklof and Andreas Str\"{o}mbergsson,
 ``The three gap theorem and the space of lattices,''
 \emph{The American Mathematical Monthly}, vol.~124, no.~8, pp.~741--745,
 2017.
+
+\bibitem{Moura2021}
+Leonardo de Moura, Sebastian Ullrich,
+``The Lean~4 theorem prover and programming language,''
+\emph{Proceedings of the 28th International Conference on Automated
+Deduction (CADE-28)},
+LNAI, vol.~12699, pp.~625--635, Springer, 2021.
+\textsc{doi}: \href{https://doi.org/10.1007/978-3-030-79876-5_37}%
+{10.1007/978-3-030-79876-5\_37}.
 
 \bibitem{Meyer1972}
 Yves Meyer,
