@@ -1,0 +1,602 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{lemma}{Lemma}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+
+\setlist[itemize]{topsep=4pt,itemsep=3pt}
+\setlist[enumerate]{topsep=4pt,itemsep=3pt}
+
+\title{Next Steps for the Cut-and-Project Paper}
+\author{Dirk Kunert}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Purpose of this note}
+
+This document collects important hints, warnings, and concrete next steps
+for improving the manuscript
+
+\begin{center}
+\emph{Period Length of One-Dimensional Cut-and-Project Sequences
+with Rational Slope and Arbitrary Real Window Width}.
+\end{center}
+
+The central result appears to be a clean and potentially publishable formula
+for the period length of a rational one-dimensional cut-and-project
+construction.  However, several issues should be clarified before submitting
+the paper to arXiv or to a journal.
+
+\section*{Overall assessment}
+
+The work is potentially worth putting on arXiv, but not yet in exactly its
+current form.
+
+\begin{itemize}
+    \item The mathematical value is real, but probably modest rather than
+    major.
+
+    \item The result is more naturally described as elementary combinatorics,
+    discrete geometry, or symbolic dynamics than as deep number theory.
+
+    \item The formula is attractive because it is exact, simple, and covers
+    all rational slopes and all real window widths \(\omega \ge 0\).
+
+    \item The theorem is likely best framed as a clean explicit result about
+    rational cut-and-project constructions, rather than as a major
+    contribution to the general theory of aperiodic order.
+
+    \item An arXiv preprint is reasonable after revision.
+
+    \item A short journal note might be possible if the statement is correct,
+    the proof is fully polished, and the relation to existing literature is
+    handled carefully.
+\end{itemize}
+
+\section*{Central mathematical result}
+
+The main formula is:
+
+\[
+\lambda =
+\begin{cases}
+N, & D \nmid N,\\
+N/D, & D \mid N,
+\end{cases}
+\]
+
+where
+
+\[
+N = \lfloor \omega\alpha \rfloor
+  + \lfloor \omega\beta \rfloor + 1,
+\qquad
+D = \alpha^2+\beta^2.
+\]
+
+This is a strong feature of the paper: the result is short, exact, and easy
+to state.
+
+The proof reduces the geometry to arithmetic progressions modulo \(D\).
+The key invariant is
+
+\[
+r = \alpha x - \beta y,
+\]
+
+and the projected coordinate is controlled by
+
+\[
+\tilde p = \beta x + \alpha y.
+\]
+
+For fixed \(r\), the projected values lie in an arithmetic progression modulo
+\(D\).  The formula follows from counting how \(N\) consecutive values of
+\(r\) distribute among the residue classes modulo \(D\).
+
+\section*{Most important issue: multiset versus set}
+
+The manuscript currently defines the sorted projected values as a multiset.
+This is mathematically legitimate, but it must be stated extremely clearly.
+
+In standard cut-and-project terminology, one usually speaks about point sets,
+where duplicate projected points are identified.  In your manuscript,
+however, different lattice points may project to the same \(\tilde p\)-value,
+and these repeated values are counted with multiplicity.
+
+This distinction is crucial.
+
+\subsection*{Why this matters}
+
+In the degenerate case \(D \mid N\), your proof says that every integer
+\(\tilde p\) is achieved with multiplicity \(N/D\).  Hence the sorted sequence
+has the form
+
+\[
+\ldots,
+\underbrace{t,\ldots,t}_{N/D},
+\underbrace{t+1,\ldots,t+1}_{N/D},
+\ldots
+\]
+
+and the difference sequence has the form
+
+\[
+\underbrace{0,\ldots,0}_{N/D-1},1,
+\underbrace{0,\ldots,0}_{N/D-1},1,\ldots
+\]
+
+This has period \(N/D\).
+
+But this is only true if multiplicities are retained.  If duplicate projected
+points are collapsed, then the set of projected values is simply all integers,
+and the ordinary gap sequence has constant gap \(1\), hence period \(1\).
+
+Therefore the theorem should explicitly be described as a theorem about the
+projected lattice-point multiset, or about the multiset gap sequence.
+
+\subsection*{Recommended fix}
+
+Change the title, abstract, and definitions so that the word ``multiset''
+appears prominently.
+
+Possible titles:
+
+\begin{itemize}
+    \item \emph{Period Length of the Multiset Gap Sequence in Rational
+    One-Dimensional Cut-and-Project Projections}
+
+    \item \emph{Period Lengths for Projected Lattice-Point Multisets from
+    Rational Cut-and-Project Strips}
+
+    \item \emph{A Period Formula for Rational Cut-and-Project Strip
+    Projections with Multiplicity}
+\end{itemize}
+
+Add a remark such as:
+
+\begin{quote}
+The projected values are counted with multiplicity throughout this paper.
+Thus, if two distinct lattice points have the same projected coordinate, they
+contribute two consecutive entries to the sorted projected sequence and hence
+may produce a zero gap.  If multiplicities are discarded, the resulting
+ordinary point-set gap sequence may have a smaller period.  In particular, in
+the case \(D \mid N\), the set-valued projected sequence has constant gap and
+period \(1\), whereas the multiset sequence has period \(N/D\).
+\end{quote}
+
+This clarification is essential before submission.
+
+\section*{Tone and positioning}
+
+The paper should be presented as a clean explicit formula in a rational
+special case, not as a major breakthrough in aperiodic order.
+
+The current introduction is acceptable in spirit, but it should be toned down
+slightly.
+
+Recommended positioning:
+
+\begin{quote}
+The irrational case is central in the theory of aperiodic order.  The
+rational case is periodic and therefore often regarded as elementary or
+degenerate from that perspective.  Nevertheless, the exact period length of
+the projected multiset gap sequence appears not to be commonly recorded in
+this explicit form.  The present note gives a complete elementary formula.
+\end{quote}
+
+Avoid statements that sound too grand, such as suggesting that the paper
+fills a major gap in the theory of model sets.  The result is valuable
+because it is exact and explicit, not because it revolutionises the field.
+
+\section*{arXiv suitability}
+
+The paper is suitable for arXiv after revision.
+
+Recommended arXiv categories:
+
+\begin{itemize}
+    \item Primary: \texttt{math.CO} or \texttt{math.DS}
+    \item Possible cross-listing: \texttt{math.NT}, \texttt{math.MG}
+\end{itemize}
+
+The work is probably not best submitted primarily as number theory.  It uses
+number-theoretic tools such as congruences, residue classes, and coprimality,
+but the main object is a gap sequence arising from a geometric/combinatorial
+construction.
+
+\section*{Important arXiv warning: AI co-authors}
+
+Do not list AI systems as co-authors.
+
+The current manuscript lists Gemini and Claude as authors.  This should be
+changed before submission.
+
+Use:
+
+\begin{verbatim}
+\author{Dirk Kunert}
+\end{verbatim}
+
+Then move the AI discussion to the acknowledgements.
+
+Suggested wording:
+
+\begin{quote}
+The author used ChatGPT, Gemini, and Claude as AI-assisted tools for
+exploration, drafting, proof checking, and Lean formalisation.  The author
+has independently checked the mathematical content and accepts full
+responsibility for the results and any errors.
+\end{quote}
+
+Avoid wording such as ``Gemini derived and proved the formula'' in the author
+block.  That makes the paper look less professionally controlled.  The
+responsible author should be the human mathematician.
+
+\section*{Suggested revised abstract}
+
+A safer and more professional abstract would be:
+
+\begin{quote}
+We study the gap sequence of the projected lattice-point multiset obtained
+from a rational-slope strip in the plane. Let the slope be
+\(\alpha/\beta\), with \(\gcd(\alpha,\beta)=1\), and let the window parameter
+be \(\omega \ge 0\). Counting projected points with multiplicity, the sequence
+of consecutive gaps is periodic. We prove that its minimal period is
+\[
+\lambda =
+\begin{cases}
+N, & D\nmid N,\\
+N/D, & D\mid N,
+\end{cases}
+\]
+where
+\[
+N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
+\qquad
+D=\alpha^2+\beta^2.
+\]
+The proof reduces the geometry to the distribution of \(N\) consecutive
+residue classes modulo \(D\). In the non-uniform case, the heavy residue
+classes form a cyclic interval with trivial stabiliser, which implies
+minimality of the period. We also indicate how the formula changes when
+multiplicities are discarded.
+\end{quote}
+
+\section*{Proof issues to check carefully}
+
+The proof is plausible, but the following points should be checked line by
+line.
+
+\subsection*{1. Sorting of a bi-infinite multiset}
+
+The manuscript sorts the projected values into a bi-infinite sequence
+
+\[
+(\tilde p^{(i)}_s)_{i\in\mathbb Z}.
+\]
+
+This should be justified carefully.  One needs to know that the projected
+values are locally finite as a multiset and can be indexed increasingly over
+\(\mathbb Z\).
+
+Suggested addition:
+
+\begin{quote}
+Since the projected values are a finite union of arithmetic progressions of
+common difference \(D\), counted with finite multiplicities, the resulting
+multiset is locally finite and unbounded in both directions.  Hence it admits
+a nondecreasing enumeration indexed by \(\mathbb Z\), unique up to translation
+of the index.
+\end{quote}
+
+\subsection*{2. Multiplicity convention}
+
+State whether the sorted sequence is strictly increasing or nondecreasing.
+With multiplicities, it is nondecreasing.
+
+Use ``nondecreasing'' rather than ``ascending'' if duplicates are present.
+
+\subsection*{3. The assertion \(\lambda\mid N\)}
+
+The proof says that the sequence has a repeating block of length \(N\), hence
+\(\lambda\mid N\).  This is correct if the block structure is precisely
+periodic.  It should be made explicit that after \(N\) entries the sorted
+multiset is translated by \(D\):
+
+\[
+\tilde p_s^{(i+N)} = \tilde p_s^{(i)} + D.
+\]
+
+Then
+
+\[
+\delta^{(i+N)}=\delta^{(i)}.
+\]
+
+This gives \(N\) as a period, hence the minimal period divides \(N\).
+
+\subsection*{4. The minimality argument}
+
+The minimality proof is the heart of the paper.  It is good, but it should be
+made maximally rigorous.
+
+The argument is:
+
+\begin{enumerate}
+    \item Suppose \(\lambda'<N\) is a period.
+    \item Since \(N\) is a period, the minimal period divides \(N\), so
+    \(N=k\lambda'\) for some \(k>1\).
+    \item Let \(\sigma\) be the sum of one \(\lambda'\)-block of gaps.
+    \item Then translation by \(\sigma\) preserves the multiset.
+    \item Since \(N\) gaps sum to \(D\), we get \(k\sigma=D\).
+    \item Therefore translation by \(\sigma\) induces a nontrivial
+    stabiliser of the residue multiplicity function modulo \(D\).
+    \item But the heavy set is a proper cyclic interval, and such an interval
+    has trivial stabiliser.
+    \item Contradiction.
+\end{enumerate}
+
+This is elegant.  The paper should isolate this as a lemma, perhaps:
+
+\begin{lemma}
+Let \(S\) be a finite union of arithmetic progressions of common difference
+\(D\), with residue multiplicity function \(\mu\).  If the gap sequence has
+period \(L\), then the translation by the sum of one \(L\)-block of gaps
+preserves \(\mu\).
+\end{lemma}
+
+This would make the proof more modular.
+
+\subsection*{5. The cyclic interval stabiliser}
+
+The statement that a proper nonempty cyclic interval has trivial stabiliser is
+correct, but the proof should be made more formal.
+
+Suggested lemma:
+
+\begin{lemma}
+Let \(D\ge 2\), and let
+\[
+H=\{a,a+1,\ldots,a+s-1\}\subset \mathbb Z/D\mathbb Z
+\]
+with \(0<s<D\).  If \(H+\tau=H\), then \(\tau\equiv0\pmod D\).
+\end{lemma}
+
+A clean proof uses the boundary of \(H\): the set \(H\) has exactly two
+boundary edges in the cyclic graph \(C_D\), whereas a nontrivial translation
+moves the boundary.  Alternatively, use cardinality of intersections.
+
+\section*{Lean formalisation}
+
+The Lean formalisation is a strength, but the wording should be precise.
+
+Do not overclaim that the entire geometric theorem has been formalised from
+first principles if the construction is partly abstracted through a typeclass.
+
+Recommended wording:
+
+\begin{quote}
+The residue-class and minimal-period argument has been formalised in Lean 4.
+The geometric reduction from the strip construction to the residue multiset is
+represented at the combinatorial level.  Thus the formalisation verifies the
+algebraic core of the proof rather than the full analytic geometry from first
+principles.
+\end{quote}
+
+If the repository is public, make sure that:
+
+\begin{itemize}
+    \item it builds from a clean clone;
+    \item the Lean version is specified;
+    \item the Mathlib commit is specified;
+    \item there are no \texttt{sorry};
+    \item instructions are included in a \texttt{README.md};
+    \item the file names and line numbers in the paper are still correct.
+\end{itemize}
+
+\section*{Computational verification}
+
+The computational verification is useful, but it should not be overemphasised.
+Once the proof is complete, the tests are supporting evidence, not part of the
+mathematical proof.
+
+Recommended placement:
+
+\begin{itemize}
+    \item keep a short remark in the main text;
+    \item move details to an appendix or repository;
+    \item describe the testing method clearly enough to be reproducible.
+\end{itemize}
+
+Mention:
+
+\begin{itemize}
+    \item ranges of \(\alpha,\beta,\omega\);
+    \item how \(\omega\) was sampled;
+    \item how the period was computed;
+    \item whether multiplicities were counted;
+    \item how degenerate cases \(D\mid N\) were generated.
+\end{itemize}
+
+\section*{Literature section}
+
+The related-literature section should be strengthened.
+
+The current discussion of the three-distance theorem, Christoffel words, and
+Sturmian sequences is useful, but the paper should avoid relying on Wikipedia
+as a research citation.
+
+Recommended changes:
+
+\begin{itemize}
+    \item Replace the Wikipedia citation for the three-distance theorem with
+    a mathematical source.
+
+    \item Keep Berstel--Lauve--Reutenauer--Saliola for Christoffel words.
+
+    \item Keep Haynes--Koivusalo--Walton--Sadun for cut-and-project gap
+    problems.
+
+    \item Add a sentence explaining exactly why these papers do not contain
+    your formula.
+
+    \item Be cautious with the claim ``no prior work was found''.  Better:
+    ``The author is not aware of a reference that records this exact period
+    formula in the above multiset convention.''
+\end{itemize}
+
+Suggested wording:
+
+\begin{quote}
+The author is not aware of a reference that states the above formula for the
+minimal period of the multiset gap sequence associated with a rational
+one-dimensional cut-and-project strip.  The result is elementary once the
+appropriate residue-class description is introduced, but it appears useful to
+record explicitly.
+\end{quote}
+
+This is modest and credible.
+
+\section*{Possible mathematical extensions}
+
+The current open problems are good.  They can be sharpened.
+
+\subsection*{1. Window translation}
+
+Study what happens if the window is shifted transversally.  Does the same
+formula depend only on the number \(N\) of admissible invariant values, or do
+endpoint effects change the period?
+
+\subsection*{2. Set-valued version}
+
+Derive the exact period when projected points are counted without
+multiplicity.  This may be a natural companion theorem and would remove
+possible confusion with standard model-set terminology.
+
+\subsection*{3. Gap-value distribution}
+
+The paper determines the period length, but not the actual distribution of
+gap sizes within one period.
+
+A useful extension would be:
+
+\begin{quote}
+For fixed \(\alpha,\beta,\omega\), determine the distinct gap values and
+their multiplicities in one minimal period.
+\end{quote}
+
+This would connect more directly to the three-distance theorem and gap
+problems.
+
+\subsection*{4. Higher dimensions}
+
+This is a natural but much harder direction.  It should be described as
+speculative.
+
+\section*{Recommended structure for a revised paper}
+
+A cleaner revised structure could be:
+
+\begin{enumerate}
+    \item Introduction
+    \item Statement of the multiset convention
+    \item Geometry-to-residue reduction
+    \item The residue multiplicity function
+    \item Generic case \(D\nmid N\)
+    \item Uniform case \(D\mid N\)
+    \item Set-valued comparison
+    \item Computational checks
+    \item Lean formalisation
+    \item Related literature and open problems
+\end{enumerate}
+
+\section*{Concrete checklist before arXiv}
+
+Before submitting to arXiv, do the following:
+
+\begin{enumerate}
+    \item Remove AI systems from the author list.
+
+    \item Put AI assistance only in the acknowledgements.
+
+    \item Add an explicit multiset convention near the beginning.
+
+    \item Change the title to mention ``multiset'' or ``with multiplicity''.
+
+    \item Replace ``ascending'' by ``nondecreasing'' where multiplicities are
+    possible.
+
+    \item Add a remark explaining the difference between the multiset gap
+    sequence and the ordinary set-valued gap sequence.
+
+    \item Make the proof of \(\tilde p_s^{(i+N)}=\tilde p_s^{(i)}+D\)
+    explicit.
+
+    \item Isolate the minimality argument as a clean lemma.
+
+    \item State and prove the trivial-stabiliser lemma formally.
+
+    \item Tone down claims of novelty.
+
+    \item Replace Wikipedia citations with mathematical references.
+
+    \item Check all bibliography entries.
+
+    \item Check all Lean repository links.
+
+    \item Ensure the Lean code builds from a clean clone.
+
+    \item Make clear exactly what the Lean proof does and does not formalise.
+
+    \item Consider adding a short section on the version without
+    multiplicities.
+
+    \item Decide the arXiv category, probably \texttt{math.CO} or
+    \texttt{math.DS}, with possible cross-listing to \texttt{math.NT}.
+
+    \item Compile the paper locally and check for overfull boxes,
+    undefined references, and bibliography problems.
+
+    \item Ask at least one human mathematician to read the proof.
+\end{enumerate}
+
+\section*{Final judgement}
+
+The work is worth developing.
+
+It is not likely to be regarded as a major new theorem in number theory, but
+it can be a respectable and useful short mathematical note.  Its strengths are:
+
+\begin{itemize}
+    \item a clean exact formula;
+    \item a transparent residue-class proof;
+    \item coverage of all real \(\omega\ge0\);
+    \item computational verification;
+    \item partial Lean formalisation.
+\end{itemize}
+
+Its weaknesses are:
+
+\begin{itemize}
+    \item possible confusion between point sets and multisets;
+    \item elementary depth;
+    \item need for better literature positioning;
+    \item problematic AI co-author presentation;
+    \item risk of overclaiming the scope of the Lean formalisation.
+\end{itemize}
+
+With the revisions listed above, the paper is suitable for arXiv as a modest,
+clear, and potentially useful contribution.
+
+\end{document}
