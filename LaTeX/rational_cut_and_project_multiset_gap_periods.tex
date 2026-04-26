@@ -418,21 +418,47 @@ multiplicity~\(q\).
 \label{subsec:step5}
 
 \begin{proof}
-Within each interval \([kD,\, (k+1)D)\) on the \(\tilde{p}\)-axis, exactly
+Within each interval \([kD,\,(k+1)D)\) on the \(\tilde p\)-axis, exactly
 \(N\) points from the multiset \(S\) occur, counted with multiplicity.
 Their positions within the interval are determined by the residues
-\(c_r \bmod D\).
+\(c_r \bmod D\), again counted with multiplicity.
 
-The sorted difference sequence therefore has a repeating block of length
-\(N\): after \(N\) entries, the sorted multiset is translated by \(D\), so
+Let
 \[
-    \tilde p_s^{(i+N)} = \tilde p_s^{(i)} + D
+    0 \le v_0 \le v_1 \le \cdots \le v_{N-1} < D
 \]
-for all \(i\).  Hence
+be the nondecreasing list of these residues in one interval of length \(D\),
+with repetitions according to their multiplicities.  Then the sorted
+projected multiset is obtained by repeating this same residue block in every
+translate by \(D\).  More explicitly, after a possible translation of the
+indexing, every \(i \in \mathbb Z\) can be written uniquely as
 \[
-    \delta^{(i+N)}=\delta^{(i)}
+    i = kN + j,
+    \qquad
+    k\in\mathbb Z,\quad 0\le j<N,
 \]
-for all \(i\), and therefore \(\lambda \mid N\).
+and
+\[
+    \tilde p_s^{(i)} = kD + v_j.
+\]
+Consequently,
+\[
+    \tilde p_s^{(i+N)}
+    =
+    \tilde p_s^{(i)} + D
+\]
+for all \(i\in\mathbb Z\).  Therefore
+\[
+    \delta^{(i+N)}
+    =
+    \tilde p_s^{(i+N+1)}-\tilde p_s^{(i+N)}
+    =
+    \tilde p_s^{(i+1)}-\tilde p_s^{(i)}
+    =
+    \delta^{(i)}
+\]
+for all \(i\).  Thus \(N\) is a period of the difference sequence, and hence
+the minimal period \(\lambda\) divides \(N\).
 
 \medskip
 \noindent\textbf{Minimality.}
@@ -470,7 +496,14 @@ for some \(x_0\), because the final \(s\) elements of the consecutive block
 consecutive values in the \(m\)-stepping order.
 
 Now suppose, for contradiction, that \(\lambda' < N\) is a period of the gap
-sequence, and write \(N = k\lambda'\) with \(k>1\).
+sequence.  Since the minimal period divides every period, and we already know
+that \(N\) is a period, it is enough to consider a proper period
+\(\lambda'\) dividing \(N\).  Thus write
+\[
+    N = k\lambda'
+\]
+with \(k>1\).
+
 Let
 \[
     \sigma := \delta^{(0)} + \delta^{(1)} + \cdots + \delta^{(\lambda'-1)}.
@@ -479,13 +512,18 @@ Since the gap sequence has period \(\lambda'\), we have
 \[
     \tilde p_s^{(i+\lambda')} = \tilde p_s^{(i)} + \sigma
 \]
-for all \(i\), so the entire multiset \(S\) is invariant under translation by
-\(\sigma\).  On the other hand, \(N\) consecutive gaps always sum to \(D\).
-Hence
+for all \(i\).  Hence the entire multiset \(S\) is invariant under
+translation by \(\sigma\).
+
+On the other hand, \(N\) consecutive gaps always sum to \(D\), because
 \[
-    k\sigma = D,
+    \tilde p_s^{(i+N)}-\tilde p_s^{(i)} = D.
 \]
-so \(\sigma=D/k\) is a positive integer and \(k \mid D\).
+Since \(N=k\lambda'\), this gives
+\[
+    k\sigma = D.
+\]
+Thus \(\sigma = D/k\) is a positive integer and \(k\mid D\).
 
 The translation invariance of \(S\) implies invariance of the residue
 multiplicity function:
@@ -509,8 +547,10 @@ boundary and cannot coincide with \(H\) unless \(H\) is either empty or all of
 \(\mathbb{Z}/D\mathbb{Z}\), neither of which occurs because \(0<s<D\).
 
 This contradiction shows that no proper divisor \(\lambda' < N\) can be a
-period.  Since we already know \(\lambda \mid N\), it follows that
-\(\lambda=N\).
+period.  Since \(N\) is a period, it follows that the minimal period is
+\[
+    \lambda = N.
+\]
 \end{proof}
 
 % =====================================================================
