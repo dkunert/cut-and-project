@@ -52,9 +52,9 @@ The proof reduces the geometry to the distribution of \(N\) consecutive
 residue classes modulo~\(D\).  When this distribution is non-uniform, the
 residue classes with larger multiplicity form a proper cyclic interval in
 the natural residue parametrisation; its only translational symmetry is the
-identity, which rules out any smaller period.  We also discuss how the
-formula simplifies when multiplicities are discarded.  The algebraic core of
-the proof has been machine-checked in Lean~4.
+identity, which rules out any smaller period.  We also discuss the effect of
+discarding multiplicities, in particular in the uniform case \(D\mid N\).
+The algebraic core of the proof has been formalised in Lean~4.
 \end{abstract}
 
 \medskip
@@ -205,6 +205,13 @@ set-valued projected sequence has constant gap and period~\(1\), whereas
 the multiset sequence has period~\(N/D\).
 
 \subsection{Distance sequence and period}\label{subsec:distance}
+
+As shown below in Section~\ref{subsec:step2}, the projected values form a
+finite union of arithmetic progressions with common difference
+\(\alpha^2+\beta^2\), counted with finite multiplicities.  Hence the
+resulting multiset is locally finite and unbounded in both directions.  It
+therefore admits a nondecreasing enumeration indexed by \(\mathbb{Z}\),
+unique up to translation of the index.
 
 Sort the multiset of all \(\tilde{p}\)-values in nondecreasing order, with
 multiplicities retained, to obtain
