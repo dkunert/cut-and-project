@@ -29,36 +29,31 @@
 \maketitle
 
 \begin{abstract}
-We study one-dimensional cut-and-project sequences constructed by projecting
-lattice points from a strip of width~$\omega$ around a line of rational slope
-$\alpha/\beta$ (with $\gcd(\alpha,\beta)=1$) onto that line.
-The resulting sequence of Euclidean distances between consecutive projected
-points is periodic with period length~$\lambda$.
-We prove that the period length is given by the exact formula
+Consider the one-dimensional cut-and-project construction with coprime
+positive integers \(\alpha,\beta\) defining the rational slope
+\(\alpha/\beta\), and window parameter \(\omega \ge 0\).  Projecting lattice
+points from the resulting strip onto the line and counting them with
+multiplicity gives a multiset whose consecutive gaps form a periodic
+sequence.  We prove that its minimal period is
 \[
-    \lambda_{\alpha,\beta} \;=\;
-    \begin{cases}
-        N & \text{if } D \nmid N, \\[3pt]
-        N / D & \text{if } D \mid N,
-    \end{cases}
+\lambda =
+\begin{cases}
+N, & D\nmid N,\\
+N/D, & D\mid N,
+\end{cases}
 \]
-where $N := \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1$ is
-the number of integer values of the invariant $r = \alpha x - \beta y$ in the
-admissible range, and $D := \alpha^2 + \beta^2$ is the common difference of
-the underlying arithmetic progressions.
-The proof proceeds by analysing the multiplicity function of residue
-classes on $\mathbb{Z}/D\mathbb{Z}$: when $D \nmid N$ the ``heavy''
-residue classes form a contiguous cyclic interval, whose trivial
-stabiliser precludes any sub-periodicity.
-The formula is additionally verified in over 51{,}000 computational test
-cases spanning both the regime $N < D$ and $N \ge D$.
-The algebraic core of the proof has been machine-checked in
-Lean~4 with the Mathlib library (approximately 1{,}300 lines, no
-\texttt{sorry} axioms).
-As immediate corollaries, we obtain: finiteness of the period for all
-real~$\omega\ge 0$; the proven result $\lambda = \alpha + \beta + 1$ at
-$\omega = 1$; and sharp inequalities relating~$\lambda$ to
-$\Lambda_{\alpha,\beta} := \alpha + \beta + 1$ for various ranges of~$\omega$.
+where
+\[
+N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
+\qquad
+D=\alpha^2+\beta^2.
+\]
+The proof reduces the geometry to the distribution of \(N\) consecutive
+residue classes modulo~\(D\).  When this distribution is non-uniform, the
+residue classes with larger multiplicity form a proper cyclic interval; its
+trivial stabiliser rules out any smaller period.  We also discuss how the
+formula simplifies when multiplicities are discarded.  The algebraic core of
+the proof has been machine-checked in Lean~4.
 \end{abstract}
 
 \medskip
