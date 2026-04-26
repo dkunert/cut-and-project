@@ -70,36 +70,76 @@ rational slope, residue classes, lattice projection, Lean~4 formalisation.
 \section{Introduction}\label{sec:intro}
 % =====================================================================
 
-Cut-and-project constructions occupy a central place in the mathematical
-theory of aperiodic order.  The general scheme selects lattice points that
-fall within a strip (the \emph{window}) around a subspace and projects them
-onto that subspace, producing point sets whose structure lies between perfect
-periodicity and complete disorder.  For irrational slopes the resulting
-sequences are non-periodic yet highly ordered; for rational slopes they are
-periodic, but explicit formulas for their period lengths are less commonly
-recorded.
+Cut-and-project constructions provide a standard way of producing ordered
+point sets from lattices.  In the one-dimensional planar case, one selects
+lattice points lying in a strip around a line and projects them onto that
+line.  When the slope is irrational, the resulting objects are typically
+aperiodic and belong to the classical theory of model sets and aperiodic
+order.  When the slope is rational, the resulting structure is periodic and
+is therefore often regarded as a degenerate or elementary case from the
+aperiodic-order point of view.
 
-The study of these structures was advanced by Yves Meyer's foundational work
-on model sets and harmonious sets~\cite{Meyer1972}, for which he was awarded
-the Abel Prize in 2017.  In his laudatio, Terence Tao presented an
-illustration of a two-dimensional cut-and-project set and remarked on the
-distances between the projected points: ``They repeat themselves, but not in
-a regular fashion''~\cite{SpeechTao}.
+This viewpoint goes back in part to Yves Meyer's foundational work on
+harmonious sets and model sets~\cite{Meyer1972}.  Meyer's work became one
+of the mathematical foundations of the modern theory of quasicrystals and
+aperiodic order, and was recognised by the 2017 Abel Prize.
 
-The present paper determines the period length~\(\lambda\) exactly for
-rational slopes and all nonnegative real window widths in the multiset
-convention specified below.  That convention is important: projected values
-are counted with multiplicity throughout the main theorem.  Thus coincident
-projected points can give rise to zero gaps.
+Nevertheless, even in the rational case there are natural quantitative
+questions.  One such question is the following: after projecting the accepted
+lattice points and ordering the projected values along the line, what is the
+minimal period of the sequence of consecutive gaps?  This question depends
+on a convention.  If projected values are counted with multiplicity, then
+distinct lattice points projecting to the same value give rise to zero gaps.
+If multiplicities are discarded, the resulting ordinary point-set gap
+sequence may have a smaller period.  The main theorem of this paper is
+stated for the projected multiset.
 
-Section~\ref{sec:setup} gives the precise construction.
+Let the rational slope be \(\alpha/\beta\), with
+\(\gcd(\alpha,\beta)=1\), and let \(\omega\ge0\) be the window parameter.
+We prove that the multiset gap sequence has minimal period
+\[
+    \lambda =
+    \begin{cases}
+        N, & D\nmid N,\\[3pt]
+        N/D, & D\mid N,
+    \end{cases}
+\]
+where
+\[
+    N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
+    \qquad
+    D=\alpha^2+\beta^2.
+\]
+Here \(N\) is the number of admissible values of the invariant
+\(r=\alpha x-\beta y\), and \(D\) is the common difference of the arithmetic
+progressions obtained after projection.
+
+The proof is elementary.  The accepted lattice points decompose into
+parallel tracks indexed by the admissible values of \(r\).  Each track gives
+an arithmetic progression of projected values with common difference \(D\),
+and the relevant residues modulo \(D\) are obtained from \(N\) consecutive
+integers by multiplication with a unit modulo \(D\).  If \(D\nmid N\), the
+residue classes with larger multiplicity form a proper cyclic interval in
+the natural residue parametrisation; its only translational symmetry is the
+identity, which rules out any smaller period.  If \(D\mid N\), the residues
+are uniformly distributed and the gap sequence collapses to a simple pattern
+of period \(N/D\).
+
+The algebraic core of the proof has been formalised in Lean~4.  The
+formalisation verifies the residue-class and minimal-period arguments; the
+geometric construction is represented at the combinatorial level described
+above.
+
+The paper is organised as follows.  Section~\ref{sec:setup} gives the
+construction and fixes the multiplicity convention.
 Section~\ref{sec:mainresult} states the main result.
-Section~\ref{sec:proof} contains the proof for the generic case \(D \nmid N\).
-Section~\ref{sec:degenerate} treats the degenerate case \(D \mid N\).
-Section~\ref{sec:corollaries} derives corollaries.
-Section~\ref{sec:lean} describes the machine-checked formalisation in Lean~4.
-Section~\ref{sec:literature} surveys related results.
-Section~\ref{sec:discussion} discusses open problems.
+Section~\ref{sec:proof} proves the generic case \(D \nmid N\).
+Section~\ref{sec:degenerate} treats the uniform case \(D \mid N\).
+Section~\ref{sec:corollaries} records some immediate corollaries.
+Section~\ref{sec:lean} describes the Lean~4 formalisation.
+Section~\ref{sec:literature} discusses related literature.
+Section~\ref{sec:discussion} discusses the set-valued variant and open
+questions.
 
 % =====================================================================
 \section{Construction of the Sequences}\label{sec:setup}
