@@ -495,10 +495,9 @@ for some \(x_0\), because the final \(s\) elements of the consecutive block
 \(r_0,r_0+1,\ldots,r_0+N-1\) contribute one extra hit exactly on \(s\)
 consecutive values in the \(m\)-stepping order.
 
-Now suppose, for contradiction, that \(\lambda' < N\) is a period of the gap
-sequence.  Since the minimal period divides every period, and we already know
-that \(N\) is a period, it is enough to consider a proper period
-\(\lambda'\) dividing \(N\).  Thus write
+Now suppose, for contradiction, that the minimal period \(\lambda'\) satisfies
+\(\lambda' < N\).  Since \(N\) is a period, the minimal period divides \(N\).
+Thus we may write
 \[
     N = k\lambda'
 \]
@@ -546,9 +545,10 @@ trivial stabiliser: if \(0<s<D\) and
     H=\{x_0,x_0+1,\ldots,x_0+s-1\}\pmod D,
 \]
 then \(H+\tau=H\) forces \(\tau\equiv 0\pmod D\).
-Indeed, since \(0<s<D\), the interval \(H\) is uniquely determined by its
-starting element in \(\mathbb{Z}/D\mathbb{Z}\); the translate \(H+\tau\)
-starts at \(x_0+\tau\neq x_0\), so \(H+\tau\neq H\).
+Indeed, \(x_0\in H\) while \(x_0-1\notin H\), so \(x_0\) is the unique element
+of \(H\) whose predecessor is not in \(H\).  If \(H+\tau=H\), then
+\(x_0+\tau\) must have the same property and hence must equal \(x_0\).
+Thus \(\tau\equiv0\pmod D\).
 
 This contradiction shows that no proper divisor \(\lambda' < N\) can be a
 period.  Since \(N\) is a period, it follows that the minimal period is
