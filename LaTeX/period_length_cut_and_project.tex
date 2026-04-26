@@ -50,8 +50,9 @@ D=\alpha^2+\beta^2.
 \]
 The proof reduces the geometry to the distribution of \(N\) consecutive
 residue classes modulo~\(D\).  When this distribution is non-uniform, the
-residue classes with larger multiplicity form a proper cyclic interval; its
-trivial stabiliser rules out any smaller period.  We also discuss how the
+residue classes with larger multiplicity form a proper cyclic interval in
+the natural residue parametrisation; its only translational symmetry is the
+identity, which rules out any smaller period.  We also discuss how the
 formula simplifies when multiplicities are discarded.  The algebraic core of
 the proof has been machine-checked in Lean~4.
 \end{abstract}
@@ -589,7 +590,7 @@ Each axiom is discharged by a separate lemma
 \subsection{Correspondence with the paper}\label{subsec:lean_corr}
 
 Table~\ref{tab:lean} gives the correspondence between the main
-results of this paper and the Lean declarations in
+results of this paper and the Lean~4 declarations in
 \texttt{Basic.lean}.
 
 \begin{table}[ht]
@@ -597,7 +598,7 @@ results of this paper and the Lean declarations in
 \small
 \begin{tabular}{lll}
 \hline
-\textbf{Paper} & \textbf{Lean name} & \textbf{Line} \\
+\textbf{Paper} & \textbf{Lean~4 name} & \textbf{Line} \\
 \hline
 Lemma~\ref{lem:gcd} ($\gcd(\alpha,D)=1$)
   & \texttt{coprime\_alpha\_D} & 11 \\
