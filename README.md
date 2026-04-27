@@ -124,3 +124,32 @@ There are four targets:
 * ```make run``` runs the software.
 * ```make all``` installs all required libraries and runs the software.
 * ```make clean``` cleans up.
+
+### Lean 4 Formalisation
+
+The algebraic core of the proof in `LaTeX/rational_cut_and_project_multiset_gap_periods.tex` has been formalised in Lean 4 in directory `Lean/CutAndProject/`. The formalisation comprises about 1,300 lines of verified code with no `sorry`, `admit`, or `axiom`.
+
+#### Scope
+
+The formalised proof covers the algebraic and combinatorial core: the coprimality lemmas, the residue distribution (uniform and non-uniform cases), the heavy-set/cyclic-interval structure, the trivial-stabiliser lemma, the generic minimality argument, the degenerate case, and the final case dispatch (Theorem 3.1 of the paper, named `main_theorem` in the Lean code).
+
+The geometric construction — defining the cut-and-project set, projecting lattice points and sorting the multiset of $\tilde{p}$-values — is modelled abstractly via the `GeometricProjection` typeclass rather than formalised from first principles. A concrete instance `GeometricProjectionConcrete` discharges each of the four typeclass axioms.
+
+A correspondence between paper results and Lean declarations is given in Table 1 of the paper.
+
+#### Versions
+
+* Lean: `leanprover/lean4:v4.29.1` (pinned in `Lean/CutAndProject/lean-toolchain`).
+* Mathlib: `v4.29.1`, exact commit `5e932f97dd25535344f80f9dd8da3aab83df0fe6` (pinned in `Lean/CutAndProject/lake-manifest.json`).
+
+#### Building
+
+Install [`elan`](https://github.com/leanprover/elan) (this will pick up the toolchain pinned in `lean-toolchain` automatically), then:
+
+```
+cd Lean/CutAndProject
+lake exe cache get   # download Mathlib build cache (recommended)
+lake build
+```
+
+The full source is `Lean/CutAndProject/CutAndProject/Basic.lean`.

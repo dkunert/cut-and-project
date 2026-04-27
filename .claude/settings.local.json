@@ -16,7 +16,8 @@
       "WebFetch(domain:link.springer.com)",
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c && make perf 2>&1)",
       "Bash(lake build*)",
-      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX && mv period_length_cut_and_project.tex rational_cut_and_project_multiset_gap_periods.tex && ls -la rational_cut_and_project_multiset_gap_periods.tex)"
+      "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX && mv period_length_cut_and_project.tex rational_cut_and_project_multiset_gap_periods.tex && ls -la rational_cut_and_project_multiset_gap_periods.tex)",
+      "Bash(lake --version)"
     ]
   }
 }
