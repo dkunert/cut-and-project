@@ -22,7 +22,9 @@
       "Read(//Users/dirk/.claude/projects/**)",
       "Bash(git mv *)",
       "Bash(mkdir -p src/c/multiset/.claude)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(make clean *)",
+      "Bash(make all *)"
     ]
   }
 }
