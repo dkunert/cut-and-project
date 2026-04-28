@@ -24,7 +24,14 @@
       "Bash(mkdir -p src/c/multiset/.claude)",
       "Bash(git *)",
       "Bash(make clean *)",
-      "Bash(make all *)"
+      "Bash(make all *)",
+      "Bash(make add_period_set)",
+      "Bash(head -6 /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/degenerate_patterns_5000_lines.csv)",
+      "Bash(/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/add_period_set /tmp/degen_sample.csv /tmp/degen_sample_out.csv degenerate)",
+      "Read(//tmp/**)",
+      "Bash(head -6 /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
+      "Bash(/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/add_period_set /tmp/find_sample.csv /tmp/find_sample_out.csv global)",
+      "Bash(./src/c/set/add_period_set tests/degenerate_patterns_5000_lines.csv tests/degenerate_patterns_5000_lines.csv.tmp degenerate)"
     ]
   }
 }

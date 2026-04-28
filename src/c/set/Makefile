@@ -47,8 +47,16 @@ DEPS          := $(OBJS_PERF:.perf.o=.d) $(OBJS_DEBUG:.debug.o=.d)
 TARGET_PERF   := cnp$(EXE)
 TARGET_DEBUG  := cnp_debug$(EXE)
 
-.PHONY: all perf debug clean
-all: perf debug
+ADD_PS_SOURCES := add_period_set.c mathematics.c
+ADD_PS_OBJS    := $(ADD_PS_SOURCES:.c=.perf.o)
+TARGET_ADD_PS  := add_period_set$(EXE)
+
+.PHONY: all perf debug clean add_period_set
+all: perf debug add_period_set
+add_period_set: $(TARGET_ADD_PS)
+
+$(TARGET_ADD_PS): $(ADD_PS_OBJS)
+	$(CC) $(CFLAGS_PERF) -o $@ $^
 
 # -----------------
 # Performance build
@@ -78,4 +86,4 @@ $(TARGET_DEBUG): $(OBJS_DEBUG)
 -include $(DEPS)
 
 clean:
-	rm -f $(OBJS_PERF) $(OBJS_DEBUG) $(DEPS) $(TARGET_PERF) $(TARGET_DEBUG)
+	rm -f $(OBJS_PERF) $(OBJS_DEBUG) $(DEPS) $(TARGET_PERF) $(TARGET_DEBUG) $(TARGET_ADD_PS) add_period_set.perf.o add_period_set.d
