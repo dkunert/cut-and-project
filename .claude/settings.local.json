@@ -19,7 +19,10 @@
       "Bash(cd /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/LaTeX && mv period_length_cut_and_project.tex rational_cut_and_project_multiset_gap_periods.tex && ls -la rational_cut_and_project_multiset_gap_periods.tex)",
       "Bash(lake --version)",
       "Read(//Users/dirk/.claude/projects/-Users-dirk-Documents-knowHow-mathematics-cut-and-project-published-cut-and-project/**)",
-      "Read(//Users/dirk/.claude/projects/**)"
+      "Read(//Users/dirk/.claude/projects/**)",
+      "Bash(git mv *)",
+      "Bash(mkdir -p src/c/multiset/.claude)",
+      "Bash(git *)"
     ]
   }
 }

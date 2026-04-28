@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Mathematical research project investigating period lengths of one-dimensional cut-and-project sequences. The project has two implementations:
-- **C** (`src/c/`): High-performance computation for testing mathematical conjectures
+- **C** (`src/c/multiset/`): High-performance computation for testing mathematical conjectures
 - **Python** (`src/python/`): Statistical analysis and ML modeling of computed results
 - **LaTeX** (`LaTeX/`): Academic paper source and compiled PDF
 
@@ -14,7 +14,7 @@ Mathematical research project investigating period lengths of one-dimensional cu
 ### C Implementation
 
 ```bash
-cd src/c
+cd src/c/multiset
 make all        # Build both performance (cnp) and debug (cnp_debug) versions
 make perf       # Build optimized version only (-O3 -flto -funroll-loops -ffast-math)
 make debug      # Build debug version only (-O0 -g)
@@ -35,7 +35,7 @@ make clean      # Remove virtual environment
 
 ## Configuration Before Running C Code
 
-Edit `src/c/constants.h` before building/running:
+Edit `src/c/multiset/constants.h` before building/running:
 
 - `X_MIN`, `X_MAX`: x-interval for computation (default: 0 to 1,000,000)
 - `NUMBER_OF_CONJECTURE_TESTS`: Number of random test iterations (default: 1000)
