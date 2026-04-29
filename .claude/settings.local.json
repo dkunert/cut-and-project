@@ -31,7 +31,17 @@
       "Read(//tmp/**)",
       "Bash(head -6 /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
       "Bash(/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/add_period_set /tmp/find_sample.csv /tmp/find_sample_out.csv global)",
-      "Bash(./src/c/set/add_period_set tests/degenerate_patterns_5000_lines.csv tests/degenerate_patterns_5000_lines.csv.tmp degenerate)"
+      "Bash(./src/c/set/add_period_set tests/degenerate_patterns_5000_lines.csv tests/degenerate_patterns_5000_lines.csv.tmp degenerate)",
+      "Bash(awk -F, 'NR>1 {ps[$6]++; total++} END {print \"total rows:\", total; for \\(v in ps\\) print \"period_set =\", v, \"count:\", ps[v]}' tests/degenerate_patterns_5000_lines.csv.tmp)",
+      "Bash(mv tests/degenerate_patterns_5000_lines.csv.tmp tests/degenerate_patterns_5000_lines.csv)",
+      "Bash(awk *)",
+      "Bash(time /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/add_period_set /tmp/find_100.csv /tmp/find_100_out.csv global)",
+      "Bash(/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/add_period_set *)",
+      "Bash(sed -n '38600p' /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
+      "Bash(sed -n '38601p' /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
+      "Bash(ps *)",
+      "Bash(sort -k2 -n -r)",
+      "Bash(./add_period_set *)"
     ]
   }
 }
