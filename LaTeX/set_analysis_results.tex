@@ -1,0 +1,106 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+\title{Set-Period vs.\ Multiset-Period: Computational Results}
+\author{Dirk Kunert}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Setup}
+
+For each row $(o_n, o_d, a_n, a_d, \mathrm{period})$ of the file
+\texttt{tests/new\_find\_patterns\_x\_max\_1000000\_51012\_lines.csv}, the
+program \texttt{src/c/set/add\_period\_set} computed the set-based period
+length $\lambda_{\text{set}}$ on the same parameter quadruple and appended
+it as a sixth column~\texttt{period\_set}. The run was performed in
+\emph{global} mode with $X_{\max}=10^{6}$ and a per-row wall-clock cap of
+$120$~seconds. The output is written to
+\texttt{tests/new\_find\_patterns\_x\_max\_1000000\_51012\_lines.csv.tmp}.
+
+\section*{Aggregate counts}
+
+Of the $51{,}011$ data rows in the input, the resulting file breaks down
+as follows.
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Outcome & Rows & Meaning \\
+\midrule
+$\lambda_{\text{set}} = \mathrm{period}$  & $50{,}968$ & set period equals multiset period \\
+$\lambda_{\text{set}} = -2$ & $29$ & \texttt{ARRAY\_SIZE\_EXCEEDED} \\
+$\lambda_{\text{set}} = -3$ & $1$  & \texttt{DX\_LENGTH\_TO\_SMALL} \\
+$\lambda_{\text{set}} = -4$ & $13$ & per-row $120$\,s timeout \\
+$\lambda_{\text{set}} > 0$, $\lambda_{\text{set}} \neq \mathrm{period}$ & $1$ & genuine disagreement (see below) \\
+\midrule
+Total                                     & $51{,}012$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+In other words, on $99.92\%$ of the rows ($50{,}968 / 51{,}011$) the
+set-based and multiset-based period lengths coincide; the remaining
+$43$ rows split into $43$ computational aborts (out of memory, dx-window
+too small, or timeout) and exactly one row in which the two periods are
+both well-defined positive integers but disagree.
+
+\section*{The single positive disagreement}
+
+The only row with $\lambda_{\text{set}} > 0$ and
+$\lambda_{\text{set}} \neq \mathrm{period}$ is
+
+\begin{center}
+\begin{tabular}{rrrrrr}
+\toprule
+$o_n$ & $o_d$ & $a_n$ & $a_d$ & multiset period & $\lambda_{\text{set}}$ \\
+\midrule
+$98{,}281$ & $139$ & $68$ & $149$ & $153{,}431$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Here the multiset period is $153{,}431$ while the set-based period
+collapses to $1$. This is a candidate witness for the
+multiset-vs.-set distinction discussed in Open Problem~2 and warrants a
+direct re-computation by hand or with an independent implementation
+before being cited.
+
+\section*{Run summary}
+
+\begin{itemize}
+\item Resume from a partial run: $40{,}201$ rows already present in the
+      output were skipped; $10{,}811$ rows were freshly processed.
+\item No hard failures during the resume run; $11$ of the $13$ timeouts
+      shown above were produced in this run, the remaining $2$ were
+      already present in the partial output.
+\item Errors of types $-2$ and $-3$ accumulated $30$ rows in total;
+      these are computational limitations of the current
+      \texttt{lambda} implementation at $X_{\max}=10^{6}$ and do not
+      indicate a true mismatch of the two period notions.
+\end{itemize}
+
+\section*{Caveats}
+
+\begin{itemize}
+\item Negative \texttt{period\_set} values mean the set-based period was
+      \emph{not} computed, not that it differs from the multiset period.
+      Excluding the $43$ aborted rows, the multiset period and the
+      set-based period agree on every single one of the remaining
+      $50{,}968$ rows except the row exhibited above.
+\item The timeout cap of $120$\,s is heuristic; lifting it (or doubling
+      \texttt{MAX\_PERIOD\_ARRAY\_SIZE}) might convert some of the $43$
+      aborts into successful computations.
+\end{itemize}
+
+\end{document}
