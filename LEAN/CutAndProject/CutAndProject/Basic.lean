@@ -1392,4 +1392,259 @@ theorem set_main_theorem
     rw [if_neg h]
     exact HasPeriodLength_const_one set_seq (h_ge (not_lt.mp h))
 
+/-! ## Set-valued period (Phase C: concrete construction)
+
+Concrete enumeration of the underlying set
+`{ z ∈ ℤ | count_hits D r0 N (z mod D) ≥ 1 }`,
+mirroring the multiset's `V` / `sorted_multiset` machinery but with
+multiplicities flattened to `{0,1}` via the indicator. The resulting
+`set_difference_sequence` discharges the abstract hypotheses `h_lt`
+and `h_ge` of `set_main_theorem`.
+-/
+
+/-- Set indicator: `1` if residue `(y : ZMod D)` is hit at least once,
+else `0`. Flattens multiplicities of the multiset to `{0,1}`. -/
+noncomputable def set_indicator (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (y : ℕ) : ℕ :=
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  if 1 ≤ count_hits D r0 N (y : ZMod D) then 1 else 0
+
+/-- Cumulative count of hit residues over `[0, x]`. Set analogue of
+`cumulative_hits`. -/
+noncomputable def set_cumulative_hits (α β : ℕ) (ω : ℝ)
+    [NeZero (α ^ 2 + β ^ 2)] (x : ℕ) : ℕ :=
+  (Finset.range (x + 1)).sum (set_indicator α β ω)
+
+-- The `k`-th hit position: least `x` such that `[0, x]` contains
+-- strictly more than `k` hits. Set analogue of `V`.
+open Classical in
+noncomputable def set_V (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (k : ℕ) : ℕ :=
+  if h : ∃ x, k < set_cumulative_hits α β ω x then
+    Nat.find h
+  else
+    0
+
+/-- Number of distinct residues hit, i.e. `|set ∩ [0, D)|`. -/
+noncomputable def set_size (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] : ℕ :=
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card
+
+/-- Bi-infinite enumeration of the underlying set, lifted via `set_size`. -/
+noncomputable def set_sorted (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (i : ℤ) : ℤ :=
+  let M := (set_size α β ω : ℤ)
+  let D := α ^ 2 + β ^ 2
+  let r := (i % M).toNat
+  let q := i / M
+  (set_V α β ω r : ℤ) + q * D
+
+/-- Concrete set-valued gap sequence. -/
+noncomputable def set_difference_sequence (α β : ℕ) (ω : ℝ)
+    [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) : ℤ :=
+  set_sorted α β ω (i + 1) - set_sorted α β ω i
+
+/-! ### Phase C, branch `N < D`: agreement with `difference_sequence` -/
+
+/-- Under `N < D`, the indicator and the multiplicity coincide pointwise. -/
+lemma set_indicator_eq_count_hits_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (y : ℕ) :
+    set_indicator α β ω y =
+      count_hits (α ^ 2 + β ^ 2)
+        (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+        ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (y : ZMod (α ^ 2 + β ^ 2)) := by
+  have h_le := count_hits_lt_D (α ^ 2 + β ^ 2)
+      (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+      (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h (y : ZMod (α ^ 2 + β ^ 2))
+  show (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = _
+  split_ifs with hge
+  · omega
+  · push_neg at hge; omega
+
+/-- Under `N < D`, `set_cumulative_hits` and `cumulative_hits` agree. -/
+lemma set_cumulative_hits_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
+    set_cumulative_hits α β ω x = cumulative_hits α β ω x := by
+  show (Finset.range (x + 1)).sum (set_indicator α β ω) = _
+  apply Finset.sum_congr rfl
+  intro y _
+  exact set_indicator_eq_count_hits_of_lt α β ω h y
+
+/-- Under `N < D`, `set_V` and `V` agree. -/
+lemma set_V_eq_V_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (k : ℕ) :
+    set_V α β ω k = V α β ω k := by
+  have h_funeq : set_cumulative_hits α β ω = cumulative_hits α β ω :=
+    funext (set_cumulative_hits_eq_of_lt α β ω h)
+  unfold set_V V
+  rw [h_funeq]
+
+/-- Under `N < D`, `set_size = N`. -/
+lemma set_size_eq_N_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) :
+    set_size α β ω = (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := by
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  have h_div : N / D = 0 := Nat.div_eq_of_lt h
+  have h_mod : N % D = N := Nat.mod_eq_of_lt h
+  have h_dist := (non_uniform_residue_distribution D r0 N).1
+  simp only [h_div, h_mod, zero_add] at h_dist
+  have h_le : ∀ x : ZMod D, count_hits D r0 N x ≤ 1 :=
+    fun x => count_hits_lt_D D r0 N h x
+  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = N
+  have h_filter_eq :
+      (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)) =
+      (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = 1)) := by
+    ext x
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    constructor
+    · intro hge; have := h_le x; omega
+    · intro heq; omega
+  rw [h_filter_eq]
+  exact h_dist
+
+/-- Under `N < D`, `set_sorted = sorted_multiset` pointwise. -/
+lemma set_sorted_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
+    set_sorted α β ω i = sorted_multiset α β ω i := by
+  show (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
+       (i / (set_size α β ω : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) =
+       (V α β ω (i % ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)).toNat : ℤ) +
+       (i / ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)) * (α ^ 2 + β ^ 2 : ℕ)
+  rw [set_size_eq_N_of_lt α β ω h, set_V_eq_V_of_lt α β ω h]
+
+/-- **Discharge of `h_lt`**: under `N < D`, the concrete set sequence
+agrees pointwise with `difference_sequence`. -/
+lemma set_difference_sequence_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
+    set_difference_sequence α β ω i = difference_sequence α β ω i := by
+  show set_sorted α β ω (i + 1) - set_sorted α β ω i =
+       sorted_multiset α β ω (i + 1) - sorted_multiset α β ω i
+  rw [set_sorted_eq_of_lt α β ω h (i + 1), set_sorted_eq_of_lt α β ω h i]
+
+/-! ### Phase C, branch `D ≤ N`: constant-`1` set sequence -/
+
+/-- Under `D ≤ N`, every residue is hit, so the indicator is constantly `1`. -/
+lemma set_indicator_eq_one_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (y : ℕ) :
+    set_indicator α β ω y = 1 := by
+  have h_ge := count_hits_ge_D (α ^ 2 + β ^ 2)
+      (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+      (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h (y : ZMod (α ^ 2 + β ^ 2))
+  show (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = 1
+  rw [if_pos h_ge]
+
+/-- Under `D ≤ N`, the cumulative count is just `x + 1`. -/
+lemma set_cumulative_hits_eq_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (x : ℕ) :
+    set_cumulative_hits α β ω x = x + 1 := by
+  show (Finset.range (x + 1)).sum (set_indicator α β ω) = x + 1
+  calc (Finset.range (x + 1)).sum (set_indicator α β ω)
+      = (Finset.range (x + 1)).sum (fun _ : ℕ => 1) :=
+        Finset.sum_congr rfl (fun y _ => set_indicator_eq_one_of_ge α β ω h y)
+    _ = x + 1 := by simp
+
+/-- Under `D ≤ N`, `set_V k = k`. -/
+lemma set_V_eq_id_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (k : ℕ) :
+    set_V α β ω k = k := by
+  have h_cum : ∀ x, set_cumulative_hits α β ω x = x + 1 :=
+    set_cumulative_hits_eq_of_ge α β ω h
+  have hex : ∃ x, k < set_cumulative_hits α β ω x := ⟨k, by rw [h_cum]; omega⟩
+  unfold set_V
+  rw [dif_pos hex]
+  apply Nat.find_eq_iff _ |>.mpr
+  refine ⟨?_, ?_⟩
+  · rw [h_cum]; omega
+  · intro m hm
+    rw [h_cum]; omega
+
+/-- Under `D ≤ N`, `set_size = D` (every residue is hit). -/
+lemma set_size_eq_D_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) :
+    set_size α β ω = α ^ 2 + β ^ 2 := by
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  have h_ge : ∀ x : ZMod D, 1 ≤ count_hits D r0 N x :=
+    fun x => count_hits_ge_D D r0 N h x
+  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = D
+  have h_filter_eq :
+      Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x) =
+      (Finset.univ : Finset (ZMod D)) := by
+    ext x; simp [h_ge x]
+  rw [h_filter_eq, Finset.card_univ, ZMod.card]
+
+/-- Under `D ≤ N`, `set_sorted i = i`. -/
+lemma set_sorted_eq_id_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
+    set_sorted α β ω i = i := by
+  have hD_pos : 0 < α ^ 2 + β ^ 2 := by
+    have : NeZero (α ^ 2 + β ^ 2) := inferInstance
+    exact Nat.pos_of_ne_zero this.out
+  have hD_ne : ((α ^ 2 + β ^ 2 : ℕ) : ℤ) ≠ 0 := by exact_mod_cast hD_pos.ne'
+  show (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
+       (i / (set_size α β ω : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) = i
+  rw [set_size_eq_D_of_ge α β ω h]
+  have hmod_nn : 0 ≤ i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := Int.emod_nonneg i hD_ne
+  have hmod_lt : i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) < ((α ^ 2 + β ^ 2 : ℕ) : ℤ) :=
+    Int.emod_lt_of_pos i (by exact_mod_cast hD_pos)
+  set r : ℕ := (i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ)).toNat with hr_def
+  have hr_lt : r < α ^ 2 + β ^ 2 := by
+    have : (r : ℤ) < ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
+      rw [hr_def, Int.toNat_of_nonneg hmod_nn]; exact hmod_lt
+    exact_mod_cast this
+  rw [set_V_eq_id_of_ge α β ω h r]
+  have h_r_int : (r : ℤ) = i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
+    rw [hr_def, Int.toNat_of_nonneg hmod_nn]
+  rw [h_r_int]
+  have := Int.emod_add_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
+  linarith
+
+/-- **Discharge of `h_ge`**: under `D ≤ N`, the concrete set sequence
+is constantly `1`. -/
+lemma set_difference_sequence_eq_one_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
+    set_difference_sequence α β ω i = 1 := by
+  show set_sorted α β ω (i + 1) - set_sorted α β ω i = 1
+  rw [set_sorted_eq_id_of_ge α β ω h (i + 1), set_sorted_eq_id_of_ge α β ω h i]
+  ring
+
+/-! ### Phase C, concrete instantiation of `set_main_theorem` -/
+
+/--
+Concrete set-valued period theorem. The `set_difference_sequence` defined
+above realises the abstract `set_main_theorem`, closing the asymmetry
+between the multiset side (`main_theorem`, line 1283 — instantiated via
+`GeometricProjectionConcrete`) and the set side. -/
+theorem set_main_theorem_concrete
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] :
+    HasPeriodLength (set_difference_sequence α β ω)
+      (if (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+       else 1) := by
+  haveI : GeometricProjection α β ω (difference_sequence α β ω) :=
+    GeometricProjectionConcrete α β h_coprime ω h_ω
+  exact set_main_theorem α β h_coprime ω h_ω (set_difference_sequence α β ω)
+    (set_difference_sequence_eq_of_lt α β ω)
+    (set_difference_sequence_eq_one_of_ge α β ω)
+
 end CutAndProject
