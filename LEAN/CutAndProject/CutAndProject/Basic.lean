@@ -1375,6 +1375,276 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     · -- ((k + N - L%N) % N + L) % N = k
       exact mod_add_inv N L k hN hk_range
 
+-- =====================================================================
+-- Unit-aware parallel infrastructure (Phase 2 step 3d).
+-- =====================================================================
+
+/-- Unit-aware analogue of `sorted_residue_shift`. -/
+lemma sorted_residue_shift_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (L : ℕ) (hL : IsPeriod (difference_sequence_unit α β ω u) L) (j : ℕ) :
+    let D := α ^ 2 + β ^ 2
+    let σ_ℤ := sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0
+    (sorted_multiset_unit α β ω u ↑((j + L) %
+      (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) : ZMod D) =
+    (sorted_multiset_unit α β ω u ↑j : ZMod D) + (σ_ℤ : ZMod D) := by
+  intro D σ_ℤ
+  have h1 := sorted_multiset_unit_mod_D_eq α β ω h_ω u j L
+  have h2 : sorted_multiset_unit α β ω u (↑j + ↑L) =
+      sorted_multiset_unit α β ω u ↑j + σ_ℤ := by
+    have := sorted_shift_constant_unit α β ω u L hL ↑j; linarith
+  have h3 : (↑(j + L) : ℤ) = ↑j + ↑L := by push_cast; ring
+  rw [← h1, h3]; simp only [h2, Int.cast_add]
+
+/-- For k < N, sorted_multiset_unit at (↑k : ℤ) simplifies to ↑(V_unit α β ω u k). -/
+private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+    sorted_multiset_unit α β ω u (↑k : ℤ) = ↑(V_unit α β ω u k) := by
+  have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
+    exact_mod_cast (show 0 < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat from by omega)
+  have h_mod : (↑k : ℤ) % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat = ↑k :=
+    Int.emod_eq_of_lt (Int.natCast_nonneg k) (by exact_mod_cast hk)
+  have h_div : (↑k : ℤ) / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat = 0 :=
+    Int.ediv_eq_zero_of_lt (Int.natCast_nonneg k) (by exact_mod_cast hk)
+  simp only [sorted_multiset_unit, h_mod, h_div, Int.toNat_natCast, zero_mul, add_zero,
+             Nat.cast_inj]
+
+private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    Monotone (cumulative_hits_unit α β ω u) := by
+  intro a b hab
+  dsimp [cumulative_hits_unit]
+  apply Finset.sum_le_sum_of_subset
+  exact Finset.range_mono (Nat.add_le_add_right hab 1)
+
+/-- Unit-aware version of `sum_count_hits`. Total hits over all D residues equals N. -/
+private lemma sum_count_hits_unit (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) :
+    ∑ x : ZMod D, count_hits_unit D u r0 N x = N := by
+  have h_eq : ∀ x : ZMod D, count_hits_unit D u r0 N x = count_hits D r0 N ((u⁻¹ : (ZMod D)ˣ) * x) :=
+    count_hits_unit_eq_count_hits D u r0 N
+  rw [Finset.sum_congr rfl (fun x _ => h_eq x)]
+  -- ∑ x, count_hits D r0 N (u⁻¹ * x) = ∑ y, count_hits D r0 N y via bijection x ↦ u⁻¹ * x
+  rw [show (∑ x : ZMod D, count_hits D r0 N ((u⁻¹ : (ZMod D)ˣ) * x)) =
+        ∑ y : ZMod D, count_hits D r0 N y from ?_]
+  · exact sum_count_hits D r0 N
+  · apply Finset.sum_bij (fun (x : ZMod D) _ => (u⁻¹ : (ZMod D)ˣ) * x)
+    · intro a _; exact Finset.mem_univ _
+    · intro a _ b _ h
+      have := congrArg (fun z => (u : ZMod D) * z) h
+      simp only [← mul_assoc, Units.mul_inv, one_mul] at this
+      exact this
+    · intro b _; refine ⟨(u : ZMod D) * b, Finset.mem_univ _, ?_⟩
+      rw [← mul_assoc, Units.inv_mul, one_mul]
+    · intros; rfl
+
+private lemma sum_range_eq_sum_zmod_unit (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) :
+    ∑ y ∈ Finset.range D, count_hits_unit D u r0 N (↑y : ZMod D) =
+    ∑ x : ZMod D, count_hits_unit D u r0 N x := by
+  symm
+  apply Finset.sum_bij (fun (x : ZMod D) _ => x.val)
+  · intro x _; exact Finset.mem_range.mpr (ZMod.val_lt x)
+  · intro x₁ _ x₂ _ h
+    rw [← ZMod.natCast_zmod_val x₁, ← ZMod.natCast_zmod_val x₂, h]
+  · intro y hy
+    exact ⟨(↑y : ZMod D), Finset.mem_univ _,
+      by rw [ZMod.val_natCast, Nat.mod_eq_of_lt (Finset.mem_range.mp hy)]⟩
+  · intro x _; congr 1; exact (ZMod.natCast_zmod_val x).symm
+
+private lemma cumulative_hits_unit_eq_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    cumulative_hits_unit α β ω u (α ^ 2 + β ^ 2 - 1) =
+    (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
+  dsimp [cumulative_hits_unit]
+  rw [show α ^ 2 + β ^ 2 - 1 + 1 = α ^ 2 + β ^ 2 from
+        Nat.succ_pred_eq_of_pos (NeZero.pos (α ^ 2 + β ^ 2))]
+  rw [sum_range_eq_sum_zmod_unit (α ^ 2 + β ^ 2) u
+        (((-⌊ω * ↑β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+        (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat,
+      sum_count_hits_unit (α ^ 2 + β ^ 2) u
+        (((-⌊ω * ↑β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+        (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat]
+
+private lemma V_unit_lt_D (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+    V_unit α β ω u k < α ^ 2 + β ^ 2 := by
+  have h_exists : ∃ x, k < cumulative_hits_unit α β ω u x :=
+    ⟨α ^ 2 + β ^ 2 - 1, (cumulative_hits_unit_eq_N α β ω u).symm ▸ hk⟩
+  have h_eq : V_unit α β ω u k = Nat.find h_exists := by
+    unfold V_unit; exact dif_pos h_exists
+  rw [h_eq]
+  calc Nat.find h_exists
+      ≤ α ^ 2 + β ^ 2 - 1 :=
+        Nat.find_min' h_exists ((cumulative_hits_unit_eq_N α β ω u).symm ▸ hk)
+    _ < α ^ 2 + β ^ 2 := Nat.sub_lt (NeZero.pos _) Nat.one_pos
+
+private lemma V_unit_eq_iff (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (v : ℕ) :
+    V_unit α β ω u k = v ↔
+    (v = 0 ∨ cumulative_hits_unit α β ω u (v - 1) ≤ k) ∧
+    k < cumulative_hits_unit α β ω u v := by
+  have h_exists : ∃ x, k < cumulative_hits_unit α β ω u x :=
+    ⟨α ^ 2 + β ^ 2 - 1, (cumulative_hits_unit_eq_N α β ω u).symm ▸ hk⟩
+  have h_V : V_unit α β ω u k = Nat.find h_exists := by
+    unfold V_unit; exact dif_pos h_exists
+  rw [h_V]
+  constructor
+  · intro h_eq
+    refine ⟨?_, h_eq ▸ Nat.find_spec h_exists⟩
+    rcases Nat.eq_zero_or_pos v with hv | hv
+    · left; exact hv
+    · right
+      have h_lt_find : v - 1 < Nat.find h_exists := by
+        rw [h_eq]; exact Nat.sub_lt hv Nat.one_pos
+      exact Nat.not_lt.mp (Nat.find_min h_exists h_lt_find)
+  · intro ⟨h_left, h_right⟩
+    apply le_antisymm
+    · exact Nat.find_min' h_exists h_right
+    · by_contra h_lt
+      push_neg at h_lt
+      rcases h_left with hv | h_ge
+      · subst hv; omega
+      · have h_mono := cumulative_hits_unit_mono α β ω u
+            (show Nat.find h_exists ≤ v - 1 by omega)
+        linarith [Nat.find_spec h_exists]
+
+private lemma V_unit_fiber_card (α β : ℕ) (ω : ℝ) (_h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (v : ℕ) (hv : v < α ^ 2 + β ^ 2) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    ((Finset.range N).filter (fun k => V_unit α β ω u k = v)).card =
+    count_hits_unit D u r0 N (↑v : ZMod D) := by
+  intro N D r0
+  set prev := if v = 0 then 0 else cumulative_hits_unit α β ω u (v - 1) with h_prev_def
+  have h_filter_eq : (Finset.range N).filter (fun k => V_unit α β ω u k = v) =
+      Finset.Ico prev (cumulative_hits_unit α β ω u v) := by
+    ext k
+    simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ico]
+    constructor
+    · intro ⟨hk, hV⟩
+      have h_iff := (V_unit_eq_iff α β ω u k hk v).mp hV
+      refine ⟨?_, h_iff.2⟩
+      simp only [prev]
+      split_ifs with hv0
+      · omega
+      · rcases h_iff.1 with h | h
+        · omega
+        · exact h
+    · intro ⟨h_ge, h_lt⟩
+      have hk_lt_N : k < N := by
+        calc k < cumulative_hits_unit α β ω u v := h_lt
+          _ ≤ cumulative_hits_unit α β ω u (D - 1) :=
+              cumulative_hits_unit_mono α β ω u (by omega : v ≤ D - 1)
+          _ = N := cumulative_hits_unit_eq_N α β ω u
+      refine ⟨hk_lt_N, (V_unit_eq_iff α β ω u k hk_lt_N v).mpr ⟨?_, h_lt⟩⟩
+      simp only [prev] at h_ge
+      split_ifs at h_ge with hv0
+      · left; exact hv0
+      · right; exact h_ge
+  rw [h_filter_eq, Nat.card_Ico]
+  have h_step : ∀ n, cumulative_hits_unit α β ω u (n + 1) =
+      cumulative_hits_unit α β ω u n + count_hits_unit D u r0 N (↑(n + 1) : ZMod D) := by
+    intro n; dsimp [cumulative_hits_unit]; rw [Finset.sum_range_succ]
+  rcases Nat.eq_zero_or_pos v with hv0 | hv0
+  · subst hv0; simp only [prev, ite_true, Nat.sub_zero]
+    have : cumulative_hits_unit α β ω u 0 =
+        (Finset.range 1).sum
+          (fun y => count_hits_unit D u r0 N (↑y : ZMod D)) := by rfl
+    rw [this, Finset.sum_range_one]
+  · simp only [prev, show v = 0 ↔ False from ⟨by omega, False.elim⟩, ite_false]
+    have h_eq : cumulative_hits_unit α β ω u v =
+        cumulative_hits_unit α β ω u (v - 1) + count_hits_unit D u r0 N (↑v : ZMod D) := by
+      have := h_step (v - 1)
+      rwa [show v - 1 + 1 = v from Nat.succ_pred_eq_of_pos hv0] at this
+    omega
+
+/-- Unit-aware analogue of `count_hits_eq_sorted_count`. -/
+lemma count_hits_eq_sorted_count_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    ∀ x : ZMod D, count_hits_unit D u r0 N x =
+      ((Finset.range N).filter
+        (fun (k : ℕ) => (sorted_multiset_unit α β ω u (↑k : ℤ) : ZMod D) = x)).card := by
+  intro N D r0 x
+  have h_filter_eq : (Finset.range N).filter
+      (fun (k : ℕ) => (sorted_multiset_unit α β ω u (↑k : ℤ) : ZMod D) = x) =
+      (Finset.range N).filter
+      (fun (k : ℕ) => (↑(V_unit α β ω u k) : ZMod D) = x) := by
+    apply Finset.filter_congr
+    intro k hk; rw [Finset.mem_range] at hk
+    constructor
+    · intro h; rw [sorted_multiset_unit_of_lt_N α β ω u k hk] at h; exact_mod_cast h
+    · intro h; rw [sorted_multiset_unit_of_lt_N α β ω u k hk]; exact_mod_cast h
+  rw [h_filter_eq]
+  have h_filter_eq2 : (Finset.range N).filter
+      (fun (k : ℕ) => (↑(V_unit α β ω u k) : ZMod D) = x) =
+      (Finset.range N).filter (fun k => V_unit α β ω u k = x.val) := by
+    apply Finset.filter_congr
+    intro k hk; rw [Finset.mem_range] at hk
+    have hV := V_unit_lt_D α β ω u k hk
+    constructor
+    · intro heq
+      have := congrArg ZMod.val heq
+      rwa [ZMod.val_natCast, Nat.mod_eq_of_lt hV] at this
+    · intro heq; rw [heq, ZMod.natCast_zmod_val]
+  rw [h_filter_eq2, V_unit_fiber_card α β ω h_ω u x.val (ZMod.val_lt x)]
+  congr 1; exact (ZMod.natCast_zmod_val x).symm
+
+/-- Unit-aware analogue of `count_hits_shift_invariant`. -/
+lemma count_hits_shift_invariant_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence_unit α β ω u) L) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let σ := (sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0).toNat
+    let r0 := ((-⌊ω * ↑β⌋ : ℤ) : ZMod D).val
+    ∀ x : ZMod D, count_hits_unit D u r0 N (x + ↑σ) = count_hits_unit D u r0 N x := by
+  intro N D σ r0 x
+  have hN := N_pos_concrete α β ω h_ω
+  set σ_ℤ := sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0
+    with hσ_def
+  have h_nn : 0 ≤ σ_ℤ := shift_nonneg_unit α β ω h_ω u L hL_pos hL
+  have h_σ_cast : (↑σ : ZMod D) = (σ_ℤ : ZMod D) := by
+    have h_eq : (σ_ℤ.toNat : ℤ) = σ_ℤ := Int.toNat_of_nonneg h_nn
+    have : (↑σ : ZMod D) = ((σ_ℤ.toNat : ℤ) : ZMod D) := by push_cast; rfl
+    rw [this, h_eq]
+  rw [count_hits_eq_sorted_count_unit α β ω h_ω u x,
+      count_hits_eq_sorted_count_unit α β ω h_ω u (x + ↑σ)]
+  symm
+  apply Finset.card_bij (fun (j : ℕ) (_ : j ∈ _) => (j + L) % N)
+  · intro j hj
+    have hjf := Finset.mem_filter.mp hj
+    apply Finset.mem_filter.mpr
+    refine ⟨Finset.mem_range.mpr (Nat.mod_lt _ hN), ?_⟩
+    rw [sorted_residue_shift_unit α β ω h_ω u L hL j, hjf.2, h_σ_cast]
+  · intro j₁ hj₁ j₂ hj₂ h_eq
+    have hj₁' := Finset.mem_range.mp (Finset.mem_filter.mp hj₁).1
+    have hj₂' := Finset.mem_range.mp (Finset.mem_filter.mp hj₂).1
+    exact mod_add_inj N L j₁ j₂ hN hj₁' hj₂' h_eq
+  · intro k hk
+    have hkf := Finset.mem_filter.mp hk
+    have hk_range := Finset.mem_range.mp hkf.1
+    refine ⟨(k + N - L % N) % N, ?_, ?_⟩
+    · apply Finset.mem_filter.mpr
+      refine ⟨Finset.mem_range.mpr (Nat.mod_lt _ hN), ?_⟩
+      have h_inv : ((k + N - L % N) % N + L) % N = k :=
+        mod_add_inv N L k hN hk_range
+      have h_shift := sorted_residue_shift_unit α β ω h_ω u L hL
+          ((k + N - L % N) % N)
+      simp only at h_shift; rw [h_inv] at h_shift
+      have h_eq : (sorted_multiset_unit α β ω u
+          ↑((k + N - L % N) % N) : ZMod D) +
+          (σ_ℤ : ZMod D) = x + (σ_ℤ : ZMod D) := by
+        rw [← h_shift, hkf.2, h_σ_cast]
+      exact add_right_cancel h_eq
+    · exact mod_add_inv N L k hN hk_range
+
 private lemma cumulative_hits_uniform (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (v : ℕ)
     (_hv : v < α ^ 2 + β ^ 2) :
