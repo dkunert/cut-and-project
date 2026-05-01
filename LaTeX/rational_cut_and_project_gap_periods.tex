@@ -32,11 +32,12 @@
 Consider the one-dimensional cut-and-project construction with coprime
 positive integers \(\alpha,\beta\) defining the rational slope
 \(\alpha/\beta\), and window parameter \(\omega \ge 0\).  Projecting lattice
-points from the resulting strip onto the line and counting them with
-multiplicity gives a multiset whose consecutive gaps form a periodic
-sequence.  We prove that its minimal period is
+points from the resulting strip onto the line yields, after ordering, a
+periodic sequence of consecutive gaps.  We give two complementary period
+formulas, one for each natural way to count projected points.  Counting
+with multiplicity (the projected multiset), the minimal period is
 \[
-\lambda =
+\lambda_{\mathrm{multiset}} =
 \begin{cases}
 N, & D\nmid N,\\
 N/D, & D\mid N,
@@ -48,13 +49,22 @@ N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
 \qquad
 D=\alpha^2+\beta^2.
 \]
-The proof reduces the geometry to the distribution of \(N\) consecutive
-residue classes modulo~\(D\).  When this distribution is non-uniform, the
-residue classes with larger multiplicity form a proper cyclic interval in
-the natural residue parametrisation; its only translational symmetry is the
-identity, which rules out any smaller period.  We also discuss the effect of
-discarding multiplicities, in particular in the uniform case \(D\mid N\).
-The algebraic core of the proof has been formalised in Lean~4.
+Discarding multiplicities (the projected set), the minimal period is
+\[
+\lambda_{\mathrm{set}} =
+\begin{cases}
+N, & N < D,\\
+1, & N \ge D,
+\end{cases}
+\]
+and \(\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}\) in every
+case, with equality if and only if \(N \le D\).  The proof reduces the
+geometry to the distribution of \(N\) consecutive residue classes
+modulo~\(D\).  When this distribution is non-uniform, the residue classes
+with larger multiplicity form a proper cyclic interval in the natural
+residue parametrisation; its only translational symmetry is the identity,
+which rules out any smaller period.  The algebraic core of both proofs
+has been formalised in Lean~4.
 \end{abstract}
 
 \medskip
@@ -91,17 +101,25 @@ minimal period of the sequence of consecutive gaps?  This question depends
 on a convention.  If projected values are counted with multiplicity, then
 distinct lattice points projecting to the same value give rise to zero gaps.
 If multiplicities are discarded, the resulting ordinary point-set gap
-sequence may have a smaller period.  The main theorem of this paper is
-stated for the projected multiset.
+sequence may have a smaller period.  We give a complete period formula for
+\emph{both} conventions.
 
 Let the rational slope be \(\alpha/\beta\), with
 \(\gcd(\alpha,\beta)=1\), and let \(\omega\ge0\) be the window parameter.
 We prove that the multiset gap sequence has minimal period
 \[
-    \lambda =
+    \lambda_{\mathrm{multiset}} =
     \begin{cases}
         N, & D\nmid N,\\[3pt]
         N/D, & D\mid N,
+    \end{cases}
+\]
+and that the set-valued gap sequence has minimal period
+\[
+    \lambda_{\mathrm{set}} =
+    \begin{cases}
+        N, & N < D,\\[3pt]
+        1, & N \ge D,
     \end{cases}
 \]
 where
@@ -112,34 +130,41 @@ where
 \]
 Here \(N\) is the number of admissible values of the invariant
 \(r=\alpha x-\beta y\), and \(D\) is the common difference of the arithmetic
-progressions obtained after projection.
+progressions obtained after projection.  The two formulas agree precisely
+when \(N \le D\); when \(N > D\) the set-valued period collapses to~\(1\),
+because every integer is then a projected value.
 
-The proof is elementary.  The accepted lattice points decompose into
-parallel tracks indexed by the admissible values of \(r\).  Each track gives
-an arithmetic progression of projected values with common difference \(D\),
-and the relevant residues modulo \(D\) are obtained from \(N\) consecutive
-integers by multiplication with a unit modulo \(D\).  If \(D\nmid N\), the
-residue classes with larger multiplicity form a proper cyclic interval in
-the natural residue parametrisation; its only translational symmetry is the
-identity, which rules out any smaller period.  If \(D\mid N\), the residues
-are uniformly distributed and the gap sequence collapses to a simple pattern
-of period \(N/D\).
+The proof of the multiset formula is elementary.  The accepted lattice
+points decompose into parallel tracks indexed by the admissible values of
+\(r\).  Each track gives an arithmetic progression of projected values with
+common difference \(D\), and the relevant residues modulo \(D\) are
+obtained from \(N\) consecutive integers by multiplication with a unit
+modulo \(D\).  If \(D\nmid N\), the residue classes with larger multiplicity
+form a proper cyclic interval in the natural residue parametrisation; its
+only translational symmetry is the identity, which rules out any smaller
+period.  If \(D\mid N\), the residues are uniformly distributed and the gap
+sequence collapses to a simple pattern of period \(N/D\).  The set-valued
+formula then follows from the same residue-distribution analysis: under
+\(N < D\) the multiplicity function takes values in \(\{0, 1\}\), so set
+and multiset coincide as sequences; under \(N \ge D\) every residue is hit
+and the underlying set is~\(\mathbb{Z}\).
 
-The algebraic core of the proof has been formalised in Lean~4.  The
+The algebraic core of both proofs has been formalised in Lean~4.  The
 formalisation verifies the residue-class and minimal-period arguments; the
 geometric construction is represented at the combinatorial level described
 above.
 
 The paper is organised as follows.  Section~\ref{sec:setup} gives the
-construction and fixes the multiplicity convention.
-Section~\ref{sec:mainresult} states the main result.
+construction and fixes the two multiplicity conventions.
+Section~\ref{sec:mainresult} states the multiset main result.
 Section~\ref{sec:proof} proves the generic case \(D \nmid N\).
 Section~\ref{sec:degenerate} treats the uniform case \(D \mid N\).
+Section~\ref{sec:setvalued} states and proves the set-valued period formula
+and records its comparison with the multiset period.
 Section~\ref{sec:corollaries} records some immediate corollaries.
 Section~\ref{sec:lean} describes the Lean~4 formalisation.
 Section~\ref{sec:literature} discusses related literature.
-Section~\ref{sec:discussion} discusses the set-valued variant and open
-questions.
+Section~\ref{sec:discussion} collects open questions.
 
 % =====================================================================
 \section{Construction of the Sequences}\label{sec:setup}
@@ -192,17 +217,33 @@ the ordering of projected points is determined by
 
 \subsection{Multiplicity convention}\label{subsec:multiplicity}
 
-Throughout this paper, projected values are counted with multiplicity.
-Thus, if two distinct accepted lattice points have the same projected
-coordinate, they contribute two consecutive entries to the sorted projected
-sequence and may therefore produce a zero gap.
+There are two natural ways to enumerate the projected points along the
+line, and we treat both in this paper.
 
-Equivalently, we study the gap sequence of the projected lattice-point
-\emph{multiset}, not only the underlying projected point set.  If
-multiplicities are discarded, the resulting ordinary point-set gap sequence
-may have a smaller period.  In particular, in the case \(D \mid N\), the
-set-valued projected sequence has constant gap and period~\(1\), whereas
-the multiset sequence has period~\(N/D\).
+\begin{description}
+    \item[Multiset convention.]  Projected values are counted with
+    multiplicity.  Thus, if two distinct accepted lattice points have the
+    same projected coordinate, they contribute two consecutive entries to
+    the sorted sequence and produce a zero gap.  Equivalently, we study the
+    gap sequence of the projected lattice-point \emph{multiset}.
+
+    \item[Set convention.]  Coincident projected values are identified, so
+    each value occurs at most once in the sorted sequence.  Equivalently,
+    we study the gap sequence of the underlying projected \emph{point
+    set}.
+\end{description}
+
+The two conventions can produce different period lengths, and we prove a
+formula for each.  The main result for the multiset convention is
+Theorem~\ref{thm:main} (Section~\ref{sec:mainresult}).  The companion
+result for the set convention is Theorem~\ref{thm:setperiod}
+(Section~\ref{sec:setvalued}).  In every case the set-valued period
+divides the multiset period, with equality if and only if \(N \le D\); see
+Corollary~\ref{cor:setlemultiset}.
+
+Unless otherwise stated, the technical development in
+Sections~\ref{sec:mainresult}--\ref{sec:degenerate} uses the multiset
+convention.
 
 \subsection{Distance sequence and period}\label{subsec:distance}
 
@@ -414,6 +455,19 @@ Hence \(s\) classes have multiplicity \(q + 1\) and \(D - s\) classes have
 multiplicity~\(q\).
 \end{proof}
 
+\begin{lemma}[Uniform residue distribution]\label{lem:uniform}
+If \(D \mid N\), then every residue class \(c \in \mathbb{Z}/D\mathbb{Z}\) is
+hit exactly \(N/D\) times by the multiset
+\(\{c_r \bmod D : r \in \mathcal{R}\}\).
+\end{lemma}
+
+\begin{proof}
+The \(N\) values of \(r\) span exactly \(N/D\) complete cycles of the map
+\(r \mapsto mr \bmod D\).  Since this map is a bijection on
+\(\mathbb{Z}/D\mathbb{Z}\) by Corollary~\ref{cor:inverse}, each residue
+class is hit exactly \(N/D\) times.
+\end{proof}
+
 \subsection{Step 5: Period equals \(N\) when \(D \nmid N\)}
 \label{subsec:step5}
 
@@ -566,14 +620,11 @@ If \(D \mid N\), then \(\lambda = N/D\).
 \end{theorem}
 
 \begin{proof}
-When \(D \mid N\), the \(N\) values of \(r\) span exactly \(N/D\) complete
-cycles of the map \(r \mapsto mr \bmod D\).
-Since this map is a bijection on \(\mathbb{Z}/D\mathbb{Z}\), each residue
-class \(c \in \{0, 1, \ldots, D-1\}\) is hit exactly \(N/D\) times.
-Consequently, each residue class contributes \(N/D\) projected multiset
-entries per interval of length~\(D\) on the \(\tilde{p}\)-axis.  By the
-uniform distribution, every integer \(\tilde{p}\) is achieved with
-multiplicity~\(N/D\).
+By Lemma~\ref{lem:uniform}, every residue class
+\(c \in \mathbb{Z}/D\mathbb{Z}\) is hit exactly \(N/D\) times.  Consequently,
+each residue class contributes \(N/D\) projected multiset entries per
+interval of length~\(D\) on the \(\tilde{p}\)-axis, and every integer
+\(\tilde{p}\) is achieved with multiplicity~\(N/D\).
 
 The sorted sequence of \(\tilde{p}\)-values, counted with multiplicity, thus
 consists of each integer repeated \(N/D\) times:
@@ -614,11 +665,144 @@ For \(\alpha = 3\), \(\beta = 2\), \(\omega = 5\):
 Since \(13 \mid 26\), the formula gives \(\lambda = 26/13 = 2\).
 \end{example}
 
-\begin{remark}
-The boundary case \(N = D\), i.e. \(N/D = 1\), gives \(\lambda = 1\):
-every integer is a projected value with multiplicity~\(1\), and all gaps
-equal~\(1\).
+\begin{remark}\label{rem:boundary}
+The boundary case \(N = D\), i.e. \(N/D = 1\), gives
+\(\lambda_{\mathrm{multiset}} = 1\): every integer is a projected value with
+multiplicity~\(1\), and all gaps equal~\(1\).  At this boundary the
+multiset and set conventions agree
+(Theorem~\ref{thm:setperiod}, case \(N \ge D\); see also
+Corollary~\ref{cor:setlemultiset}).
 \end{remark}
+
+% =====================================================================
+\section{The Set-Valued Period}\label{sec:setvalued}
+% =====================================================================
+
+We now treat the set convention introduced in
+Section~\ref{subsec:multiplicity}: coincident projected points are
+identified, so each \(\tilde p\)-value occurs at most once in the sorted
+sequence.
+
+\subsection{Definition of the set-valued gap sequence}\label{subsec:setdef}
+
+Sort the underlying set
+\(\bigl\{\tilde p \,:\, \tilde p\text{ occurs as a projected value}\bigr\}
+\subseteq \mathbb{Z}\) in increasing order, with each value listed once.
+By Section~\ref{subsec:step2} this set is locally finite and unbounded in
+both directions, so it admits a strictly increasing enumeration indexed by
+\(\mathbb{Z}\), unique up to translation of the index.  Write this
+enumeration \((\tilde p^{(i)}_{\mathrm{set}})_{i \in \mathbb{Z}}\) and
+define the \emph{set-valued difference sequence}
+\begin{equation}\label{eq:delta_set}
+    \delta^{(i)}_{\mathrm{set}}
+    \;:=\; \tilde p^{(i+1)}_{\mathrm{set}} - \tilde p^{(i)}_{\mathrm{set}}.
+\end{equation}
+Its minimal period \(\lambda_{\mathrm{set}}\) is defined exactly as in
+Definition~\ref{def:period}.
+
+\subsection{Statement and proof}
+
+\begin{theorem}[Set-valued period]\label{thm:setperiod}
+Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha,\beta) = 1\) and
+\(\omega \in \mathbb{R}_{\ge 0}\).  With \(N\) and \(D\) as
+in~\eqref{eq:ND}, the set-valued difference sequence~\eqref{eq:delta_set}
+has minimal period
+\begin{equation}\label{eq:setformula}
+    \lambda_{\mathrm{set}} \;=\;
+    \begin{cases}
+        N & \text{if } N < D, \\[3pt]
+        1 & \text{if } N \ge D.
+    \end{cases}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Write \(N = qD + s\) with \(0 \le s < D\) as in §\ref{subsec:step5}, and
+let \(\mu \colon \mathbb{Z}/D\mathbb{Z} \to \mathbb{N}_0\) be the
+multiplicity function defined there.
+
+\smallskip
+\noindent\emph{Case \(N < D\).}  Then \(q = 0\), so by
+Lemma~\ref{lem:nonuniform} the function \(\mu\) takes values in
+\(\{0, 1\}\): exactly \(N\) residue classes are hit once, and the
+remaining \(D - N\) are hit zero times.  Hence in the bi-infinite multiset
+no integer occurs with multiplicity greater than one, and the underlying
+set coincides with the multiset (as \(\mathbb{Z}\)-indexed sequences,
+after a possible translation of the index).  In particular
+\(\lambda_{\mathrm{set}} = \lambda_{\mathrm{multiset}}\).  Since
+\(0 < N < D\) implies \(D \nmid N\), Theorem~\ref{thm:main} gives
+\(\lambda_{\mathrm{multiset}} = N\).  Thus
+\(\lambda_{\mathrm{set}} = N\).
+
+\smallskip
+\noindent\emph{Case \(N \ge D\).}  Then \(q \ge 1\), so by
+Lemma~\ref{lem:nonuniform} (if \(D \nmid N\)) and
+Lemma~\ref{lem:uniform} (if \(D \mid N\)), the function \(\mu\) takes
+only positive values.  Hence every residue class is hit at least once,
+and by~\eqref{eq:Pr} every integer is a projected value.  The underlying
+set is therefore \(\mathbb{Z}\) in the \(\tilde p\)-coordinate, its gap
+sequence is constantly \(1\), and \(\lambda_{\mathrm{set}} = 1\).
+\qedhere
+\end{proof}
+
+\subsection{Comparison with the multiset period}
+
+\begin{corollary}\label{cor:setlemultiset}
+For all \(\alpha, \beta, \omega\) as above,
+\[
+    \lambda_{\mathrm{set}} \;\le\; \lambda_{\mathrm{multiset}},
+\]
+with equality if and only if \(N \le D\).
+\end{corollary}
+
+\begin{proof}
+Compare~\eqref{eq:formula} and~\eqref{eq:setformula} on the three
+sub-regimes:
+\begin{itemize}
+    \item \(N < D\) (in particular \(D \nmid N\)):
+          \(\lambda_{\mathrm{multiset}} = N = \lambda_{\mathrm{set}}\).
+    \item \(N = D\) (so \(D \mid N\)):
+          \(\lambda_{\mathrm{multiset}} = N/D = 1 = \lambda_{\mathrm{set}}\).
+    \item \(N > D\): if \(D \mid N\) then
+          \(\lambda_{\mathrm{multiset}} = N/D \ge 2 > 1
+          = \lambda_{\mathrm{set}}\); if \(D \nmid N\) then
+          \(\lambda_{\mathrm{multiset}} = N > 1 = \lambda_{\mathrm{set}}\).
+\end{itemize}
+In every case \(\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}\),
+with equality precisely when \(N \le D\).
+\end{proof}
+
+\subsection{Examples}
+
+\begin{example}[\(N < D\), set and multiset agree]\label{ex:set_lt}
+For \(\alpha = 2\), \(\beta = 3\), \(\omega = 2\): \(N = 4 + 6 + 1 = 11\)
+and \(D = 13\), so \(N < D\).  Then
+\(\lambda_{\mathrm{multiset}} = \lambda_{\mathrm{set}} = 11\).
+\end{example}
+
+\begin{example}[\(N = D\), boundary]\label{ex:set_eq}
+For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3/2\): \(N = 5 = D\), so
+\(\lambda_{\mathrm{multiset}} = N/D = 1 = \lambda_{\mathrm{set}}\)
+(cf.\ Remark~\ref{rem:boundary}).
+\end{example}
+
+\begin{example}[\(N > D\), \(D \nmid N\), set and multiset disagree]
+\label{ex:set_gt}
+For \(\alpha = 3\), \(\beta = 4\), \(\omega = 4\): \(N = 12 + 16 + 1 = 29\)
+and \(D = 25\), so \(N > D\) and \(D \nmid N\).  Theorem~\ref{thm:main}
+gives \(\lambda_{\mathrm{multiset}} = 29\), while
+Theorem~\ref{thm:setperiod} gives \(\lambda_{\mathrm{set}} = 1\).  Direct
+computation confirms both values.
+\end{example}
+
+\subsection{Empirical evidence}\label{subsec:set_empirical}
+
+The dichotomy \(N < D\) versus \(N \ge D\) has been verified against the
+companion empirical data in~\cite{Kunert2025}; see in particular the
+report \texttt{set\_analysis\_results.tex} and the worked input/output
+files \texttt{tests/six\_examples\_*.csv} and
+\texttt{tests/seventh\_example\_*.csv}, covering all eight regimes of the
+case split.
 
 % =====================================================================
 \section{Corollaries}\label{sec:corollaries}
@@ -779,7 +963,7 @@ Corollary~\ref{cor:inverse} (residue bijection)
   & \texttt{residue\_bijection} & 43 \\
 Lemma~\ref{lem:nonuniform} (non-uniform distribution)
   & \texttt{non\_uniform\_residue\_distribution} & 140 \\
-Uniform distribution (\(D \mid N\))
+Lemma~\ref{lem:uniform} (uniform distribution, \(D \mid N\))
   & \texttt{uniform\_residue\_distribution} & 215 \\
 Heavy set is cyclic interval
   & \texttt{heavy\_set\_is\_cyclic\_interval} & 269 \\
@@ -791,20 +975,35 @@ Theorem~\ref{thm:degenerate} (\(D \mid N\) case)
   & \texttt{period\_degenerate\_concrete} & 1233 \\
 \(\sigma N = LD\) from periodicity
   & \texttt{sigma\_of\_period\_concrete} & 1206 \\
-Theorem~\ref{thm:main} (main result)
+Theorem~\ref{thm:main} (main result, abstract)
   & \texttt{main\_theorem} & 1283 \\
+Theorem~\ref{thm:main} (concrete wrapper)
+  & \texttt{main\_theorem\_concrete} & 1640 \\
+\hline
+\multicolumn{3}{l}{\textit{Set-valued period (Section~\ref{sec:setvalued})}} \\
+\hline
+Theorem~\ref{thm:setperiod}, lower bound (\(D \le N\))
+  & \texttt{count\_hits\_ge\_D} & 1326 \\
+Theorem~\ref{thm:setperiod}, constant-\(1\) period
+  & \texttt{HasPeriodLength\_const\_one} & 1344 \\
+Theorem~\ref{thm:setperiod} (set-valued period, abstract)
+  & \texttt{set\_main\_theorem} & 1362 \\
+Theorem~\ref{thm:setperiod} (concrete wrapper)
+  & \texttt{set\_main\_theorem\_concrete} & 1656 \\
 \hline
 \end{tabular}
-\caption{Correspondence between paper results and Lean~4 declarations.}
+\caption{Correspondence between paper results and Lean~4 declarations
+in \texttt{Basic.lean}.}
 \label{tab:lean}
 \end{table}
 
 \subsection{Scope of the formalisation}\label{subsec:lean_scope}
 
-The formalised proof covers the algebraic and combinatorial core:
-coprimality, residue distribution, cyclic interval structure, the trivial
-stabiliser lemma, the generic minimality argument, the degenerate case, and
-the final case dispatch.
+The formalised proof covers the algebraic and combinatorial core for both
+periods: coprimality, residue distribution (uniform and non-uniform),
+cyclic interval structure, the trivial stabiliser lemma, the generic
+minimality argument, the degenerate case, and the case dispatch for both
+the multiset and set conventions.
 
 The geometric construction, namely defining the cut-and-project set,
 projecting lattice points, and sorting the multiset of \(\tilde{p}\)-values,
@@ -817,6 +1016,14 @@ defined combinatorially as
 where \(V\) is the quantile function of the cumulative residue distribution.
 The bridge lemma \texttt{count\_hits\_eq\_sorted\_count} verifies that this
 construction is consistent with the residue counting function.
+
+The set-valued enumeration mirrors this construction with multiplicities
+flattened to \(\{0, 1\}\) by an indicator function: \texttt{set\_V} replaces
+\texttt{V}, \texttt{set\_size} replaces \(N\), and the resulting bi-infinite
+\texttt{set\_difference\_sequence} discharges the abstract hypotheses of
+\texttt{set\_main\_theorem} via the dichotomy
+(\texttt{count\_hits\_lt\_D} versus \texttt{count\_hits\_ge\_D}) on the
+multiplicity function.
 
 % =====================================================================
 \section{Related Literature}\label{sec:literature}
@@ -888,19 +1095,6 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
           collapsing the gap structure to a simple pattern of period \(N/D\).
 \end{itemize}
 
-\subsection{Discarding multiplicities}\label{subsec:discarding}
-
-The main theorem is stated for the projected multiset.  If projected points
-are instead identified, the period may decrease.  The clearest example is
-the degenerate case \(D \mid N\).  There every integer \(\tilde p\) occurs
-with multiplicity \(N/D\).  After discarding multiplicities, the projected
-set is simply \(\mathbb{Z}\) in the \(\tilde p\)-coordinate, so the ordinary
-set-valued gap sequence has constant gap and period~\(1\).
-
-Thus the branch \(\lambda=N/D\) is a genuine multiset phenomenon.  A complete
-formula for the set-valued gap sequence, with multiplicities discarded in
-all cases, is a natural companion question.
-
 \subsection{Open problems}
 
 \begin{enumerate}
@@ -909,14 +1103,8 @@ all cases, is a natural companion question.
     \eqref{eq:points}.  If one translates the window transversally, the set of
     admissible invariant values changes by a shifted interval, but boundary
     effects may alter the interleaving pattern.  It would be interesting to
-    determine whether the same period formula persists for arbitrary window
+    determine whether the same period formulas persist for arbitrary window
     offsets.
-
-    \item \textbf{Set-valued gap sequence.}
-    Determine the exact minimal period when projected points are counted
-    without multiplicity.  The degenerate case \(D \mid N\) collapses to
-    period~\(1\), but the behaviour in the non-uniform case should be
-    described explicitly.
 
     \item \textbf{Higher dimensions.}
     The cut-and-project construction generalises to higher-dimensional
@@ -926,7 +1114,7 @@ all cases, is a natural companion question.
     \item \textbf{Distribution of gap lengths.}
     For fixed \(\alpha, \beta, \omega\), one may ask for a precise
     characterisation of the distinct gap values and their multiplicities
-    within one minimal period.
+    within one minimal period (in either convention).
 \end{enumerate}
 
 % =====================================================================
