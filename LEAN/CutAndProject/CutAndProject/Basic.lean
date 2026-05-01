@@ -1162,7 +1162,7 @@ private lemma V_eq_iff (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     apply le_antisymm
     · exact Nat.find_min' h_exists h_right
     · by_contra h_lt
-      push_neg at h_lt
+      push Not at h_lt
       rcases h_left with hv | h_ge
       · subst hv; omega
       · have h_mono := cumulative_hits_mono α β ω (show Nat.find h_exists ≤ v - 1 by omega)
@@ -1503,7 +1503,7 @@ private lemma V_unit_eq_iff (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     apply le_antisymm
     · exact Nat.find_min' h_exists h_right
     · by_contra h_lt
-      push_neg at h_lt
+      push Not at h_lt
       rcases h_left with hv | h_ge
       · subst hv; omega
       · have h_mono := cumulative_hits_unit_mono α β ω u
@@ -1688,7 +1688,7 @@ private lemma V_uniform (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^
       calc k = q * v + k % q := (Nat.div_add_mod k q).symm
         _ < q * v + q := by have := Nat.mod_lt k hq_pos; omega
         _ = (v + 1) * q := by ring
-    · by_contra h_lt; push_neg at h_lt
+    · by_contra h_lt; push Not at h_lt
       have h_prev := Nat.find_spec h_exists
       have h_find_lt : Nat.find h_exists < v := h_lt
       have h_find_lt_D : Nat.find h_exists < D := lt_trans h_find_lt hv_lt_D
@@ -1722,7 +1722,7 @@ private lemma sorted_multiset_add_q (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     rw [hr_def]; exact Int.toNat_lt hr_nonneg |>.mpr (Int.emod_lt_of_pos i (by omega))
   have hr_cast : (r : ℤ) = i % (N : ℤ) := Int.toNat_of_nonneg hr_nonneg
   have h_decomp : i = ↑N * (i / ↑N) + ↑r := by
-    rw [hr_cast]; exact (Int.ediv_add_emod i ↑N).symm
+    rw [hr_cast]; exact (Int.mul_ediv_add_emod i ↑N).symm
   -- Key helper: rewrite (i + q) as N * quot + remainder
   -- We split into two cases depending on whether r + q < N
   by_cases h_case : r + q < N
@@ -1744,7 +1744,7 @@ private lemma sorted_multiset_add_q (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
         Int.ediv_eq_zero_of_lt h_rq_nonneg h_rq_lt
       omega
     -- Now compute both sides
-    show (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
+    change (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
          (V α β ω (i % ↑N).toNat : ℤ) + i / ↑N * ↑D + 1
     -- fold (i % ↑N).toNat back to r
     rw [show (i % (↑N : ℤ)).toNat = r from rfl]
@@ -1759,7 +1759,7 @@ private lemma sorted_multiset_add_q (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     have h_div_q : (r + q) / q = r / q + 1 := Nat.add_div_right r hq_pos
     rw [h_div_q]; push_cast; ring
   · -- Case 2: r + q ≥ N, so the N-quotient increases by 1
-    push_neg at h_case
+    push Not at h_case
     -- In this case, r ≥ N - q = q * (D - 1)
     have hD_ge_one : D ≥ 1 := by omega
     have h_r_large : (D - 1) * q ≤ r := by
@@ -1808,7 +1808,7 @@ private lemma sorted_multiset_add_q (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
       have h2 : q * (D - 1) + q = q * D := by
         rw [Nat.mul_sub_one]; omega
       omega
-    show (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
+    change (V α β ω ((i + ↑q) % ↑N).toNat : ℤ) + (i + ↑q) / ↑N * ↑D =
          (V α β ω (i % ↑N).toNat : ℤ) + i / ↑N * ↑D + 1
     -- fold (i % ↑N).toNat back to r
     rw [show (i % (↑N : ℤ)).toNat = r from rfl]
@@ -1880,7 +1880,7 @@ lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (
       have : σ * q * D = L' * D := by linarith [mul_assoc σ q D]
       exact Nat.eq_of_mul_eq_mul_right hD_pos this
     have hσ_pos : 0 < σ := by
-      by_contra h; push_neg at h
+      by_contra h; push Not at h
       have : σ = 0 := by omega
       rw [this, zero_mul] at h3; omega
     -- L' = σ * q ≥ 1 * q = q
@@ -2081,17 +2081,17 @@ lemma set_indicator_eq_count_hits_of_lt
   have h_le := count_hits_lt_D (α ^ 2 + β ^ 2)
       (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
       (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h (y : ZMod (α ^ 2 + β ^ 2))
-  show (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = _
+  change (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = _
   split_ifs with hge
   · omega
-  · push_neg at hge; omega
+  · push Not at hge; omega
 
 /-- Under `N < D`, `set_cumulative_hits` and `cumulative_hits` agree. -/
 lemma set_cumulative_hits_eq_of_lt
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
     set_cumulative_hits α β ω x = cumulative_hits α β ω x := by
-  show (Finset.range (x + 1)).sum (set_indicator α β ω) = _
+  change (Finset.range (x + 1)).sum (set_indicator α β ω) = _
   apply Finset.sum_congr rfl
   intro y _
   exact set_indicator_eq_count_hits_of_lt α β ω h y
@@ -2120,7 +2120,7 @@ lemma set_size_eq_N_of_lt
   simp only [h_div, h_mod, zero_add] at h_dist
   have h_le : ∀ x : ZMod D, count_hits D r0 N x ≤ 1 :=
     fun x => count_hits_lt_D D r0 N h x
-  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = N
+  change (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = N
   have h_filter_eq :
       (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)) =
       (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = 1)) := by
@@ -2137,7 +2137,7 @@ lemma set_sorted_eq_of_lt
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
     set_sorted α β ω i = sorted_multiset α β ω i := by
-  show (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
+  change (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
        (i / (set_size α β ω : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) =
        (V α β ω (i % ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)).toNat : ℤ) +
        (i / ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)) * (α ^ 2 + β ^ 2 : ℕ)
@@ -2149,7 +2149,7 @@ lemma set_difference_sequence_eq_of_lt
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
     set_difference_sequence α β ω i = difference_sequence α β ω i := by
-  show set_sorted α β ω (i + 1) - set_sorted α β ω i =
+  change set_sorted α β ω (i + 1) - set_sorted α β ω i =
        sorted_multiset α β ω (i + 1) - sorted_multiset α β ω i
   rw [set_sorted_eq_of_lt α β ω h (i + 1), set_sorted_eq_of_lt α β ω h i]
 
@@ -2163,7 +2163,7 @@ lemma set_indicator_eq_one_of_ge
   have h_ge := count_hits_ge_D (α ^ 2 + β ^ 2)
       (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
       (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h (y : ZMod (α ^ 2 + β ^ 2))
-  show (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = 1
+  change (if 1 ≤ count_hits _ _ _ _ then 1 else 0) = 1
   rw [if_pos h_ge]
 
 /-- Under `D ≤ N`, the cumulative count is just `x + 1`. -/
@@ -2171,7 +2171,7 @@ lemma set_cumulative_hits_eq_of_ge
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (x : ℕ) :
     set_cumulative_hits α β ω x = x + 1 := by
-  show (Finset.range (x + 1)).sum (set_indicator α β ω) = x + 1
+  change (Finset.range (x + 1)).sum (set_indicator α β ω) = x + 1
   calc (Finset.range (x + 1)).sum (set_indicator α β ω)
       = (Finset.range (x + 1)).sum (fun _ : ℕ => 1) :=
         Finset.sum_congr rfl (fun y _ => set_indicator_eq_one_of_ge α β ω h y)
@@ -2203,7 +2203,7 @@ lemma set_size_eq_D_of_ge
   let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
   have h_ge : ∀ x : ZMod D, 1 ≤ count_hits D r0 N x :=
     fun x => count_hits_ge_D D r0 N h x
-  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = D
+  change (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x)).card = D
   have h_filter_eq :
       Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits D r0 N x) =
       (Finset.univ : Finset (ZMod D)) := by
@@ -2233,7 +2233,7 @@ lemma set_sorted_eq_id_of_ge
     have : NeZero (α ^ 2 + β ^ 2) := inferInstance
     exact Nat.pos_of_ne_zero this.out
   have hD_ne : ((α ^ 2 + β ^ 2 : ℕ) : ℤ) ≠ 0 := by exact_mod_cast hD_pos.ne'
-  show (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
+  change (set_V α β ω (i % ((set_size α β ω : ℤ))).toNat : ℤ) +
        (i / (set_size α β ω : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) = i
   rw [set_size_eq_D_of_ge α β ω h]
   have hmod_nn : 0 ≤ i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := Int.emod_nonneg i hD_ne
@@ -2248,7 +2248,7 @@ lemma set_sorted_eq_id_of_ge
   have h_r_int : (r : ℤ) = i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
     rw [hr_def, Int.toNat_of_nonneg hmod_nn]
   rw [h_r_int]
-  have := Int.emod_add_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
+  have := Int.emod_add_mul_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
   linarith
 
 /-- **Discharge of `h_ge`**: under `D ≤ N`, the concrete set sequence
@@ -2257,7 +2257,7 @@ lemma set_difference_sequence_eq_one_of_ge
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
     set_difference_sequence α β ω i = 1 := by
-  show set_sorted α β ω (i + 1) - set_sorted α β ω i = 1
+  change set_sorted α β ω (i + 1) - set_sorted α β ω i = 1
   rw [set_sorted_eq_id_of_ge α β ω h (i + 1), set_sorted_eq_id_of_ge α β ω h i]
   ring
 
@@ -2330,7 +2330,7 @@ private lemma sorted_multiset_unit_eq_sorted_multiset_of_dvd
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (i : ℤ) :
     sorted_multiset_unit α β ω u i = sorted_multiset α β ω i := by
-  show ((V_unit α β ω u (i % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat).toNat : ℤ) +
+  change ((V_unit α β ω u (i % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat).toNat : ℤ) +
         (i / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) * ↑(α ^ 2 + β ^ 2)) =
        ((V α β ω (i % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat).toNat : ℤ) +
         (i / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) * ↑(α ^ 2 + β ^ 2))
@@ -2634,18 +2634,18 @@ lemma set_indicator_unit_eq_count_hits_unit_of_lt
       (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h
       (((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
         ((y : ℕ) : ZMod (α ^ 2 + β ^ 2)))
-  show (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = _
+  change (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = _
   rw [count_hits_unit_eq_count_hits]
   split_ifs with hge
   · omega
-  · push_neg at hge; omega
+  · push Not at hge; omega
 
 lemma set_cumulative_hits_unit_eq_of_lt
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
     set_cumulative_hits_unit α β ω u x = cumulative_hits_unit α β ω u x := by
-  show (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = _
+  change (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = _
   apply Finset.sum_congr rfl
   intro y _
   exact set_indicator_unit_eq_count_hits_unit_of_lt α β ω u h y
@@ -2675,7 +2675,7 @@ lemma set_size_unit_eq_N_of_lt
   have h_le : ∀ x : ZMod D, count_hits_unit D u r0 N x ≤ 1 := fun x => by
     rw [count_hits_unit_eq_count_hits]
     exact count_hits_lt_D D r0 N h _
-  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = N
+  change (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = N
   have h_filter_eq :
       (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)) =
       (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = 1)) := by
@@ -2692,7 +2692,7 @@ lemma set_sorted_unit_eq_of_lt
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
     set_sorted_unit α β ω u i = sorted_multiset_unit α β ω u i := by
-  show (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
+  change (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
        (i / (set_size_unit α β ω u : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) =
        (V_unit α β ω u (i % ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)).toNat : ℤ) +
        (i / ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)) * (α ^ 2 + β ^ 2 : ℕ)
@@ -2705,7 +2705,7 @@ lemma set_difference_sequence_unit_eq_of_lt
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
     set_difference_sequence_unit α β ω u i = difference_sequence_unit α β ω u i := by
-  show set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i =
+  change set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i =
        sorted_multiset_unit α β ω u (i + 1) - sorted_multiset_unit α β ω u i
   rw [set_sorted_unit_eq_of_lt α β ω u h (i + 1),
       set_sorted_unit_eq_of_lt α β ω u h i]
@@ -2722,7 +2722,7 @@ lemma set_indicator_unit_eq_one_of_ge
       (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h
       (((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
         ((y : ℕ) : ZMod (α ^ 2 + β ^ 2)))
-  show (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = 1
+  change (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = 1
   rw [count_hits_unit_eq_count_hits]
   rw [if_pos h_ge]
 
@@ -2731,7 +2731,7 @@ lemma set_cumulative_hits_unit_eq_of_ge
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (x : ℕ) :
     set_cumulative_hits_unit α β ω u x = x + 1 := by
-  show (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = x + 1
+  change (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = x + 1
   calc (Finset.range (x + 1)).sum (set_indicator_unit α β ω u)
       = (Finset.range (x + 1)).sum (fun _ : ℕ => 1) :=
         Finset.sum_congr rfl (fun y _ => set_indicator_unit_eq_one_of_ge α β ω u h y)
@@ -2763,7 +2763,7 @@ lemma set_size_unit_eq_D_of_ge
   have h_ge : ∀ x : ZMod D, 1 ≤ count_hits_unit D u r0 N x := fun x => by
     rw [count_hits_unit_eq_count_hits]
     exact count_hits_ge_D D r0 N h _
-  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = D
+  change (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = D
   have h_filter_eq :
       Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x) =
       (Finset.univ : Finset (ZMod D)) := by
@@ -2779,7 +2779,7 @@ lemma set_sorted_unit_eq_id_of_ge
     have : NeZero (α ^ 2 + β ^ 2) := inferInstance
     exact Nat.pos_of_ne_zero this.out
   have hD_ne : ((α ^ 2 + β ^ 2 : ℕ) : ℤ) ≠ 0 := by exact_mod_cast hD_pos.ne'
-  show (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
+  change (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
        (i / (set_size_unit α β ω u : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) = i
   rw [set_size_unit_eq_D_of_ge α β ω u h]
   have hmod_nn : 0 ≤ i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := Int.emod_nonneg i hD_ne
@@ -2794,7 +2794,7 @@ lemma set_sorted_unit_eq_id_of_ge
   have h_r_int : (r : ℤ) = i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
     rw [hr_def, Int.toNat_of_nonneg hmod_nn]
   rw [h_r_int]
-  have := Int.emod_add_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
+  have := Int.emod_add_mul_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
   linarith
 
 /-- **Discharge of `h_ge`** for the unit case: under `D ≤ N`, the unit
@@ -2804,7 +2804,7 @@ lemma set_difference_sequence_unit_eq_one_of_ge
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
     set_difference_sequence_unit α β ω u i = 1 := by
-  show set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i = 1
+  change set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i = 1
   rw [set_sorted_unit_eq_id_of_ge α β ω u h (i + 1),
       set_sorted_unit_eq_id_of_ge α β ω u h i]
   ring
