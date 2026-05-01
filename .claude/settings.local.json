@@ -54,7 +54,12 @@
       "Bash(pdflatex -interaction=nonstopmode set_analysis_results.tex)",
       "Bash(rm -f tests/six_examples_output.csv)",
       "Bash(./src/c/set/add_period_set tests/six_examples_input.csv tests/six_examples_output.csv global 30)",
-      "Bash(./src/c/set/add_period_set tests/seventh_example_input.csv tests/seventh_example_output.csv global 30)"
+      "Bash(./src/c/set/add_period_set tests/seventh_example_input.csv tests/seventh_example_output.csv global 30)",
+      "Bash(pdflatex -interaction=nonstopmode -draftmode rational_cut_and_project_gap_periods.tex)",
+      "Bash(pdflatex -interaction=nonstopmode rational_cut_and_project_gap_periods.tex)",
+      "Bash(pdfinfo rational_cut_and_project_gap_periods.pdf)",
+      "Bash(pdfinfo rational_cut_and_project_multiset_gap_periods.pdf)",
+      "Bash(mdls -name kMDItemNumberOfPages rational_cut_and_project_multiset_gap_periods.pdf rational_cut_and_project_gap_periods.pdf)"
     ]
   }
 }
