@@ -1,0 +1,307 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{listings}
+
+\geometry{a4paper, margin=1in}
+
+\lstdefinestyle{leanstyle}{%
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  rulecolor=\color{black!25},
+  backgroundcolor=\color{black!3},
+  keywordstyle=\color{blue!60!black},
+  commentstyle=\color{green!40!black},
+  showstringspaces=false
+}
+
+\lstset{style=leanstyle}
+
+\title{Anmerkungen zum Lean-Code\\
+\large Cut-and-Project-Periodenformel}
+\author{Review-Kommentare}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Gesamturteil}
+
+Der Lean-Code ist beeindruckend und formalisiert einen erheblichen Teil der kombinatorischen Kernstruktur des Papers. Besonders stark sind die Formalisierung der Restklassenverteilung, der zyklischen Intervalle, der Minimalitätsargumente und der set-valued Dichotomie.
+
+Gleichzeitig sollte der Code in seiner jetzigen Form nicht ohne Präzisierung als vollständige Formalisierung der geometrischen Cut-and-Project-Konstruktion präsentiert werden. Der wichtigste Punkt ist die Modelltreue: Der Code formalisiert im Wesentlichen ein normalisiertes Restklassenmodell, während die tatsächlichen geometrischen Restklassen im Paper durch
+\[
+    c_r \equiv -\alpha\beta^{-1}r \pmod D
+\]
+gegeben sind.
+
+\section{Stärken des Codes}
+
+Die folgenden Bestandteile sind mathematisch und formal sehr gelungen:
+
+\begin{itemize}[leftmargin=2em]
+    \item \texttt{coprime\_alpha\_D} und \texttt{coprime\_beta\_D} bilden die elementare Zahlentheorie sauber ab.
+    \item \texttt{count\_hits} ist eine gute Formalisierung der Trefferanzahl in einem Block aufeinanderfolgender Restklassen.
+    \item \texttt{count\_hits\_lt\_D}, \texttt{count\_hits\_ge\_D}, \texttt{uniform\_residue\_distribution} und \texttt{non\_uniform\_residue\_distribution} treffen genau die zentrale Fallunterscheidung.
+    \item \texttt{cyclic\_interval\_stabilizer\_trivial} formalisiert den entscheidenden Minimalitätsschritt.
+    \item \texttt{generic\_minimality} ist konzeptionell überzeugend: Aus einem Periodenkandidaten entsteht eine Restklassen-Translation; diese stabilisiert die schwere Menge; der triviale Stabilisator erzwingt die behauptete Minimalität.
+    \item Die set-valued Konstruktion über \texttt{set\_indicator}, \texttt{set\_size}, \texttt{set\_sorted} und \texttt{set\_difference\_sequence} spiegelt die mathematische Idee klar wider.
+\end{itemize}
+
+Der Code ist damit keine bloße Skizze, sondern eine ernsthafte formale Begleitung des mathematischen Arguments.
+
+\section{Wichtigster kritischer Punkt: Der Multiplikator wird nicht durchgezogen}
+
+Im Paper sind die tatsächlichen projektiven Restklassen
+\[
+    c_r \equiv -\alpha\beta^{-1}r \pmod D.
+\]
+Im Lean-Code werden zwar
+
+\begin{lstlisting}
+def multiplier ...
+def residue_bijection ...
+\end{lstlisting}
+
+definiert, aber der Hauptteil arbeitet später mit
+
+\begin{lstlisting}
+def count_hits (D : Nat) [NeZero D] (r0 N : Nat) (x : ZMod D) : Nat :=
+  (Finset.range N).filter (fun i => (r0 + i : ZMod D) = x) |>.card
+\end{lstlisting}
+
+Das entspricht den Restklassen
+\[
+    r_0, r_0+1, \ldots, r_0+N-1 \pmod D,
+\]
+nicht unmittelbar den geometrischen Restklassen
+\[
+    m r_0, m(r_0+1), \ldots, m(r_0+N-1) \pmod D,
+    \qquad m=-\alpha\beta^{-1}.
+\]
+
+Mathematisch ist das für die Periodenlänge wahrscheinlich unschädlich, weil Multiplikation mit einer Einheit modulo~\(D\) nur eine Bijektion der Restklassen ist. Aber die tatsächlich sortierte Gap-Folge kann durch diese Multiplikation anders aussehen. Daher sollte entweder der Multiplikator in der konkreten Enumeration formal eingebaut werden, oder die Lean-Sektion im Paper sollte klar sagen, dass ein normalisiertes kombinatorisches Restklassenmodell formalisiert wurde.
+
+\section{Vorschlag: \texttt{count\_hits\_unit}}
+
+Eine mögliche Verbesserung wäre eine allgemeinere Trefferfunktion:
+
+\begin{lstlisting}
+def count_hits_unit
+    (D : Nat) [NeZero D]
+    (u : (ZMod D)^*)
+    (r0 N : Nat)
+    (x : ZMod D) : Nat :=
+  (Finset.range N).filter
+    (fun i => u.val * (r0 + i : ZMod D) = x) |>.card
+\end{lstlisting}
+
+Für das geometrische Modell wäre dann
+
+\begin{lstlisting}
+u = multiplier alpha beta h
+\end{lstlisting}
+
+und die tatsächliche Restklassenabbildung wäre formal enthalten.
+
+Dann sollte man ein Transferlemma beweisen:
+
+\begin{lstlisting}
+count_hits_unit D u r0 N x =
+count_hits D r0 N (u^{-1}.val * x)
+\end{lstlisting}
+
+Damit könnten viele vorhandene Beweise weiterverwendet werden. Der schwere Satz wäre dann nicht mehr direkt in der natürlichen Restklassenordnung ein Intervall, sondern nach Rücktransport durch \(u^{-1}\). Das entspricht genau der Argumentation im Paper.
+
+\section{Benennung und Reichweite der Formalisierung}
+
+Der Name
+
+\begin{lstlisting}
+main_theorem_concrete
+\end{lstlisting}
+
+wirkt etwas stärker, als die aktuelle Modellierung rechtfertigt. Er klingt so, als sei die volle geometrische Konstruktion formalisiert. Treffender wären Namen wie:
+
+\begin{lstlisting}
+main_theorem_residue_model
+main_theorem_normalized_residue_model
+\end{lstlisting}
+
+Ähnliches gilt für die Typeclass
+
+\begin{lstlisting}
+class GeometricProjection ...
+\end{lstlisting}
+
+Die Axiome sind eher periodisch-kombinatorisch als geometrisch. Ein präziserer Name wäre zum Beispiel:
+
+\begin{lstlisting}
+class ResidueProjectionModel ...
+class PeriodicResidueModel ...
+\end{lstlisting}
+
+Wenn der Name \texttt{GeometricProjection} beibehalten wird, sollte der Kommentar deutlicher sein, etwa:
+
+\begin{lstlisting}
+/--
+Abstract interface for the combinatorial residue model obtained after
+reducing the geometric cut-and-project construction.
+-/
+\end{lstlisting}
+
+\section{Umbenennung von \texttt{non\_uniform\_residue\_distribution}}
+
+Das Theorem
+
+\begin{lstlisting}
+theorem non_uniform_residue_distribution ...
+\end{lstlisting}
+
+gilt offenbar auch im Fall \(s=0\), also im uniformen Fall \(D\mid N\). Denn dann ist die Anzahl der \(q+1\)-Klassen gleich \(0\), und die Anzahl der \(q\)-Klassen gleich \(D\).
+
+Der Name ist daher etwas irreführend. Besser wäre:
+
+\begin{lstlisting}
+theorem residue_distribution
+theorem quotient_remainder_residue_distribution
+\end{lstlisting}
+
+Daraus könnten dann zwei Spezialisierungen abgeleitet werden:
+
+\begin{lstlisting}
+theorem non_uniform_residue_distribution_of_not_dvd ...
+theorem uniform_residue_distribution ...
+\end{lstlisting}
+
+\section{Der degenerierte Fall ist im Code stärker als im Paper}
+
+Der Code beweist in
+
+\begin{lstlisting}
+lemma period_degenerate_concrete ...
+\end{lstlisting}
+
+tatsächlich die Minimalität der Periode \(N/D\). Das ist sehr gut. Im Paper sollte der analoge Beweisschritt ebenfalls explizit ergänzt werden: Die Folge
+\[
+    \underbrace{0,\ldots,0}_{N/D-1},1,
+    \underbrace{0,\ldots,0}_{N/D-1},1,\ldots
+\]
+hat nicht nur Periode \(N/D\), sondern minimale Periode \(N/D\). Für \(N/D>1\) liegt die \(1\) genau einmal pro Block der Länge \(N/D\), sodass keine kleinere positive Periode möglich ist.
+
+\section{Architektur von \texttt{main\_theorem}}
+
+Das Theorem
+
+\begin{lstlisting}
+theorem main_theorem ...
+  [GeometricProjection alpha beta omega (difference_sequence alpha beta omega)] :
+\end{lstlisting}
+
+ist eine Mischform: Es verwendet abstrakte Axiome, aber bereits die konkrete Sequenz \texttt{difference\_sequence}. Architektonisch sauberer wäre eine abstrakte Version:
+
+\begin{lstlisting}
+theorem main_theorem_abstract
+    (seq : Z -> Z)
+    [GeometricProjection alpha beta omega seq] :
+    ...
+    HasPeriodLength seq L
+\end{lstlisting}
+
+und anschließend ein konkreter Wrapper:
+
+\begin{lstlisting}
+theorem main_theorem_concrete :
+    HasPeriodLength (difference_sequence alpha beta omega) L
+\end{lstlisting}
+
+Das ist kein mathematischer Fehler, aber es würde die Struktur des Codes deutlicher machen.
+
+\section{Modulo durch \texttt{set\_size}}
+
+Die Definition
+
+\begin{lstlisting}
+def set_sorted ... :=
+  let M := (set_size alpha beta omega : Z)
+  let r := (i % M).toNat
+  ...
+\end{lstlisting}
+
+verwendet Modulo durch \texttt{set\_size}. Lean ist total und erlaubt diese Definition auch bei \(M=0\). In den relevanten Fällen wird später bewiesen, dass \texttt{set\_size = N} oder \texttt{set\_size = D} gilt und damit positiv ist. Mathematisch ist das also in den Theoremen kontrolliert.
+
+Für bessere Lesbarkeit und Robustheit wäre aber ein Lemma sinnvoll:
+
+\begin{lstlisting}
+lemma set_size_pos ...
+\end{lstlisting}
+
+Dieses Lemma könnte explizit dokumentieren, dass die set-valued Enumeration in den relevanten Fällen wohldefiniert als Periodenblock der positiven Länge ist.
+
+\section{Heartbeat-lastige Beweise}
+
+Mehrere Beweise verwenden hohe Heartbeat-Grenzen, zum Beispiel:
+
+\begin{lstlisting}
+set_option maxHeartbeats 400000
+set_option maxHeartbeats 800000
+\end{lstlisting}
+
+Das ist für ein Forschungsprojekt akzeptabel, aber für langfristige Wartbarkeit fragil. Besonders \texttt{sorted\_multiset\_add\_q} wirkt technisch schwer. Es wäre besser, die dort verwendeten Aussagen über Division, Modulo und den Fall \(N=qD\) in kleinere allgemeine Lemmas auszulagern.
+
+\section{Set-valued Teil}
+
+Der set-valued Teil ist sehr überzeugend strukturiert:
+
+\begin{itemize}[leftmargin=2em]
+    \item Phase A: strukturelle Dichotomie über \texttt{count\_hits\_lt\_D} und \texttt{count\_hits\_ge\_D}.
+    \item Phase B: abstrakter Satz \texttt{set\_main\_theorem}.
+    \item Phase C: konkrete Konstruktion über \texttt{set\_indicator}, \texttt{set\_cumulative\_hits}, \texttt{set\_V}, \texttt{set\_size}, \texttt{set\_sorted} und \texttt{set\_difference\_sequence}.
+\end{itemize}
+
+Das ist didaktisch klar und mathematisch passend: Multiplizitäten werden auf \(\{0,1\}\) reduziert.
+
+\section{Formulierungsvorschlag für das Paper}
+
+Mit dem Code in der jetzigen Form wäre folgende Beschreibung angemessen:
+
+\begin{quote}
+The Lean formalisation verifies the algebraic and combinatorial core of the argument in a normalised residue model. It formalises the coprimality lemmas, the uniform and non-uniform residue-distribution statements, the cyclic-interval stabiliser argument, the generic minimality proof, the degenerate case, and the set-valued dichotomy. The Euclidean cut-and-project geometry is not formalised from first principles; instead, the formalisation starts from the residue model obtained after reducing the geometry to arithmetic progressions modulo \(D\).
+\end{quote}
+
+Falls der Multiplikator \(m=-\alpha\beta^{-1}\) in die konkrete Enumeration eingebaut wird, kann diese Formulierung entsprechend stärker ausfallen.
+
+\section*{Schlussurteil}
+
+Der Lean-Code ist sehr gut als kombinatorische Formalisierung. Er enthält die entscheidenden Minimalitätsargumente und stützt das Paper substanziell.
+
+Der zentrale Vorbehalt lautet:
+
+\begin{quote}
+Der Code formalisiert aktuell nicht sichtbar die tatsächliche geometrische Restklassenabbildung
+\[
+    r \mapsto -\alpha\beta^{-1}r \pmod D,
+\]
+sondern arbeitet im Wesentlichen mit dem normalisierten Fall \(m=1\).
+\end{quote}
+
+Empfehlung:
+
+\begin{enumerate}[leftmargin=2em]
+    \item Für arXiv kurzfristig: Die Lean-Sektion vorsichtig formulieren und von einem normalisierten Restklassenmodell sprechen.
+    \item Für maximale Qualität: \texttt{count\_hits\_unit} einführen und den Multiplikator \(m\) tatsächlich durch die konkrete Enumeration ziehen.
+    \item Für Codepflege: \texttt{non\_uniform\_residue\_distribution} umbenennen, \texttt{main\_theorem} abstrakter machen und heartbeat-lastige Beweise modularisieren.
+\end{enumerate}
+
+Dann wäre die Lean-Formalisation eine sehr solide und glaubwürdige Begleitung des Papers.
+
+\end{document}

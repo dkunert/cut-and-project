@@ -1,0 +1,396 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[hidelinks]{hyperref}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\geometry{a4paper, margin=1in}
+
+\lstdefinelanguage{Lean}{
+  morekeywords={import,open,namespace,section,end,def,theorem,lemma,by,have,show,exact,where,class,instance,let,if,then,else,match,with,intro,fun,forall,exists,noncomputable,private},
+  sensitive=true,
+  morecomment=[l]{--},
+  morecomment=[s]{/-}{-/},
+  morestring=[b]"
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  backgroundcolor=\color{gray!5},
+  keywordstyle=\color{blue!60!black},
+  commentstyle=\color{green!40!black},
+  stringstyle=\color{red!50!black}
+}
+
+\title{Comments on the Final Paper and Lean Formalisation}
+\author{ChatGPT review notes for Dirk Kunert}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Overall assessment}
+
+After re-reading both the paper and the Lean code, my assessment is that the
+mathematical paper is substantially coherent and that the two period formulas
+look correct.  The Lean code is also much stronger than the earlier version,
+especially because the unit-aware geometric multiplier layer is now present.
+
+The most important point is not a flaw in the period formula.  Rather, the
+paper should describe the boundary of the Lean formalisation carefully.  The
+Lean development formalises the residue-combinatorial model with the geometric
+multiplier threaded through to the final theorems.  It does not formalise the
+full real-geometric strip-to-residue derivation from first principles.
+
+Thus, the final paper should say that the residue-combinatorial core has been
+formalised in Lean~4, while the reduction from the real strip geometry to the
+residue model is hand-verified in the paper.
+
+\section{Main mathematical result}
+
+The multiset formula appears consistent:
+\[
+\lambda_{\mathrm{multiset}}=
+\begin{cases}
+N, & D\nmid N,\\
+N/D, & D\mid N,
+\end{cases}
+\qquad
+N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
+\qquad
+D=\alpha^2+\beta^2.
+\]
+
+The set-valued formula also appears consistent:
+\[
+\lambda_{\mathrm{set}}=
+\begin{cases}
+N, & N<D,\\
+1, & N\ge D.
+\end{cases}
+\]
+
+The geometric reduction is correct.  With
+\[
+r=\alpha x-\beta y,
+\]
+the strip condition gives
+\[
+-\beta\omega\le r\le \alpha\omega.
+\]
+Hence the number of admissible integer values of~\(r\) is
+\[
+\lfloor\alpha\omega\rfloor+\lfloor\beta\omega\rfloor+1.
+\]
+The residue formula
+\[
+\widetilde p\equiv -\alpha\beta^{-1}r\pmod D
+\]
+is also correct.  Indeed, solving
+\[
+\beta x+\alpha y=\widetilde p,
+\qquad
+\alpha x-\beta y=r
+\]
+gives
+\[
+x=\frac{\beta\widetilde p+\alpha r}{D},
+\qquad
+ y=\frac{\alpha\widetilde p-\beta r}{D}.
+\]
+Integrality of~\(x\) requires
+\[
+D\mid \beta\widetilde p+\alpha r.
+\]
+Since \(\beta\) is invertible modulo~\(D\), this gives exactly
+\[
+\widetilde p\equiv -\alpha\beta^{-1}r\pmod D.
+\]
+
+\section{Recommended correction: describe the Lean scope more precisely}
+
+The abstract currently says, in substance, that the algebraic core has been
+formalised in Lean~4.  That wording is good.  However, some later passages may
+sound as if the complete real-geometric construction has been formalised.
+This should be avoided.
+
+I recommend replacing the relevant statement with something like the following:
+
+\begin{quote}
+The residue-combinatorial core of both proofs has been formalised in Lean~4.
+The formalisation does not formalise the real-geometric strip-to-residue
+reduction itself; instead, it starts from the resulting residue model and
+verifies the residue distribution, cyclic-interval minimality, degenerate case,
+and both multiset and set-valued period theorems, with the geometric multiplier
+\(c_r\equiv -\alpha\beta^{-1}r\pmod D\) threaded through to the final
+statements.
+\end{quote}
+
+This wording is safer and better aligned with the actual Lean code.
+
+\section{Important Lean/paper mismatch: positivity of \texorpdfstring{\(\alpha,\beta\)}{alpha,beta}}
+
+The paper assumes
+\[
+\alpha,\beta\in\mathbb N=\{1,2,3,\ldots\}.
+\]
+The Lean code uses
+\begin{lstlisting}[language=Lean]
+(α β : ℕ) (h_coprime : Nat.Coprime α β)
+\end{lstlisting}
+but does not globally require
+\begin{lstlisting}[language=Lean]
+(hα : 0 < α) (hβ : 0 < β)
+\end{lstlisting}
+in the public-facing theorem statements.
+
+This means that the Lean theorem is formally stated over a slightly wider
+domain than the paper.  For example, \(\alpha=0,\beta=1\) satisfies
+\texttt{Nat.Coprime α β}, but it is not part of the paper's intended positive
+slope setup.
+
+This is not fatal, but I recommend adding explicit positivity assumptions to
+the public Lean wrappers, especially
+\begin{lstlisting}[language=Lean]
+main_theorem_geometric_concrete
+set_main_theorem_geometric_concrete
+\end{lstlisting}
+Even if the proof does not need these assumptions, they make the Lean statement
+match the paper.
+
+A possible public theorem signature would include:
+\begin{lstlisting}[language=Lean]
+(α β : ℕ) (hα : 0 < α) (hβ : 0 < β)
+(h_coprime : Nat.Coprime α β)
+\end{lstlisting}
+
+Alternatively, the paper can explicitly say that the Lean theorem is stated in
+a slightly more general natural-number domain, while the paper itself restricts
+to positive \(\alpha,\beta\).
+
+\section{Generic minimality proof}
+
+The proof of the generic case \(D\nmid N\) is now convincing.  The key chain of
+reasoning is:
+
+\begin{enumerate}[label=\arabic*.]
+    \item \(N\) is a period.
+    \item If \(\lambda_0\) is the minimal positive period, then
+          \(\lambda_0\mid N\).
+    \item A block of \(\lambda_0\) gaps has constant sum \(\sigma\).
+    \item Since \(N=k\lambda_0\), one obtains \(k\sigma=D\).
+    \item Translation by \(\sigma\) preserves the projected multiset.
+    \item Therefore the residue multiplicity function is invariant under
+          translation by \(\sigma\).
+    \item In the natural multiplier-stepping coordinate, the heavy residue
+          classes form a proper cyclic interval.
+    \item A proper cyclic interval has trivial translational stabiliser.
+    \item Hence no proper divisor of \(N\) can be a period.
+\end{enumerate}
+
+This is a solid minimality argument.
+
+One small stylistic recommendation: use \(\lambda_0\) instead of
+\(\lambda'\) for the alleged smaller minimal period.  For example:
+
+\begin{quote}
+Now suppose, for contradiction, that the minimal positive period
+\(\lambda_0\) satisfies \(\lambda_0<N\). Since \(N\) is a period,
+Lemma~\ref{lem:minperiod_divides_periods} gives \(\lambda_0\mid N\).
+\end{quote}
+
+This avoids the impression that \(\lambda'\) is an arbitrary period rather
+than the minimal one.
+
+\section{Set-valued theorem}
+
+The set-valued theorem appears correct.  The dichotomy is exactly the right
+one:
+\[
+N<D \quad\text{versus}\quad N\ge D.
+\]
+When \(N<D\), every residue class is hit at most once, so the set and multiset
+sequences agree.  When \(N\ge D\), every residue class is hit at least once,
+so the projected set is all of \(\mathbb Z\) in the \(\widetilde p\)-coordinate,
+and the gap sequence is constantly~\(1\).
+
+One wording issue occurs in the introduction.  The text says, in substance,
+that when \(N>D\) the set-valued period collapses to~\(1\).  The collapse
+already happens at \(N=D\).  I recommend writing:
+
+\begin{quote}
+When \(N\ge D\), the set-valued period collapses to~\(1\), because every
+integer residue class is then hit.
+\end{quote}
+
+The comparison corollary is correct:
+\[
+\lambda_{\mathrm{set}}\mid \lambda_{\mathrm{multiset}},
+\qquad
+\lambda_{\mathrm{set}}\le \lambda_{\mathrm{multiset}},
+\]
+with equality if and only if \(N\le D\).
+
+\section{Lean code: conceptual structure}
+
+The Lean code has three conceptual layers.
+
+\subsection{Untwisted residue model}
+
+The untwisted residue model uses
+\begin{lstlisting}[language=Lean]
+count_hits D r0 N x
+\end{lstlisting}
+and the normalised enumeration.  This proves the core residue distribution
+and minimality theorem for the case where the admissible residues are simply
+\[
+r_0,r_0+1,\ldots,r_0+N-1\pmod D.
+\]
+
+\subsection{Unit-aware residue model}
+
+The unit-aware model is the important new part.  It uses
+\begin{lstlisting}[language=Lean]
+count_hits_unit D u r0 N x
+\end{lstlisting}
+and
+\begin{lstlisting}[language=Lean]
+difference_sequence_unit α β ω u
+\end{lstlisting}
+This layer handles multiplication by an arbitrary unit \(u\in(\mathbb Z/D\mathbb Z)^\times\).
+
+\subsection{Geometric specialisation}
+
+The true Lean counterparts of the paper's headline theorems are the geometric
+specialisations
+\begin{lstlisting}[language=Lean]
+main_theorem_geometric_concrete
+set_main_theorem_geometric_concrete
+\end{lstlisting}
+where
+\begin{lstlisting}[language=Lean]
+u = multiplier α β h_coprime
+\end{lstlisting}
+This is the layer corresponding to the actual paper residue map
+\[
+c_r\equiv -\alpha\beta^{-1}r\pmod D.
+\]
+
+The older declarations
+\begin{lstlisting}[language=Lean]
+main_theorem_concrete
+set_main_theorem_concrete
+\end{lstlisting}
+are still useful, but they refer to the normalised residue enumeration, not
+directly to the geometric multiplier.  In the paper, the declarations
+\texttt{main\_theorem\_geometric\_concrete} and
+\texttt{set\_main\_theorem\_geometric\_concrete} should be emphasised as the
+final machine-checked statements corresponding to the paper.
+
+\section{Lean code: naming issue}
+
+The typeclass
+\begin{lstlisting}[language=Lean]
+class GeometricProjection ...
+\end{lstlisting}
+is somewhat misleadingly named.  It does not encode an actual real-geometric
+projection from the strip.  It encodes an abstract residue-combinatorial model
+satisfying period and translation-invariance axioms.
+
+A more accurate name would be something like
+\begin{lstlisting}[language=Lean]
+ResidueProjectionModel
+\end{lstlisting}
+or
+\begin{lstlisting}[language=Lean]
+ResidueGapModel
+\end{lstlisting}
+This is not a mathematical error, but a reviewer reading the code may object
+that \texttt{GeometricProjection} is not literally geometric.
+
+If the name is kept, the paper should describe it as an abstract residue-model
+interface rather than as a full formalisation of the geometric projection.
+
+\section{Lean correspondence table}
+
+The paper's Lean correspondence table currently includes exact line numbers.
+This is fragile, because any small edit to the Lean file will make the line
+numbers inaccurate.
+
+I recommend removing the line-number column.  Instead of a table of the form
+\[
+\text{Paper result} \quad | \quad \text{Lean declaration} \quad | \quad
+\text{Line},
+\]
+use only
+\[
+\text{Paper result} \quad | \quad \text{Lean declaration}.
+\]
+
+For example, replace entries like
+\begin{center}
+\texttt{coprime\_alpha\_D} --- line 11
+\end{center}
+by simply
+\begin{center}
+\texttt{coprime\_alpha\_D}.
+\end{center}
+
+This will make the paper more durable.
+
+\section{Bibliography and repository reference}
+
+The repository citation currently uses a 2025 date.  If the paper is compiled
+or submitted in 2026 and the repository is active in 2026, consider using a
+more explicit GitHub-style citation, for example:
+
+\begin{quote}
+Dirk Kunert, \emph{cut-and-project repository}, GitHub repository, accessed
+2026.
+\end{quote}
+
+Also make sure that the repository is public before submission if the paper
+claims that the formalisation is available there.
+
+\section{Recommended changes before submission}
+
+Before submitting the paper, I recommend the following concrete changes:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Reword the Lean-scope statements to say ``residue-combinatorial
+          core'', not full geometric proof.
+    \item Explicitly state that the real-geometric strip-to-residue reduction
+          is hand-verified in the paper.
+    \item Emphasise
+          \texttt{main\_theorem\_geometric\_concrete} and
+          \texttt{set\_main\_theorem\_geometric\_concrete} as the final Lean
+          counterparts of the two headline theorems.
+    \item Add \texttt{0 < α} and \texttt{0 < β} assumptions to the public Lean
+          theorem statements, or explain why Lean is stated over a slightly
+          wider domain.
+    \item Remove exact Lean line numbers from the correspondence table.
+    \item Change the introductory phrase ``when \(N>D\)'' to
+          ``when \(N\ge D\)'' for the set-valued collapse.
+    \item Consider renaming \texttt{GeometricProjection} to something like
+          \texttt{ResidueGapModel}, or explain the name carefully.
+\end{enumerate}
+
+\section{Final verdict}
+
+The paper is mathematically plausible and internally consistent.  The main
+proof strategy is now convincing.  The Lean code substantially supports the
+algebraic residue core, including the geometric multiplier.  The remaining
+weakness is not the formula itself, but the exact description of the
+formalisation boundary: the real-geometric strip-to-residue reduction is still
+hand-verified, while the residue distribution and period-minimality arguments
+are machine-checked.
+
+With the wording changes above, this version is much closer to submission
+quality.
+
+\end{document}

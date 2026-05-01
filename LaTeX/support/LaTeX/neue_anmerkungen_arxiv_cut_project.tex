@@ -1,0 +1,158 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  backgroundcolor=\color{gray!6}
+}
+
+\title{Neue Anmerkungen zur verbesserten Fassung\\
+\large Review-Notizen zum arXiv-Manuskript}
+\author{Kommentare von ChatGPT}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Gesamturteil}
+
+Die neue Fassung ist erheblich besser und wirkt deutlich publikationsnäher. Die wichtigsten früheren Schwachstellen sind behoben:
+
+\begin{itemize}[leftmargin=2em]
+    \item Der Hauptsatz wird jetzt sauber über die Proposition zum generischen Fall und den Satz zum degenerierten Fall bewiesen.
+    \item Die Integrabilität von \(y\) ist ergänzt.
+    \item Die Minimalität im generischen Fall ist als eigene Proposition isoliert.
+    \item Das Lemma über den trivialen Stabilisator eines zyklischen Intervalls ist explizit formuliert.
+    \item Die Set/Multiset-Teilbarkeitsaussage ist sauber in das Korollar aufgenommen.
+    \item Die Korollar-Sektion ist nun klar als Multiset-Sektion markiert.
+    \item Die Lean-Zeilenzahl ist konsistenter gemacht.
+    \item Das Beispiel \(N>D\), \(D\nmid N\) ist viel anschaulicher geworden.
+\end{itemize}
+
+Mein Urteil: Die Fassung ist in der Beweisarchitektur deutlich näher an einer arXiv-Version. Es bleiben aber einige Punkte, die vor einer Einreichung verbessert werden sollten.
+
+\section{Degenerierter Fall: Minimalität noch explizit beweisen}
+
+Im Satz zum degenerierten Fall wird gezeigt, dass die Gap-Sequenz die Form
+\[
+    \underbrace{0,\ldots,0}_{N/D-1},1,
+    \underbrace{0,\ldots,0}_{N/D-1},1,\ldots
+\]
+hat. Damit ist klar, dass \(N/D\) eine Periode ist. Der Satz behauptet aber die \emph{minimale} Periode. Diese Minimalität sollte ausdrücklich begründet werden.
+
+Empfohlene Ergänzung direkt nach der dargestellten Gap-Sequenz:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+If \(N/D=1\), this period is clearly minimal. If \(N/D>1\), the value
+\(1\) occurs exactly once in each block of length \(N/D\), while all other
+entries in the block are \(0\). Hence no smaller positive period can
+preserve the positions of the entries equal to \(1\). Therefore the
+minimal period is \(N/D\).
+\end{lstlisting}
+
+Das ist der wichtigste noch offene mathematische Präzisierungspunkt.
+
+\section{Minimalitätsbeweis: Blocksumme präziser formulieren}
+
+Im generischen Minimalitätsbeweis wird definiert:
+\[
+    \sigma := \delta^{(0)}+\delta^{(1)}+\cdots+\delta^{(\lambda'-1)}.
+\]
+Danach folgt unmittelbar:
+\[
+    \tilde p_s^{(i+\lambda')} = \tilde p_s^{(i)} + \sigma.
+\]
+Das ist richtig, aber ein Zwischensatz würde die Argumentation wasserdicht machen.
+
+Empfohlene Ergänzung:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+By \(\lambda'\)-periodicity, every block of \(\lambda'\) consecutive gaps
+has the same sum \(\sigma\); that is, for every \(i\in\mathbb Z\),
+\[
+    \delta^{(i)}+\delta^{(i+1)}+\cdots+\delta^{(i+\lambda'-1)}=\sigma.
+\]
+Hence
+\[
+    \tilde p_s^{(i+\lambda')}-\tilde p_s^{(i)}=\sigma.
+\]
+\end{lstlisting}
+
+\section{Translation invariance des Multisets präzisieren}
+
+Die Aussage, dass aus
+\[
+    \tilde p_s^{(i+\lambda')} = \tilde p_s^{(i)}+\sigma
+\]
+die Translationsinvarianz des gesamten Multisets folgt, ist korrekt. Sie sollte aber einen Satz mehr bekommen, damit klar ist, dass Multiplikitäten erhalten bleiben.
+
+Empfohlene Ergänzung:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+Since \(i\mapsto i+\lambda'\) is a bijection of \(\mathbb Z\), this
+translation maps the enumerated multiset bijectively onto itself and
+preserves multiplicities.
+\end{lstlisting}
+
+\section{Formulierung zur schweren Menge leicht verbessern}
+
+Die aktuelle Formulierung, dass die ``final \(s\) elements'' des Blocks den Extra-Hit liefern, ist inhaltlich richtig, aber etwas missverständlich. Nach \(q\) vollständigen Umläufen sind die verbleibenden \(s\) Elemente entscheidend; man sollte diese Struktur direkt so formulieren.
+
+Empfohlene Ersatzformulierung:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+because after \(q\) complete cycles the remaining \(s\) elements contribute
+one additional hit on \(s\) consecutive classes in the \(m\)-stepping order.
+\end{lstlisting}
+
+\section{Lean-Sektion: Umfang noch früher präzisieren}
+
+Die spätere Scope-Erklärung ist gut. Noch besser wäre es, bereits am Anfang der Lean-Sektion deutlich zu sagen, dass die geometrische Konstruktion nicht vollständig von Grund auf formalisiert wurde, sondern nach Reduktion auf das kombinatorische Restklassenmodell.
+
+Empfohlener Satz am Anfang der Lean-Sektion:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+The formalisation verifies the residue-class and period-minimality
+arguments after the geometric construction has been reduced to the
+combinatorial residue model.
+\end{lstlisting}
+
+Im Abstract könnte der Satz
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+The algebraic core of both proofs has been formalised in Lean~4.
+\end{lstlisting}
+
+leicht präzisiert werden zu:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+The algebraic and combinatorial core of both proofs has been formalised in Lean~4.
+\end{lstlisting}
+
+\section{Acknowledgements entschärfen}
+
+Der aktuelle Hinweis auf KI-Unterstützung ist transparent, aber die Formulierung ``proof construction'' könnte unnötig Misstrauen erzeugen. Professioneller und nüchterner wäre:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+The author used ChatGPT, Gemini, and Claude as assistive tools during
+mathematical exploration, drafting, code generation, and proofreading.
+The author has independently verified the mathematical content and accepts
+full responsibility for the results and any errors.
+\end{lstlisting}
+
+\section{Abschließende Einschätzung}
+
+Nach den bisherigen Verbesserungen bleibt als wichtigste mathematische Ergänzung nur noch die explizite Minimalität im degenerierten Fall. Danach ist das Manuskript nach meiner Einschätzung arXiv-tauglich als elementarer, klarer Beitrag über rationale Cut-and-Project-Strip-Projektionen, vorausgesetzt Repository, Lean-Code und empirische Daten sind tatsächlich konsistent mit den Angaben.
+
+Vor Einreichung sollte das Dokument außerdem einmal lokal kompiliert werden, insbesondere wegen Label-Umbenennungen wie \texttt{subsec:gapseq} und wegen der Referenzen auf die Lean-Tabelle.
+
+\end{document}

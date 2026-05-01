@@ -1,0 +1,407 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\geometry{a4paper, margin=1in}
+
+\newcommand{\paper}[1]{\textit{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\todo}[1]{\par\medskip\noindent\textbf{Empfehlung.} #1\par\medskip}
+
+\title{Anmerkungen zum Manuskript\\
+\paper{Period Formulas for Rational Cut-and-Project Strip Projections:\\ Multiset and Set Cases}}
+\author{Review-Kommentare}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Gesamturteil}
+
+Das Manuskript ist deutlich publikationsnäher geworden. Die zentrale Idee, die Geometrie auf die Verteilung von
+\(N\) aufeinanderfolgenden Restklassen modulo
+\[
+    D=\alpha^2+\beta^2
+\]
+zu reduzieren, ist überzeugend. Auch die Trennung zwischen Multiset- und Set-Konvention ist mathematisch und didaktisch sinnvoll.
+
+Für eine Veröffentlichung auf arXiv sollte das Manuskript jedoch noch überarbeitet werden. Die Hauptformeln wirken korrekt, aber einige Beweisstellen sollten strenger formuliert und die Beweisarchitektur klarer organisiert werden. Besonders wichtig sind die Minimalität im generischen Fall, die genaue Reichweite der Lean-Formalisierung und die professionelle Einordnung in die Literatur.
+
+\section{Mathematische Hauptprüfung}
+
+\subsection{Reduktion auf den Invarianten \texorpdfstring{\(r=\alpha x-\beta y\)}{r}}
+
+Die Herleitung aus der Streifenbedingung ist korrekt. Aus
+\[
+    \frac{\alpha}{\beta}(x-\omega)\le y\le \frac{\alpha}{\beta}x+\omega
+\]
+folgt nach Multiplikation mit \(\beta>0\)
+\[
+    \alpha x-\alpha\omega \le \beta y \le \alpha x+\beta\omega,
+\]
+also
+\[
+    -\beta\omega \le \alpha x-\beta y \le \alpha\omega.
+\]
+Damit nimmt
+\[
+    r=\alpha x-\beta y
+\]
+genau ganzzahlige Werte im Intervall
+\[
+    [-\beta\omega,\alpha\omega]\cap\mathbb Z
+\]
+an, und die Anzahl dieser Werte ist
+\[
+    N=\lfloor \alpha\omega\rfloor+\lfloor \beta\omega\rfloor+1.
+\]
+
+Diese Stelle ist gut und sollte beibehalten werden.
+
+\subsection{Projektion und Ordnungskoordinate}
+
+Die Projektionsmatrix auf die Gerade in Richtung \((\beta,\alpha)\) ist korrekt:
+\[
+    \frac{1}{\alpha^2+\beta^2}
+    \begin{pmatrix}
+        \beta^2 & \alpha\beta\\
+        \alpha\beta & \alpha^2
+    \end{pmatrix}.
+\]
+Die \(x\)-Koordinate des projizierten Punktes ist
+\[
+    p_x=\frac{\beta(\beta x+\alpha y)}{\alpha^2+\beta^2}.
+\]
+Da der Faktor positiv ist, wird die Ordnung tatsächlich durch
+\[
+    \tilde p=\beta x+\alpha y
+\]
+bestimmt.
+
+\subsection{Integrabilität der Lösungen}
+
+Die Lösung des Systems
+\[
+    \beta x+\alpha y=\tilde p,
+    \qquad
+    \alpha x-\beta y=r
+\]
+lautet
+\[
+    x=\frac{\beta\tilde p+\alpha r}{D},
+    \qquad
+    y=\frac{\alpha\tilde p-\beta r}{D}.
+\]
+Die Bedingung
+\[
+    D\mid (\beta\tilde p+\alpha r)
+\]
+ist äquivalent zu
+\[
+    \tilde p\equiv -\alpha\beta^{-1}r\pmod D.
+\]
+Das ist korrekt. Für vollständige Strenge sollte aber ergänzt werden, dass daraus auch die Ganzzahligkeit von \(y\) folgt. Eine geeignete Ergänzung wäre:
+
+\begin{quote}
+The second integrality condition follows automatically. Indeed, from
+\(\tilde p\equiv -\alpha\beta^{-1}r \pmod D\) we get
+\[
+\alpha\tilde p-\beta r
+\equiv
+-\alpha^2\beta^{-1}r-\beta r
+=
+-(\alpha^2+\beta^2)\beta^{-1}r
+\equiv 0 \pmod D.
+\]
+Thus both coordinates in the displayed solution are integral.
+\end{quote}
+
+\todo{Diese Ergänzung sollte nach der Kongruenzbedingung für \(\tilde p\) eingefügt werden.}
+
+\section{Der kritischste Punkt: Minimalität im generischen Fall}
+
+Der Minimalitätsbeweis für den Fall \(D\nmid N\) ist der wichtigste Teil des Manuskripts. Die Grundidee ist richtig: Eine kleinere Periode würde eine nichttriviale Translation der Restklassen-Multiplizitätsfunktion erzeugen; diese ist aber unmöglich, weil die schweren Restklassen ein echtes zyklisches Intervall bilden.
+
+Die Beweisstruktur sollte jedoch deutlicher gemacht werden.
+
+\subsection{Aus dem freien Beweis eine Proposition machen}
+
+Der Abschnitt \emph{Step 5: Period equals \(N\) when \(D\nmid N\)} enthält derzeit einen Beweis ohne unmittelbar vorhergehende Satzumgebung. Für eine Veröffentlichung sollte daraus eine Proposition werden:
+
+\begin{verbatim}
+\begin{proposition}\label{prop:generic_period}
+Assume \(D\nmid N\). Then the multiset difference sequence has
+minimal period \(N\).
+\end{proposition}
+
+\begin{proof}
+...
+\end{proof}
+\end{verbatim}
+
+Danach kann der Hauptsatz sauber abgeschlossen werden durch:
+
+\begin{verbatim}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+If \(D\nmid N\), the claim follows from
+Proposition~\ref{prop:generic_period}. If \(D\mid N\), it follows from
+Theorem~\ref{thm:degenerate}.
+\end{proof}
+\end{verbatim}
+
+\todo{Der Hauptsatz sollte am Ende explizit bewiesen werden; derzeit ist die Beweisführung zwar vorhanden, aber formal nicht optimal geschlossen.}
+
+\subsection{Translation des Multisets präzisieren}
+
+Aus einer Periode \(\lambda'\) und
+\[
+    \sigma=\delta^{(0)}+\cdots+\delta^{(\lambda'-1)}
+\]
+folgert das Manuskript
+\[
+    \tilde p_s^{(i+\lambda')}=\tilde p_s^{(i)}+\sigma.
+\]
+Das ist korrekt. Es sollte aber kurz ergänzt werden, warum daraus eine Invarianz des ganzen Multisets folgt. Da \(i\mapsto i+\lambda'\) eine Bijektion von \(\mathbb Z\) ist, wird die gesamte bi-infinite Enumeration bijektiv auf sich selbst verschoben, mit Erhaltung der Multiplizitäten.
+
+Geeigneter Zusatz:
+
+\begin{quote}
+Since \(i\mapsto i+\lambda'\) is a bijection of \(\mathbb Z\), this equality shows that translation by \(\sigma\) maps the enumerated multiset bijectively onto itself, preserving multiplicities.
+\end{quote}
+
+\subsection{Den Schritt \texorpdfstring{\(k\sigma=D\)}{k sigma = D} etwas genauer machen}
+
+Wenn \(N=k\lambda'\), folgt aus der Periodizität, dass \(k\) aufeinanderfolgende Blöcke der Länge \(\lambda'\) jeweils dieselbe Gap-Summe \(\sigma\) haben. Zusammen mit
+\[
+    \tilde p_s^{(i+N)}-\tilde p_s^{(i)}=D
+\]
+ergibt das
+\[
+    k\sigma=D.
+\]
+Dieser Schritt ist korrekt, sollte aber mit einem Satz erläutert werden, damit keine stillschweigende Indexabhängigkeit bleibt.
+
+\subsection{Trivialer Stabilisator als eigenes Lemma}
+
+Die Aussage, dass ein echtes nichtleeres zyklisches Intervall in \(\mathbb Z/D\mathbb Z\) nur den trivialen Translationsstabilisator hat, ist zentral. Sie sollte als eigenes Lemma formuliert werden:
+
+\begin{verbatim}
+\begin{lemma}\label{lem:cyclic_interval_trivial_stabilizer}
+Let \(0<s<D\), and let
+\[
+H=\{x_0,x_0+1,\ldots,x_0+s-1\}\subset \mathbb Z/D\mathbb Z.
+\]
+If \(H+\tau=H\), then \(\tau\equiv 0\pmod D\).
+\end{lemma}
+\end{verbatim}
+
+\todo{Dieses Lemma sollte vor dem Minimalitätsbeweis stehen und dort explizit verwendet werden.}
+
+\section{Set-Periode und Vergleich mit der Multiset-Periode}
+
+Im Abstract wird korrekt behauptet:
+\[
+    \lambda_{\mathrm{set}}\le \lambda_{\mathrm{multiset}},
+\]
+mit Gleichheit genau dann, wenn \(N\le D\).
+
+An anderer Stelle heißt es aber, die Set-Periode teile die Multiset-Periode. Diese stärkere Aussage ist zwar ebenfalls richtig, aber dann sollte sie auch im Korollar explizit stehen.
+
+Mögliche Formulierung:
+
+\begin{verbatim}
+\begin{corollary}\label{cor:setlemultiset}
+For all \(\alpha,\beta,\omega\) as above,
+\[
+    \lambda_{\mathrm{set}} \mid \lambda_{\mathrm{multiset}},
+\]
+and hence
+\[
+    \lambda_{\mathrm{set}}\le \lambda_{\mathrm{multiset}}.
+\]
+Equality holds if and only if \(N\le D\).
+\end{corollary}
+\end{verbatim}
+
+Alternativ sollte die frühere Aussage abgeschwächt werden, sodass nur noch von der Ungleichung gesprochen wird.
+
+\section{Terminologie}
+
+Das Manuskript verwendet mehrere Begriffe: \emph{gap sequence}, \emph{difference sequence} und \emph{distance sequence}. Für eine Veröffentlichung wäre eine einheitlichere Terminologie besser.
+
+Empfohlen wird:
+
+\begin{itemize}[leftmargin=2em]
+    \item durchgehend \emph{gap sequence} für die Sequenz \((\delta^{(i)})\),
+    \item einmalige Definition
+    \[
+        \delta^{(i)}=\tilde p_s^{(i+1)}-\tilde p_s^{(i)},
+    \]
+    \item danach der Hinweis, dass die tatsächlichen euklidischen Abstände nur durch einen positiven konstanten Faktor von diesen \(\tilde p\)-Gaps abweichen.
+\end{itemize}
+
+\todo{Die Begriffe sollten im ganzen Text vereinheitlicht werden.}
+
+\section{Notation der Periode}
+
+In Theorem 1 steht derzeit eine Notation wie \(\lambda_{\alpha,\beta}\). Diese ist unvollständig, weil die Periode auch von \(\omega\) abhängt.
+
+Besser wäre:
+\[
+    \lambda_{\mathrm{multiset}}
+\]
+oder, falls alle Parameter sichtbar sein sollen,
+\[
+    \lambda^{\mathrm{multiset}}_{\alpha,\beta,\omega}.
+\]
+
+\todo{Die Notation im Hauptsatz sollte an den Abstract angepasst werden: \(\lambda_{\mathrm{multiset}}\).}
+
+\section{Korollarien: Konvention ausdrücklich nennen}
+
+In der Korollarien-Sektion wird wieder nur \(\lambda\) verwendet. Das kann missverständlich sein, weil die Aussagen dort für die Multiset-Periode gelten, nicht allgemein für die Set-Periode.
+
+Am Anfang der Korollarien-Sektion sollte stehen:
+
+\begin{quote}
+Throughout this section, \(\lambda\) denotes the multiset period \(\lambda_{\mathrm{multiset}}\).
+\end{quote}
+
+Das ist besonders wichtig bei Aussagen wie
+\[
+    \omega>2,\quad D\nmid N \quad\Longrightarrow\quad \lambda>\Lambda_{\alpha,\beta},
+\]
+denn für die Set-Periode kann bei \(N\ge D\) die Periode gleich \(1\) sein.
+
+\section{Lean-Formalisierung}
+
+Die Aussage im Abstract, dass der algebraische Kern in Lean 4 formalisiert wurde, ist angemessen. Die spätere Lean-Sektion sollte aber vorsichtig formuliert werden, weil die Geometrie offenbar nicht vollständig von Grund auf formalisiert wurde, sondern durch ein kombinatorisches Residuenmodell beziehungsweise eine Typeclass abstrahiert wird.
+
+Empfohlene Klarstellung:
+
+\begin{quote}
+The Lean formalisation verifies the residue-class and period-minimality arguments after the geometric construction has been reduced to the combinatorial residue model. It does not formalise the Euclidean cut-and-project geometry from first principles.
+\end{quote}
+
+Außerdem gibt es einen möglichen Konsistenzfehler: Das Manuskript spricht von ungefähr 1,300 Zeilen Lean-Code, während die Tabelle Zeilennummern bis etwa 1,656 nennt. Entweder sollte die ungefähre Zeilenzahl angepasst werden, etwa auf 1,700, oder die Zeilennummern sollten aus der Tabelle entfernt werden.
+
+\todo{Die Lean-Sektion sollte präzise zwischen formalisiertem algebraisch-kombinatorischem Kern und nicht vollständig formalisiertem geometrischem Ausgangsmodell unterscheiden.}
+
+\section{Literatur und Neuheitsclaim}
+
+Die Aussage
+\begin{quote}
+The author is not aware of a reference that states the above formula ...
+\end{quote}
+ist akzeptabel, wirkt aber etwas informell. Professioneller wäre:
+
+\begin{quote}
+To the author's knowledge, the specific minimal-period formula for the multiset gap sequence in the rational strip-projection model considered here does not appear explicitly in the standard references.
+\end{quote}
+
+Da das Resultat elementar ist, sollte der Literaturabschnitt sorgfältig abgrenzen, warum es nicht einfach eine bekannte Aussage über rationale mechanische Wörter, Christoffel-Wörter, Beatty-Sequenzen oder periodische Modellmengen ist.
+
+\section{Beispiele}
+
+Die vorhandenen Beispiele sind nützlich. Besonders hilfreich wäre zusätzlich oder ergänzend ein Beispiel im Regime
+\[
+    N>D,
+    \qquad
+    D\nmid N,
+\]
+bei dem echte Multiplizitäten und damit Null-Gaps auftreten, die Set-Periode aber auf \(1\) kollabiert.
+
+Das Beispiel
+\[
+    \alpha=3,
+    \qquad
+    \beta=4,
+    \qquad
+    \omega=4
+\]
+ist dafür geeignet, denn
+\[
+    N=29,
+    \qquad
+    D=25,
+    \qquad
+    N=1\cdot 25+4.
+\]
+Damit haben vier Restklassen Multiplizität \(2\), die übrigen Multiplizität \(1\). Der Multiset-Gapblock enthält also Null-Gaps, hat aber trotzdem minimale Periode \(29\), während die Set-Periode gleich \(1\) ist.
+
+\todo{Dieses Beispiel sollte etwas ausführlicher ausgewertet werden, weil es den Unterschied zwischen Set und Multiset besonders gut sichtbar macht.}
+
+\section{Open Problems}
+
+Das erste offene Problem zur Verschiebung des Fensters sollte vorsichtiger formuliert werden. Nach der Methode des Manuskripts dürfte eine transversale Verschiebung in vielen Fällen wieder nur ein Intervall zulässiger \(r\)-Werte erzeugen, möglicherweise mit anderer Lage und anderer Kardinalität. Die Lage des Intervalls sollte die Periodenminimalität typischerweise nicht ändern, solange die Anzahl \(N\) gleich bleibt.
+
+Bessere Formulierung:
+
+\begin{quote}
+A natural extension is to allow arbitrary transversal offsets of the strip. In that case the admissible \(r\)-values should again form an interval of integers, but its endpoints and cardinality depend on the offset. It would be useful to formulate the resulting period formula explicitly in terms of that cardinality and to check whether any genuinely new boundary phenomena occur.
+\end{quote}
+
+\section{Acknowledgements}
+
+Der Hinweis auf KI-Unterstützung ist transparent und grundsätzlich akzeptabel. Ich würde ihn etwas nüchterner formulieren:
+
+\begin{quote}
+The author used ChatGPT, Gemini, and Claude as assistive tools during exploration, drafting, code generation, and proofreading. The author has independently checked the mathematical arguments and accepts full responsibility for the content of the paper.
+\end{quote}
+
+Diese Formulierung klingt professioneller und vermeidet den Eindruck, dass der Beweis selbst fremdverantwortlich entstanden sei.
+
+\section{Kleine LaTeX- und Stilpunkte}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Die Bedeutung von \(\mathbb N\) sollte definiert werden, zum Beispiel:
+    \[
+        \mathbb N=\{1,2,3,\ldots\}.
+    \]
+    \item Referenzen sollten einheitlich als \code{Section\textasciitilde\textbackslash ref\{...\}} gesetzt werden; das Symbol \(\S\) sollte vermieden werden, wenn sonst überall \emph{Section} verwendet wird.
+    \item Die Schreibweise \(\tilde p\) beziehungsweise \(\tilde{p}\) sollte vereinheitlicht werden.
+    \item Die Notation \(\lambda_{\alpha,\beta}\) sollte vermieden werden, da \(\omega\) fehlt.
+    \item In der Korollarien-Sektion sollte klar gesagt werden, dass \(\lambda\) dort die Multiset-Periode bezeichnet.
+\end{enumerate}
+
+\section*{Priorisierte To-do-Liste vor arXiv}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Den generischen Fall \(D\nmid N\) als Proposition formulieren.
+    \item Einen expliziten Beweis von Theorem~\(\ref{thm:main}\) einfügen, der auf die generische Proposition und den degenerierten Satz verweist.
+    \item Die zweite Integrabilitätsbedingung für \(y\) ergänzen.
+    \item Den Stabilisator eines echten zyklischen Intervalls als eigenes Lemma ausgliedern.
+    \item Die Set-versus-Multiset-Aussage vereinheitlichen: entweder Teilbarkeit explizit beweisen oder überall nur Ungleichung behaupten.
+    \item In den Korollarien klarstellen, dass \(\lambda\) die Multiset-Periode ist.
+    \item Die Lean-Sektion konsistent und vorsichtig formulieren, insbesondere bezüglich Zeilenzahl und Scope.
+    \item Den Literatur- und Neuheitsclaim defensiver formulieren.
+    \item Terminologie vereinheitlichen: vorzugsweise \emph{gap sequence}.
+\end{enumerate}
+
+\section*{Schlussurteil}
+
+Das Manuskript ist inhaltlich ernsthaft und mit den genannten Korrekturen gut für arXiv geeignet. Die Hauptformeln
+\[
+\lambda_{\mathrm{multiset}}=
+\begin{cases}
+N,&D\nmid N,\\
+N/D,&D\mid N,
+\end{cases}
+\qquad
+\lambda_{\mathrm{set}}=
+\begin{cases}
+N,&N<D,\\
+1,&N\ge D
+\end{cases}
+\]
+sind klar, elegant und durch die Restklassenanalyse überzeugend motiviert.
+
+Die wichtigste verbleibende Aufgabe ist nicht eine grundlegende mathematische Reparatur, sondern eine stärkere formale Organisation des Beweises. Insbesondere der Minimalitätsbeweis sollte als eigenständiger Satz mit sauber ausgelagerten Hilfslemmas präsentiert werden. Danach wirkt das Manuskript wesentlich professioneller und veröffentlichungsreifer.
+
+\end{document}
