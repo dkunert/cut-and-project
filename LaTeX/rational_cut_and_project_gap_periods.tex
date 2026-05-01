@@ -3,6 +3,13 @@
 \usepackage{amsmath,amssymb,amsthm,amsfonts,mathtools}
 \usepackage[hidelinks]{hyperref}
 \usepackage[a4paper,margin=1in]{geometry}
+\usepackage{caption}
+\captionsetup[table]{position=below,skip=12pt}
+
+% Tolerate long, unbreakable \texttt{...} Lean identifiers without
+% producing visible right-margin overruns.
+\tolerance=2000
+\emergencystretch=3em
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
@@ -754,9 +761,8 @@ sequence.
 
 \subsection{Definition of the set-valued gap sequence}\label{subsec:setdef}
 
-Sort the underlying set
-\(\bigl\{\tilde{p} \,:\, \tilde{p}\text{ occurs as a projected value}\bigr\}
-\subseteq \mathbb{Z}\) in increasing order, with each value listed once.
+Sort the set of all values \(\tilde{p}\in\mathbb{Z}\) that occur as
+projected values in increasing order, with each value listed once.
 By Section~\ref{subsec:step2} this set is locally finite and unbounded in
 both directions, so it admits a strictly increasing enumeration indexed by
 \(\mathbb{Z}\), unique up to translation of the index.  Write this
@@ -1062,7 +1068,8 @@ results of this paper and the Lean~4 declarations in
 
 \begin{table}[ht]
 \centering
-\small
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lll}
 \hline
 \textbf{Paper} & \textbf{Lean~4 name} & \textbf{Line} \\
@@ -1094,7 +1101,7 @@ Theorem~\ref{thm:main} (main result, abstract)
 Theorem~\ref{thm:main} (concrete wrapper)
   & \texttt{main\_theorem\_concrete} & 2274 \\
 \hline
-\multicolumn{3}{l}{\textit{Multiplier-aware infrastructure (geometric residue map \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\))}} \\
+\multicolumn{3}{l}{\textit{Multiplier-aware infrastructure (geometric residue map \(c_r\))}} \\
 \hline
 Equation~\eqref{eq:residue} (definition of \(c_r\))
   & \texttt{c\_r} & 2513 \\
