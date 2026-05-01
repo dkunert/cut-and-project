@@ -295,7 +295,7 @@ Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha, \beta) = 1\) and let
 \end{equation}
 Then the period length of the difference sequence~\eqref{eq:delta} is
 \begin{equation}\label{eq:formula}
-    \lambda_{\alpha,\beta} \;=\;
+    \lambda_{\mathrm{multiset}} \;=\;
     \begin{cases}
         N & \text{if } D \nmid N, \\[3pt]
         N / D & \text{if } D \mid N.
@@ -383,12 +383,22 @@ has determinant \(-(\alpha^2+\beta^2) = -D \ne 0\), giving the unique solution
     x = \frac{\beta\tilde{p} + \alpha r}{D}, \qquad
     y = \frac{\alpha\tilde{p} - \beta r}{D}.
 \end{equation}
-Integrality requires \(D \mid (\beta\tilde{p} + \alpha r)\), i.e.
+Integrality of \(x\) requires \(D \mid (\beta\tilde{p} + \alpha r)\), i.e.
 \begin{equation}\label{eq:residue}
     \tilde{p} \;\equiv\; c_r \;:=\; -\alpha\beta^{-1}r \pmod{D},
 \end{equation}
 where \(\beta^{-1}\) is the modular inverse of \(\beta\) modulo \(D\)
-(existence: Corollary~\ref{cor:inverse}).
+(existence: Corollary~\ref{cor:inverse}).  Integrality of \(y\) is then
+automatic: from~\eqref{eq:residue},
+\[
+    \alpha\tilde{p} - \beta r
+    \;\equiv\;
+    -\alpha^2\beta^{-1}r - \beta r
+    \;=\;
+    -(\alpha^2 + \beta^2)\beta^{-1}r
+    \;\equiv\; 0 \pmod{D},
+\]
+so both coordinates in~\eqref{eq:solution} are integers.
 The set of \(\tilde{p}\)-values for invariant~\(r\) is the arithmetic
 progression
 \begin{equation}\label{eq:Pr}
@@ -745,6 +755,10 @@ sequence is constantly \(1\), and \(\lambda_{\mathrm{set}} = 1\).
 \begin{corollary}\label{cor:setlemultiset}
 For all \(\alpha, \beta, \omega\) as above,
 \[
+    \lambda_{\mathrm{set}} \;\mid\; \lambda_{\mathrm{multiset}},
+\]
+and in particular
+\[
     \lambda_{\mathrm{set}} \;\le\; \lambda_{\mathrm{multiset}},
 \]
 with equality if and only if \(N \le D\).
@@ -763,8 +777,10 @@ sub-regimes:
           = \lambda_{\mathrm{set}}\); if \(D \nmid N\) then
           \(\lambda_{\mathrm{multiset}} = N > 1 = \lambda_{\mathrm{set}}\).
 \end{itemize}
-In every case \(\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}\),
-with equality precisely when \(N \le D\).
+In every case \(\lambda_{\mathrm{set}} \in \{1, \lambda_{\mathrm{multiset}}\}\),
+which gives both \(\lambda_{\mathrm{set}} \mid \lambda_{\mathrm{multiset}}\)
+(since \(1\) divides every positive integer) and the inequality, with
+equality precisely when \(N \le D\).
 \end{proof}
 
 \subsection{Examples}
@@ -803,7 +819,11 @@ case split.
 \section{Corollaries}\label{sec:corollaries}
 % =====================================================================
 
-Define \(\Lambda_{\alpha,\beta} := \alpha + \beta + 1\).
+Throughout this section, \(\lambda\) denotes the multiset period
+\(\lambda_{\mathrm{multiset}}\) of Theorem~\ref{thm:main}; the
+set-valued analogues follow from Theorem~\ref{thm:setperiod} via
+Corollary~\ref{cor:setlemultiset}.  Define
+\(\Lambda_{\alpha,\beta} := \alpha + \beta + 1\).
 
 \begin{corollary}[Finiteness]\label{cor:finite}
 For all \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha,\beta)=1\) and
@@ -905,7 +925,7 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 
 The algebraic core of the proof has been formalised in
 Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
-The formalisation comprises approximately 1{,}300 lines of verified code
+The formalisation comprises approximately 1{,}650 lines of verified code
 with no \texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
