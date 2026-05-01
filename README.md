@@ -1,150 +1,102 @@
 # cut-and-project
 
-## Conjectures on the Period Lengths of One-Dimensional Cut-and-Project Sequences
+Period formulas for one-dimensional cut-and-project sequences with
+rational slope, formalised in Lean 4.
 
-With $\alpha, \beta \in ℕ$, $\alpha \perp \beta$, $x, y \in ℝ$, $\omega \in \mathbb{R}_{\ge 0}$ and $i \in ℤ$, we consider the points
+## Setup
+
+For coprime $\alpha, \beta \in \mathbb{N}$ and a window parameter
+$\omega \in \mathbb{R}_{\ge 0}$, the set of accepted lattice points is
 
 $$
 C =
-\biggl(
-(x, y)
+\biggl\{
+(x, y) \in \mathbb{Z}^2
 \Bigm|
-x \in ℤ,
 y \in
-\bigl[\tfrac{\alpha}{\beta}(x-\omega), \tfrac{\alpha}{\beta}x+\omega\bigr]
-\cap ℤ
-\biggr)
+\bigl[\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega\bigr]
+\biggr\}.
 $$
 
-projected orthogonally onto
+After projecting orthogonally onto $f(x) = (\alpha/\beta)\,x$ and
+sorting, the resulting sequence of consecutive gaps
+$(d^{(i)})_{i \in \mathbb{Z}}$ has minimal period $\lambda$.
 
-$$
-f(x) = \frac{\alpha}{\beta}x
-$$
-
-and measure their Euclidean distances $(d^{(i)})$.
+## Main results
 
 With
 
 $$
-\Lambda_{\alpha,\beta} := \alpha + \beta + 1,
+N = \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1,
+\qquad
+D = \alpha^2 + \beta^2,
 $$
 
-we propose the following conjectures concerning the period length $\lambda$ of $(d^{(i)})$:
+counting projected points with multiplicity gives
 
-1. There is always a finite $\lambda$.
-2. If $\omega \in (0,1)$, then $\lambda_{\alpha,\beta} < \Lambda_{\alpha,\beta}$.
-3. If $\omega = 1$, then $\lambda_{\alpha,\beta} = \Lambda_{\alpha,\beta}$.
-4. If $\omega \in (1,2)$, then $\lambda_{\alpha,\beta} \ge \Lambda_{\alpha,\beta}$.
-5. If $\omega > 2$, then $\lambda_{\alpha,\beta} > \Lambda_{\alpha,\beta}$.
-6. If $\omega \ne 1$, then $\lambda \approx \bigl\lfloor \omega \,\Lambda_{\alpha,\beta}\bigr\rfloor$.
+$$
+\lambda_{\mathrm{multiset}} =
+\begin{cases}
+N & \text{if } D \nmid N, \\
+N/D & \text{if } D \mid N,
+\end{cases}
+$$
 
-We use numerical methods to support these conjectures.
+while discarding multiplicities gives
 
-We will show that $\lambda_{\omega=0} = 1$. Conjecture 6 is the result of a conversation with [ChatGPT's](https://chat.openai.com) model _o3-mini-high_.
+$$
+\lambda_{\mathrm{set}} =
+\begin{cases}
+N & \text{if } N < D, \\
+1 & \text{if } N \ge D.
+\end{cases}
+$$
 
-## Content
+In every case $\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}$,
+with equality if and only if $N \le D$.
 
-### LaTeX Code and PDF
+## Paper
 
-Please find the LaTeX Code and the PDF in directory ```LaTeX```.
+- `LaTeX/rational_cut_and_project_gap_periods.tex` — main paper
+  (statements, proofs, Lean correspondence in Table 1).
+- `LaTeX/rational_cut_and_project_multiset_gap_periods.tex` —
+  earlier multiset-only version, kept for archival.
+- `LaTeX/support/set_analysis_results.tex` — empirical analysis on
+  the 51,012-row dataset; verifies the dichotomy regime by regime.
 
-### Sources
+## Lean 4 formalisation
 
-Please find the C and the Python code in directory ```src```. The sub-directories for C and Python contain makefiles.
-I have used _ChatGPT_ for both codebases.
+The algebraic core of both theorems is formalised in
+`Lean/CutAndProject/CutAndProject/Basic.lean` (~1,650 lines; no
+`sorry`, `admit`, or `axiom`).
 
-#### C Code
+Both period formulas are proved as concrete, unconditional theorems:
 
-#### Configuration
+- `main_theorem_concrete` — multiset.
+- `set_main_theorem_concrete` — set.
 
-Please configure ```constants.h```, especially ```MAX_PERIOD_ARRAY_SIZE```, before running the software! For a maximum period length of 133,333,333 1 GB of RAM is used.
+A line-by-line correspondence between paper results and Lean
+declarations is given in Table 1 of the paper.
 
-##### constants.h
+The geometric construction (defining the cut-and-project set,
+projecting, sorting) is modelled abstractly via the
+`GeometricProjection` typeclass; the concrete instance
+`GeometricProjectionConcrete` discharges its four axioms. The
+set-side enumeration reuses the same machinery with multiplicities
+flattened to $\{0, 1\}$.
 
-```c
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+### Versions
 
-#define MAX_PERIOD_ARRAY_SIZE 8000000000
-#define X_MIN 0
-#define X_MAX 1000000
-#define NUMBER_OF_CONJECTURE_TESTS 1000
-#define MAX_RANDOM 100000
-#define MAX_NOMINATOR_DENOMINATOR 100000
-#define TASKS TEST | TEST_CONJECTURES
-#define CREATE_FILE_TO_FIND_A_PATTERN false
-#define NUMBER_OF_LINES_IN_THE_PATTERN_FILE 100000
-#define FRACTION_OF_REMAINING_ELEMENTS 0.9
+- Lean: `leanprover/lean4:v4.29.1` (pinned in
+  `Lean/CutAndProject/lean-toolchain`).
+- Mathlib: `v4.29.1`, exact commit
+  `5e932f97dd25535344f80f9dd8da3aab83df0fe6` (pinned in
+  `Lean/CutAndProject/lake-manifest.json`).
 
-#define TEST_FILE "./pattern_x_max_1000000_1000_lines.csv"
-#define FILE_TO_FIND_PATTERN "./find_pattern_x_max_1000000_%d_lines.csv"
+### Building
 
-/* Error Codes */
-#define NO_PERIOD -1
-#define ARRAY_SIZE_EXCEEDED -2
-#define DX_LENGTH_TO_SMALL -3
-
-#endif /* CONSTANTS_H */
-```
-
-| Definition                                | Comment                                                                                                                                             |
-|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| ```MAX_PERIOD_ARRAY_SIZE```               | Please adjust this. With a size of 8,000,000,000 about 60 GB of RAM is used!                                                                        |
-| ```X_MIN```                               | x interval starts here. ```X_MIN``` is included.                                                                                                    |
-| ```X_MAX```                               | x interval ends here. ```X_MAX``` is included.                                                                                                      |
-| ```MAX_RANDOM```                          | maximum for random numbers                                                                                                                          |
-| ```MAX_NOMINATOR_DENOMINATOR```           | maximum number for the dominator for random rationals                                                                                               |
-| ```TASKS```                               | Tests and/or tests of conjectures can be performed. The valid values are "TEST", "TEST_CONJECTURES".                                                |
-| ```NUMBER_OF_CONJECTURE_TESTS```          | number of conjecture tests                                                                                                                          |
-| ```CREATE_FILE_TO_FIND_A_PATTERN```       | When tests are done (i.e. "TEST" is included in the tasks), you can create a file to check the patterns as well.                                    |
-| ```NUMBER_OF_LINES_IN_THE_PATTERN_FILE``` | This pattern file will have NUMBER_OF_LINES_IN_THE_PATTERN_FILE lines (plus a headline).                                                            |
-| ```FRACTION_OF_REMAINING_ELEMENTS```      | This fraction must remain in the vector for the period length (see Remark 4 in the PDF).                                                            |
-| ```TEST_FILE```                           | This is a test file, which I created with a former Rust implementation.                                                                             |
-| ```FILE_TO_FIND_PATTERN```                | This is a file, which is written, when CREATE_FILE_TO_FIND_A_PATTERN is set to "true". "%d" will be replaced by NUMBER_OF_LINES_IN_THE_PATTERN_FILE.|
-
-#### Makefile
-
-The makefile supports macOS, Linux and Windows. I have only tested it under macOS.
-
-There are three targets:
-
-* ```make debug``` creates debug code.
-* ```make perf``` produces performance code.
-* ```make all``` produces performance and debug code.
-* ```make clean``` cleans up.
-
-You can execute the performance code with ```./cnp``` and the debug code with ```./cnp_debug```.
-
-#### Python Code
-
-There are four targets:
-
-* ```make install``` installs all required libraries.
-* ```make run``` runs the software.
-* ```make all``` installs all required libraries and runs the software.
-* ```make clean``` cleans up.
-
-### Lean 4 Formalisation
-
-The algebraic core of the proof in `LaTeX/rational_cut_and_project_multiset_gap_periods.tex` has been formalised in Lean 4 in directory `Lean/CutAndProject/`. The formalisation comprises about 1,300 lines of verified code with no `sorry`, `admit`, or `axiom`.
-
-#### Scope
-
-The formalised proof covers the algebraic and combinatorial core: the coprimality lemmas, the residue distribution (uniform and non-uniform cases), the heavy-set/cyclic-interval structure, the trivial-stabiliser lemma, the generic minimality argument, the degenerate case, and the final case dispatch (Theorem 3.1 of the paper, named `main_theorem` in the Lean code).
-
-The geometric construction — defining the cut-and-project set, projecting lattice points and sorting the multiset of $\tilde{p}$-values — is modelled abstractly via the `GeometricProjection` typeclass rather than formalised from first principles. A concrete instance `GeometricProjectionConcrete` discharges each of the four typeclass axioms.
-
-A correspondence between paper results and Lean declarations is given in Table 1 of the paper.
-
-#### Versions
-
-* Lean: `leanprover/lean4:v4.29.1` (pinned in `Lean/CutAndProject/lean-toolchain`).
-* Mathlib: `v4.29.1`, exact commit `5e932f97dd25535344f80f9dd8da3aab83df0fe6` (pinned in `Lean/CutAndProject/lake-manifest.json`).
-
-#### Building
-
-Install [`elan`](https://github.com/leanprover/elan) (this will pick up the toolchain pinned in `lean-toolchain` automatically), then:
+Install [`elan`](https://github.com/leanprover/elan) (this picks up
+the pinned toolchain automatically), then:
 
 ```
 cd Lean/CutAndProject
@@ -152,4 +104,33 @@ lake exe cache get   # download Mathlib build cache (recommended)
 lake build
 ```
 
-The full source is `Lean/CutAndProject/CutAndProject/Basic.lean`.
+## Code
+
+### C (`src/c/`)
+
+Two C codebases compute period lengths over large parameter sweeps,
+used to verify the theorems empirically.
+
+- `src/c/multiset/` — multiset period.
+- `src/c/set/` — set period.
+
+Each subdirectory has its own `constants.h` (runtime configuration:
+memory limits, $x$-range, conjecture-test counts, output formats) and
+a `Makefile` with targets `make all` / `make perf` / `make debug` /
+`make clean`.
+
+> **Note:** `MAX_PERIOD_ARRAY_SIZE` controls a single allocation; the
+> default of $8 \times 10^9$ requests $\approx 60$ GB of RAM. Adjust
+> before building.
+
+### Python (`src/python/`)
+
+Statistical analysis and modelling of the computed CSV outputs.
+Targets: `make install` / `make run` / `make all` / `make clean`.
+
+## Acknowledgement
+
+AI assistants were used during mathematical exploration, drafting,
+informal proof checking, and the preparation of the Lean
+formalisation. The author has independently verified the mathematical
+content and accepts full responsibility for the results.
