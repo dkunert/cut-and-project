@@ -63,7 +63,8 @@
       "Bash(pdflatex -interaction=nonstopmode -halt-on-error rational_cut_and_project_gap_periods.tex)",
       "Bash(lake env *)",
       "Read(//private/tmp/**)",
-      "Read(//Users/dirk/.claude/**)"
+      "Read(//Users/dirk/.claude/**)",
+      "Bash(make run *)"
     ]
   }
 }
