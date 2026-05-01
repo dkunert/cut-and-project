@@ -1268,14 +1268,14 @@ lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (
       _ ≤ σ * q := Nat.mul_le_mul_right q hσ_pos
       _ = L' := h3
 
-/-
-instance GeometricProjectionConcrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] : 
+
+instance GeometricProjectionConcrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] :
     GeometricProjection α β ω (difference_sequence α β ω) where
   N_pos := N_pos_concrete α β ω h_ω
   period_N := period_N_concrete α β ω h_ω
   period_degenerate := period_degenerate_concrete α β h_coprime ω h_ω
   sigma_of_period := sigma_of_period_concrete α β h_coprime ω h_ω
--/
+
 
 /--
 Theorem 3.1: Period length formula.
