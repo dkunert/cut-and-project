@@ -2282,6 +2282,221 @@ theorem main_theorem_concrete
     GeometricProjectionConcrete α β h_coprime ω h_ω
   exact main_theorem α β h_coprime ω h_ω
 
+-- =====================================================================
+-- Unit-aware concrete period theorems (Phase 2 step 3e–3g).
+-- The geometric `c_r ≡ -αβ⁻¹ · (r0 + r) (mod D)` enumeration is realised
+-- by `difference_sequence_unit α β ω (multiplier α β h_coprime)`. Below we
+-- prove that this sequence has the same period structure as the
+-- normalised `difference_sequence`.
+-- =====================================================================
+
+/-- In the degenerate case `D ∣ N`, the count_hits_unit and count_hits at any
+residue both equal `N / D` (uniform residue distribution), hence the
+unit-aware cumulative count agrees pointwise with the untwisted one. -/
+private lemma cumulative_hits_unit_eq_cumulative_hits_of_dvd
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (v : ℕ) :
+    cumulative_hits_unit α β ω u v = cumulative_hits α β ω v := by
+  unfold cumulative_hits_unit cumulative_hits
+  apply Finset.sum_congr rfl
+  intro y _
+  rw [count_hits_unit_eq_count_hits]
+  rw [uniform_residue_distribution _ _ _ h_dvd, uniform_residue_distribution _ _ _ h_dvd]
+
+/-- In the degenerate case, `V_unit` agrees with `V` (both invert the same
+cumulative function). -/
+private lemma V_unit_eq_V_of_dvd (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (k : ℕ) :
+    V_unit α β ω u k = V α β ω k := by
+  unfold V_unit V
+  have h_eq : ∀ x, k < cumulative_hits_unit α β ω u x ↔ k < cumulative_hits α β ω x := fun x => by
+    rw [cumulative_hits_unit_eq_cumulative_hits_of_dvd α β ω u h_dvd]
+  by_cases h : ∃ x, k < cumulative_hits α β ω x
+  · have h' : ∃ x, k < cumulative_hits_unit α β ω u x := by
+      rcases h with ⟨x, hx⟩; exact ⟨x, (h_eq x).mpr hx⟩
+    rw [dif_pos h, dif_pos h']
+    apply le_antisymm
+    · exact Nat.find_min' h' ((h_eq _).mpr (Nat.find_spec h))
+    · exact Nat.find_min' h ((h_eq _).mp (Nat.find_spec h'))
+  · have h' : ¬ ∃ x, k < cumulative_hits_unit α β ω u x := by
+      rintro ⟨x, hx⟩; exact h ⟨x, (h_eq x).mp hx⟩
+    rw [dif_neg h, dif_neg h']
+
+/-- In the degenerate case, sorted_multiset_unit agrees with sorted_multiset. -/
+private lemma sorted_multiset_unit_eq_sorted_multiset_of_dvd
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) (i : ℤ) :
+    sorted_multiset_unit α β ω u i = sorted_multiset α β ω i := by
+  show ((V_unit α β ω u (i % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat).toNat : ℤ) +
+        (i / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) * ↑(α ^ 2 + β ^ 2)) =
+       ((V α β ω (i % ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat).toNat : ℤ) +
+        (i / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) * ↑(α ^ 2 + β ^ 2))
+  rw [V_unit_eq_V_of_dvd α β ω u h_dvd]
+
+/-- In the degenerate case, difference_sequence_unit agrees with difference_sequence. -/
+private lemma difference_sequence_unit_eq_difference_sequence_of_dvd
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+    difference_sequence_unit α β ω u = difference_sequence α β ω := by
+  funext i
+  unfold difference_sequence_unit difference_sequence
+  rw [sorted_multiset_unit_eq_sorted_multiset_of_dvd α β ω u h_dvd,
+      sorted_multiset_unit_eq_sorted_multiset_of_dvd α β ω u h_dvd]
+
+/-- Unit-aware analogue of `period_N_concrete`. -/
+lemma period_N_unit_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+    IsPeriod (difference_sequence_unit α β ω u) N := by
+  intro N
+  refine ⟨N_pos_concrete α β ω h_ω, ?_⟩
+  intro i
+  show difference_sequence_unit α β ω u (i + ↑N) = difference_sequence_unit α β ω u i
+  unfold difference_sequence_unit
+  have h1 := sorted_multiset_unit_add_N α β ω h_ω u (i + 1)
+  have h2 := sorted_multiset_unit_add_N α β ω h_ω u i
+  have h3 : i + ↑N + 1 = (i + 1) + ↑N := by ring
+  rw [h3]; linarith
+
+/-- Unit-aware analogue of `sigma_of_period_concrete`. -/
+lemma sigma_of_period_unit_concrete (α β : ℕ) (_h_coprime : Nat.Coprime α β)
+    (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    ∀ L > 0, IsPeriod (difference_sequence_unit α β ω u) L →
+    ∃ σ : ℕ, σ * (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat = L * (α ^ 2 + β ^ 2) ∧
+    ∃ r0 : ℕ, ∀ x : ZMod (α ^ 2 + β ^ 2),
+      count_hits_unit (α ^ 2 + β ^ 2) u r0 (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+        (x + (σ : ZMod (α ^ 2 + β ^ 2))) =
+      count_hits_unit (α ^ 2 + β ^ 2) u r0 (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat x := by
+  intro L hL_pos hL_period
+  let σ_ℤ := sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0
+  have h_nonneg : 0 ≤ σ_ℤ := shift_nonneg_unit α β ω h_ω u L hL_pos hL_period
+  refine ⟨σ_ℤ.toNat, ?_, ?_⟩
+  · have h_eq : ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat * σ_ℤ = ↑L * ↑(α ^ 2 + β ^ 2) :=
+      shift_times_N_eq_unit α β ω h_ω u L hL_period
+    have h_cast : (↑(σ_ℤ.toNat) : ℤ) = σ_ℤ := Int.toNat_of_nonneg h_nonneg
+    have h_eq_int : (↑(σ_ℤ.toNat * (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) : ℤ) =
+        ↑(L * (α ^ 2 + β ^ 2)) := by
+      push_cast; rw [h_cast]
+      have h2 : ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat * σ_ℤ =
+          ↑L * ↑(α ^ 2 + β ^ 2) := h_eq
+      push_cast at h2
+      linarith
+    exact_mod_cast h_eq_int
+  · refine ⟨((-⌊ω * ↑β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val, ?_⟩
+    exact count_hits_shift_invariant_unit α β ω h_ω u L hL_pos hL_period
+
+/-- Unit-aware analogue of `period_degenerate_concrete`. In the degenerate
+case the unit-twisted sequence equals the untwisted one
+(`difference_sequence_unit_eq_difference_sequence_of_dvd`), so the period
+result transfers directly from `period_degenerate_concrete`. -/
+lemma period_degenerate_unit_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β)
+    (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    D ∣ N → HasPeriodLength (difference_sequence_unit α β ω u) (N / D) := by
+  intro N D h_dvd
+  rw [difference_sequence_unit_eq_difference_sequence_of_dvd α β ω u h_dvd]
+  exact period_degenerate_concrete α β h_coprime ω h_ω h_dvd
+
+/-- Unit-aware concrete main theorem. Combines the period-N and degenerate
+cases plus the minimality argument from `heavy_set_unit_is_cyclic_interval`.
+For `u = multiplier α β h_coprime`, this is the geometric main theorem
+(`main_theorem_geometric_concrete` below). -/
+theorem main_theorem_unit_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β)
+    (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+    HasPeriodLength (difference_sequence_unit α β ω u)
+      (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+       else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := by
+  by_cases h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  · simp only [if_pos h_dvd]
+    exact period_degenerate_unit_concrete α β h_coprime ω h_ω u h_dvd
+  · simp only [if_neg h_dvd]
+    refine ⟨period_N_unit_concrete α β ω h_ω u, ?_⟩
+    intro L hL_pos hL_period
+    have h_sigma := sigma_of_period_unit_concrete α β h_coprime ω h_ω u L hL_pos hL_period
+    rcases h_sigma with ⟨σ, h_sigma_eq, r0, h_inv_count⟩
+    let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+    let q := N / (α ^ 2 + β ^ 2)
+    let s := N % (α ^ 2 + β ^ 2)
+    have h_s_pos : 0 < s :=
+      Nat.pos_of_ne_zero (fun h => h_dvd (Nat.dvd_of_mod_eq_zero h))
+    have h_s_lt : s < α ^ 2 + β ^ 2 :=
+      Nat.mod_lt N (Nat.pos_of_ne_zero (NeZero.ne (α ^ 2 + β ^ 2)))
+    have h_heavy_eq := heavy_set_unit_is_cyclic_interval (α ^ 2 + β ^ 2) u r0 N
+    have h_inv : ∀ y : ZMod (α ^ 2 + β ^ 2),
+        y ∈ cyclic_interval (α ^ 2 + β ^ 2) s
+              ((r0 + q * (α ^ 2 + β ^ 2) : ℕ) : ZMod (α ^ 2 + β ^ 2)) ↔
+        y + ((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+            (σ : ZMod (α ^ 2 + β ^ 2)) ∈
+          cyclic_interval (α ^ 2 + β ^ 2) s
+            ((r0 + q * (α ^ 2 + β ^ 2) : ℕ) : ZMod (α ^ 2 + β ^ 2)) := by
+      intro y
+      have hx := h_heavy_eq ((u : ZMod (α ^ 2 + β ^ 2)) * y)
+      have hx' := h_heavy_eq
+        ((u : ZMod (α ^ 2 + β ^ 2)) * y + (σ : ZMod (α ^ 2 + β ^ 2)))
+      have h_inv_y :
+          ((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+            ((u : ZMod (α ^ 2 + β ^ 2)) * y) = y := by
+        rw [← mul_assoc, Units.inv_mul, one_mul]
+      have h_inv_yσ :
+          ((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+            ((u : ZMod (α ^ 2 + β ^ 2)) * y + (σ : ZMod (α ^ 2 + β ^ 2))) =
+          y + ((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+            (σ : ZMod (α ^ 2 + β ^ 2)) := by
+        rw [mul_add, ← mul_assoc, Units.inv_mul, one_mul]
+      rw [h_inv_y] at hx
+      rw [h_inv_yσ] at hx'
+      rw [← hx, ← hx', h_inv_count ((u : ZMod (α ^ 2 + β ^ 2)) * y)]
+    have h_zero : ((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+        (σ : ZMod (α ^ 2 + β ^ 2)) = 0 :=
+      cyclic_interval_stabilizer_trivial (α ^ 2 + β ^ 2) s
+        ((r0 + q * (α ^ 2 + β ^ 2) : ℕ) : ZMod (α ^ 2 + β ^ 2))
+        (((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+          (σ : ZMod (α ^ 2 + β ^ 2))) h_s_pos h_s_lt h_inv
+    have h_sigma_zero : (σ : ZMod (α ^ 2 + β ^ 2)) = 0 := by
+      have := congrArg (fun z => (u : ZMod (α ^ 2 + β ^ 2)) * z) h_zero
+      simp only [mul_zero, ← mul_assoc, Units.mul_inv, one_mul] at this
+      exact this
+    have h_sigma_dvd : (α ^ 2 + β ^ 2) ∣ σ :=
+      (ZMod.natCast_eq_zero_iff σ (α ^ 2 + β ^ 2)).mp h_sigma_zero
+    rcases h_sigma_dvd with ⟨k, rfl⟩
+    have h_eq : (α ^ 2 + β ^ 2) * k * N = L * (α ^ 2 + β ^ 2) := h_sigma_eq
+    have h_eq2 : k * N * (α ^ 2 + β ^ 2) = L * (α ^ 2 + β ^ 2) := by
+      calc k * N * (α ^ 2 + β ^ 2) = (α ^ 2 + β ^ 2) * k * N := by ring
+        _ = L * (α ^ 2 + β ^ 2) := h_eq
+    have h_eq3 : k * N = L :=
+      mul_right_cancel₀ (NeZero.ne (α ^ 2 + β ^ 2)) h_eq2
+    have h_k_pos : 0 < k := by
+      by_contra h_k
+      have h_k0 : k = 0 := by omega
+      rw [h_k0, zero_mul] at h_eq3
+      omega
+    have hN_pos : 0 < N := N_pos_concrete α β ω h_ω
+    have h_N_le : N ≤ k * N := Nat.le_mul_of_pos_left N h_k_pos
+    omega
+
+/-- Geometric concrete main theorem. Specialises `main_theorem_unit_concrete`
+to the geometric multiplier `u = multiplier α β h_coprime`, so the period
+result holds for the actual cut-and-project enumeration with residues
+`c_r ≡ -αβ⁻¹ · (r0 + r) (mod D)`. -/
+theorem main_theorem_geometric_concrete
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] :
+    HasPeriodLength
+      (difference_sequence_unit α β ω (multiplier α β h_coprime))
+      (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+       else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) :=
+  main_theorem_unit_concrete α β h_coprime ω h_ω (multiplier α β h_coprime)
+
 /--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
 above realises the abstract `set_main_theorem`, closing the asymmetry
