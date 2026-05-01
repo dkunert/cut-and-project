@@ -1627,7 +1627,26 @@ lemma set_difference_sequence_eq_one_of_ge
   rw [set_sorted_eq_id_of_ge α β ω h (i + 1), set_sorted_eq_id_of_ge α β ω h i]
   ring
 
-/-! ### Phase C, concrete instantiation of `set_main_theorem` -/
+/-! ### Phase C, concrete instantiation of both period theorems
+
+For symmetry between the two branches: each wrapper internally discharges
+the `[GeometricProjection ...]` instance via `GeometricProjectionConcrete`,
+so neither requires its caller to provide it. -/
+
+/--
+Concrete multiset-valued period theorem. Wrapper around `main_theorem`
+(line 1283) that internalises the `GeometricProjectionConcrete` instance,
+so callers only need `h_coprime` and `h_ω`. -/
+theorem main_theorem_concrete
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] :
+    HasPeriodLength (difference_sequence α β ω)
+      (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+       else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := by
+  haveI : GeometricProjection α β ω (difference_sequence α β ω) :=
+    GeometricProjectionConcrete α β h_coprime ω h_ω
+  exact main_theorem α β h_coprime ω h_ω
 
 /--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
