@@ -65,7 +65,7 @@ Key functions:
 
 **`verify_paper.py`** reads CSVs from `tests/` and verifies Theorem 3.1 and Corollaries 5.1–5.5 of `LaTeX/rational_cut_and_project_gap_periods.tex`. Defaults to `../../tests/new_find_patterns_x_max_1000000_51012_lines.csv` and `../../tests/degenerate_patterns_5000_lines.csv`. Pure stdlib — no external dependencies.
 
-Earlier exploratory scripts (`main.py` with XGBoost / OLS / curve-fit, `anomaly.py`, `test_conjecture_7.py`, plus the older 70 977-line dataset) are archived under `LaTeX/support/src/`.
+Earlier exploratory scripts (`main.py` with XGBoost / OLS / curve-fit, `anomaly.py`, `test_conjecture_7.py`, plus the older 70 977-line dataset) are archived under `support/src/`.
 
 ### Data Flow
 

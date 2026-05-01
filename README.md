@@ -61,7 +61,7 @@ with equality if and only if $N \le D$.
   (statements, proofs, Lean correspondence in Table 1).
 - `LaTeX/rational_cut_and_project_multiset_gap_periods.tex` —
   earlier multiset-only version, kept for archival.
-- `LaTeX/support/set_analysis_results.tex` — empirical analysis on
+- `support/LaTeX/set_analysis_results.tex` — empirical analysis on
   the 51,012-row dataset; verifies the dichotomy regime by regime.
 
 ## Lean 4 formalisation
@@ -125,8 +125,8 @@ a `Makefile` with targets `make all` / `make perf` / `make debug` /
 
 ### Python (`src/python/`)
 
-Statistical analysis and modelling of the computed CSV outputs.
-Targets: `make install` / `make run` / `make all` / `make clean`.
+Verification script `verify_paper.py` checks all claims in the paper
+against the CSV data in `tests/`. Targets: `make run` / `make clean`.
 
 ## Acknowledgement
 
