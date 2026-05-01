@@ -719,6 +719,35 @@ lemma sorted_multiset_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (
   rw [h_mod, h_div]; ring
 
 /--
+Unit-aware analogue of `sorted_multiset_add_N`. Purely structural — only
+uses the `q*N + r` decomposition that defines `sorted_multiset_unit`.
+-/
+lemma sorted_multiset_unit_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    sorted_multiset_unit α β ω u (i + ↑N) = sorted_multiset_unit α β ω u i + ↑D := by
+  intro N D
+  dsimp only [sorted_multiset_unit]
+  have hN : 0 < N := N_pos_concrete α β ω h_ω
+  have hN_ne : (N : ℤ) ≠ 0 := by omega
+  have h_mod : (i + (N : ℤ)) % (N : ℤ) = i % (N : ℤ) := by
+    have hm1 : (i + (N : ℤ)) % (N : ℤ) =
+        (i % (N : ℤ) + (N : ℤ) % (N : ℤ)) % (N : ℤ) :=
+      Int.add_emod i (N : ℤ) (N : ℤ)
+    have hm2 : (N : ℤ) % (N : ℤ) = 0 := Int.emod_self
+    have hm3 : (i % (N : ℤ)) % (N : ℤ) = i % (N : ℤ) :=
+      Int.emod_emod i (N : ℤ)
+    rw [hm2, add_zero, hm3] at hm1; exact hm1
+  have h_div : (i + (N : ℤ)) / (N : ℤ) = i / (N : ℤ) + 1 := by
+    have hd1 : (i + (N : ℤ)) / (N : ℤ) =
+        i / (N : ℤ) + (N : ℤ) / (N : ℤ) :=
+      Int.add_ediv_of_dvd_right (dvd_refl (N : ℤ))
+    have hd2 : (N : ℤ) / (N : ℤ) = 1 := Int.ediv_self hN_ne
+    rw [hd2] at hd1; exact hd1
+  rw [h_mod, h_div]; ring
+
+/--
 Helper: If the difference sequence has period L, the sorted_multiset shift
 by L is constant (independent of i).
 
@@ -878,6 +907,143 @@ lemma sorted_multiset_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
   rw [sorted_multiset_add_mul_N α β ω h_ω _ ((k + L) / N)]
   simp only [Int.cast_add, Int.cast_mul, Int.cast_natCast]
   have : (↑D : ZMod D) = 0 := ZMod.natCast_self D
+  rw [this, mul_zero, add_zero]
+
+/-- Unit-aware analogue of `sorted_shift_constant`. Structural — identical
+to the untwisted proof with `difference_sequence_unit`/`sorted_multiset_unit`
+substituted. -/
+lemma sorted_shift_constant_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (L : ℕ) (hL : IsPeriod (difference_sequence_unit α β ω u) L) (i : ℤ) :
+    sorted_multiset_unit α β ω u (i + ↑L) - sorted_multiset_unit α β ω u i =
+    sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0 := by
+  have h_step : ∀ j : ℤ,
+      sorted_multiset_unit α β ω u (j + 1 + ↑L) - sorted_multiset_unit α β ω u (j + 1) =
+      sorted_multiset_unit α β ω u (j + ↑L) - sorted_multiset_unit α β ω u j := by
+    intro j
+    have hper := hL.2 j
+    simp only [difference_sequence_unit] at hper
+    have h1 : j + 1 + ↑L = j + ↑L + 1 := by ring
+    rw [h1]; linarith
+  have h_nat : ∀ n : ℕ,
+      sorted_multiset_unit α β ω u (↑n + ↑L) - sorted_multiset_unit α β ω u ↑n =
+      sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0 := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have := h_step ↑k
+      have h1 : (↑k : ℤ) + 1 + ↑L = ↑(k + 1) + ↑L := by push_cast; ring
+      have h2 : (↑k : ℤ) + 1 = ↑(k + 1) := by push_cast; ring
+      rw [h1, h2] at this; linarith
+  have h_neg : ∀ n : ℕ,
+      sorted_multiset_unit α β ω u (-↑n + ↑L) - sorted_multiset_unit α β ω u (-↑n) =
+      sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0 := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have h_eq : sorted_multiset_unit α β ω u (-↑k + ↑L) - sorted_multiset_unit α β ω u (-↑k) =
+          sorted_multiset_unit α β ω u (-↑(k + 1) + ↑L) - sorted_multiset_unit α β ω u (-↑(k + 1)) := by
+        have := h_step (-↑(k + 1))
+        have ha : (-↑(k + 1) : ℤ) + 1 + ↑L = -↑k + ↑L := by push_cast; omega
+        have hb : (-↑(k + 1) : ℤ) + 1 = -↑k := by push_cast; omega
+        simp only [ha, hb] at this; linarith
+      linarith
+  cases i with
+  | ofNat n => exact h_nat n
+  | negSucc n =>
+    have : (Int.negSucc n : ℤ) = -↑(n + 1) := by omega
+    simp only [this]
+    exact h_neg (n + 1)
+
+/-- Unit-aware analogue of `shift_times_N_eq`. -/
+lemma shift_times_N_eq_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (L : ℕ) (hL : IsPeriod (difference_sequence_unit α β ω u) L) :
+    let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    let D := α ^ 2 + β ^ 2
+    let σ := sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0
+    ↑N * σ = ↑L * ↑D := by
+  intro N D σ
+  have h_shift_L : ∀ n : ℕ, sorted_multiset_unit α β ω u (↑n * ↑L) =
+      sorted_multiset_unit α β ω u 0 + ↑n * σ := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have hsc := sorted_shift_constant_unit α β ω u L hL (↑k * ↑L)
+      have h_eq : (↑(k + 1) : ℤ) * ↑L = ↑k * ↑L + ↑L := by push_cast; ring
+      rw [h_eq]; push_cast at ih ⊢; linarith
+  have h_shift_N : ∀ n : ℕ, sorted_multiset_unit α β ω u (↑n * ↑N) =
+      sorted_multiset_unit α β ω u 0 + ↑n * ↑D := by
+    intro n; induction n with
+    | zero => simp
+    | succ k ih =>
+      have hsa : sorted_multiset_unit α β ω u (↑k * ↑N + ↑N) =
+          sorted_multiset_unit α β ω u (↑k * ↑N) + ↑D :=
+        sorted_multiset_unit_add_N α β ω h_ω u (↑k * (↑N : ℤ))
+      have h_eq : (↑(k + 1) : ℤ) * ↑N = ↑k * ↑N + ↑N := by push_cast; ring
+      have h_eq2 : (↑(k + 1) : ℤ) * ↑D = ↑k * ↑D + ↑D := by push_cast; ring
+      rw [h_eq]; linarith
+  have h1 := h_shift_L N
+  have h2 := h_shift_N L
+  have h3 : (↑N : ℤ) * ↑L = ↑L * ↑N := by ring
+  rw [h3] at h1; linarith
+
+/-- Unit-aware analogue of `shift_nonneg`. -/
+lemma shift_nonneg_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (difference_sequence_unit α β ω u) L) :
+    0 ≤ sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0 := by
+  set σ := sorted_multiset_unit α β ω u ↑L - sorted_multiset_unit α β ω u 0
+  have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
+    exact_mod_cast N_pos_concrete α β ω h_ω
+  have h_eq : ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat * σ =
+      ↑L * ↑(α ^ 2 + β ^ 2) :=
+    shift_times_N_eq_unit α β ω h_ω u L hL
+  have h_rhs : 0 ≤ ↑L * ↑(α ^ 2 + β ^ 2) := by positivity
+  nlinarith
+
+set_option maxHeartbeats 400000 in
+/-- Unit-aware analogue of `sorted_multiset_add_mul_N`. -/
+lemma sorted_multiset_unit_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) (m : ℕ) :
+    sorted_multiset_unit α β ω u (i + ↑m * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
+      sorted_multiset_unit α β ω u i + ↑m * ↑(α ^ 2 + β ^ 2) := by
+  induction m with
+  | zero => simp
+  | succ k ih =>
+    have ha : sorted_multiset_unit α β ω u
+        (i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat +
+          ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
+        sorted_multiset_unit α β ω u
+          (i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) +
+          ↑(α ^ 2 + β ^ 2) :=
+      sorted_multiset_unit_add_N α β ω h_ω u _
+    have h_eq : i + ↑(k + 1) * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat =
+        i + ↑k * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat +
+        ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by push_cast; ring
+    rw [h_eq, ha, ih]; push_cast; ring
+
+set_option maxHeartbeats 400000 in
+/-- Unit-aware analogue of `sorted_multiset_mod_D_eq`. -/
+lemma sorted_multiset_unit_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (k L : ℕ) :
+    (sorted_multiset_unit α β ω u ↑(k + L) : ZMod (α ^ 2 + β ^ 2)) =
+    (sorted_multiset_unit α β ω u ↑((k + L) %
+      (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
+      ZMod (α ^ 2 + β ^ 2)) := by
+  have hN := N_pos_concrete α β ω h_ω
+  have h_decomp : (↑(k + L) : ℤ) =
+      ↑((k + L) % (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) +
+        ↑((k + L) / (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) *
+        ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
+    have := Nat.div_add_mod (k + L) (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
+    push_cast; linarith
+  conv_lhs => rw [h_decomp]
+  rw [sorted_multiset_unit_add_mul_N α β ω h_ω u _
+        ((k + L) / (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat)]
+  simp only [Int.cast_add, Int.cast_mul, Int.cast_natCast]
+  have : (↑(α ^ 2 + β ^ 2) : ZMod (α ^ 2 + β ^ 2)) = 0 :=
+    ZMod.natCast_self (α ^ 2 + β ^ 2)
   rw [this, mul_zero, add_zero]
 
 /--
