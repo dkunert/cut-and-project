@@ -2572,4 +2572,291 @@ theorem set_main_theorem_concrete
     (set_difference_sequence_eq_of_lt α β ω)
     (set_difference_sequence_eq_one_of_ge α β ω)
 
+-- =====================================================================
+-- Unit-aware set-valued construction (Phase 2 step 3 — set side).
+-- =====================================================================
+
+/-- Unit-aware set indicator: `1` if residue `(y : ZMod D)` is hit at least once
+under the multiplier-twisted progression, else `0`. -/
+noncomputable def set_indicator_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (y : ℕ) : ℕ :=
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  if 1 ≤ count_hits_unit D u r0 N (y : ZMod D) then 1 else 0
+
+noncomputable def set_cumulative_hits_unit (α β : ℕ) (ω : ℝ)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (x : ℕ) : ℕ :=
+  (Finset.range (x + 1)).sum (set_indicator_unit α β ω u)
+
+open Classical in
+noncomputable def set_V_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (k : ℕ) : ℕ :=
+  if h : ∃ x, k < set_cumulative_hits_unit α β ω u x then
+    Nat.find h
+  else
+    0
+
+noncomputable def set_size_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) : ℕ :=
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card
+
+noncomputable def set_sorted_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
+  let M := (set_size_unit α β ω u : ℤ)
+  let D := α ^ 2 + β ^ 2
+  let r := (i % M).toNat
+  let q := i / M
+  (set_V_unit α β ω u r : ℤ) + q * D
+
+/-- Unit-aware concrete set-valued gap sequence. With
+`u = multiplier α β h_coprime` this realises the geometric set enumeration. -/
+noncomputable def set_difference_sequence_unit (α β : ℕ) (ω : ℝ)
+    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
+  set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i
+
+/-! ### Unit-aware Phase C, branch `N < D`: agreement with `difference_sequence_unit` -/
+
+lemma set_indicator_unit_eq_count_hits_unit_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (y : ℕ) :
+    set_indicator_unit α β ω u y =
+      count_hits_unit (α ^ 2 + β ^ 2) u
+        (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+        ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (y : ZMod (α ^ 2 + β ^ 2)) := by
+  rw [count_hits_unit_eq_count_hits]
+  have h_le := count_hits_lt_D (α ^ 2 + β ^ 2)
+      (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+      (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h
+      (((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+        ((y : ℕ) : ZMod (α ^ 2 + β ^ 2)))
+  show (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = _
+  rw [count_hits_unit_eq_count_hits]
+  split_ifs with hge
+  · omega
+  · push_neg at hge; omega
+
+lemma set_cumulative_hits_unit_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
+    set_cumulative_hits_unit α β ω u x = cumulative_hits_unit α β ω u x := by
+  show (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = _
+  apply Finset.sum_congr rfl
+  intro y _
+  exact set_indicator_unit_eq_count_hits_unit_of_lt α β ω u h y
+
+lemma set_V_unit_eq_V_unit_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (k : ℕ) :
+    set_V_unit α β ω u k = V_unit α β ω u k := by
+  have h_funeq : set_cumulative_hits_unit α β ω u = cumulative_hits_unit α β ω u :=
+    funext (set_cumulative_hits_unit_eq_of_lt α β ω u h)
+  unfold set_V_unit V_unit
+  rw [h_funeq]
+
+lemma set_size_unit_eq_N_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) :
+    set_size_unit α β ω u = (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := by
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  have h_div : N / D = 0 := Nat.div_eq_of_lt h
+  have h_mod : N % D = N := Nat.mod_eq_of_lt h
+  have h_dist := (residue_distribution_unit D u r0 N).1
+  simp only [h_div, h_mod, zero_add] at h_dist
+  have h_le : ∀ x : ZMod D, count_hits_unit D u r0 N x ≤ 1 := fun x => by
+    rw [count_hits_unit_eq_count_hits]
+    exact count_hits_lt_D D r0 N h _
+  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = N
+  have h_filter_eq :
+      (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)) =
+      (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = 1)) := by
+    ext x
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    constructor
+    · intro hge; have := h_le x; omega
+    · intro heq; omega
+  rw [h_filter_eq]
+  exact h_dist
+
+lemma set_sorted_unit_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
+    set_sorted_unit α β ω u i = sorted_multiset_unit α β ω u i := by
+  show (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
+       (i / (set_size_unit α β ω u : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) =
+       (V_unit α β ω u (i % ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)).toNat : ℤ) +
+       (i / ((⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat : ℤ)) * (α ^ 2 + β ^ 2 : ℕ)
+  rw [set_size_unit_eq_N_of_lt α β ω u h, set_V_unit_eq_V_unit_of_lt α β ω u h]
+
+/-- **Discharge of `h_lt`** for the unit case: under `N < D`, the unit
+set sequence agrees pointwise with `difference_sequence_unit`. -/
+lemma set_difference_sequence_unit_eq_of_lt
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (i : ℤ) :
+    set_difference_sequence_unit α β ω u i = difference_sequence_unit α β ω u i := by
+  show set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i =
+       sorted_multiset_unit α β ω u (i + 1) - sorted_multiset_unit α β ω u i
+  rw [set_sorted_unit_eq_of_lt α β ω u h (i + 1),
+      set_sorted_unit_eq_of_lt α β ω u h i]
+
+/-! ### Unit-aware Phase C, branch `D ≤ N`: constant-`1` set sequence -/
+
+lemma set_indicator_unit_eq_one_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (y : ℕ) :
+    set_indicator_unit α β ω u y = 1 := by
+  have h_ge := count_hits_ge_D (α ^ 2 + β ^ 2)
+      (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
+      (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h
+      (((u⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+        ((y : ℕ) : ZMod (α ^ 2 + β ^ 2)))
+  show (if 1 ≤ count_hits_unit _ _ _ _ _ then 1 else 0) = 1
+  rw [count_hits_unit_eq_count_hits]
+  rw [if_pos h_ge]
+
+lemma set_cumulative_hits_unit_eq_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (x : ℕ) :
+    set_cumulative_hits_unit α β ω u x = x + 1 := by
+  show (Finset.range (x + 1)).sum (set_indicator_unit α β ω u) = x + 1
+  calc (Finset.range (x + 1)).sum (set_indicator_unit α β ω u)
+      = (Finset.range (x + 1)).sum (fun _ : ℕ => 1) :=
+        Finset.sum_congr rfl (fun y _ => set_indicator_unit_eq_one_of_ge α β ω u h y)
+    _ = x + 1 := by simp
+
+lemma set_V_unit_eq_id_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (k : ℕ) :
+    set_V_unit α β ω u k = k := by
+  have h_cum : ∀ x, set_cumulative_hits_unit α β ω u x = x + 1 :=
+    set_cumulative_hits_unit_eq_of_ge α β ω u h
+  have hex : ∃ x, k < set_cumulative_hits_unit α β ω u x := ⟨k, by rw [h_cum]; omega⟩
+  unfold set_V_unit
+  rw [dif_pos hex]
+  apply Nat.find_eq_iff _ |>.mpr
+  refine ⟨?_, ?_⟩
+  · rw [h_cum]; omega
+  · intro m hm; rw [h_cum]; omega
+
+lemma set_size_unit_eq_D_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) :
+    set_size_unit α β ω u = α ^ 2 + β ^ 2 := by
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  have h_ge : ∀ x : ZMod D, 1 ≤ count_hits_unit D u r0 N x := fun x => by
+    rw [count_hits_unit_eq_count_hits]
+    exact count_hits_ge_D D r0 N h _
+  show (Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x)).card = D
+  have h_filter_eq :
+      Finset.univ.filter (fun x : ZMod D => 1 ≤ count_hits_unit D u r0 N x) =
+      (Finset.univ : Finset (ZMod D)) := by
+    ext x; simp [h_ge x]
+  rw [h_filter_eq, Finset.card_univ, ZMod.card]
+
+lemma set_sorted_unit_eq_id_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
+    set_sorted_unit α β ω u i = i := by
+  have hD_pos : 0 < α ^ 2 + β ^ 2 := by
+    have : NeZero (α ^ 2 + β ^ 2) := inferInstance
+    exact Nat.pos_of_ne_zero this.out
+  have hD_ne : ((α ^ 2 + β ^ 2 : ℕ) : ℤ) ≠ 0 := by exact_mod_cast hD_pos.ne'
+  show (set_V_unit α β ω u (i % ((set_size_unit α β ω u : ℤ))).toNat : ℤ) +
+       (i / (set_size_unit α β ω u : ℤ)) * (α ^ 2 + β ^ 2 : ℕ) = i
+  rw [set_size_unit_eq_D_of_ge α β ω u h]
+  have hmod_nn : 0 ≤ i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := Int.emod_nonneg i hD_ne
+  have hmod_lt : i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) < ((α ^ 2 + β ^ 2 : ℕ) : ℤ) :=
+    Int.emod_lt_of_pos i (by exact_mod_cast hD_pos)
+  set r : ℕ := (i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ)).toNat with hr_def
+  have hr_lt : r < α ^ 2 + β ^ 2 := by
+    have : (r : ℤ) < ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
+      rw [hr_def, Int.toNat_of_nonneg hmod_nn]; exact hmod_lt
+    exact_mod_cast this
+  rw [set_V_unit_eq_id_of_ge α β ω u h r]
+  have h_r_int : (r : ℤ) = i % ((α ^ 2 + β ^ 2 : ℕ) : ℤ) := by
+    rw [hr_def, Int.toNat_of_nonneg hmod_nn]
+  rw [h_r_int]
+  have := Int.emod_add_ediv i ((α ^ 2 + β ^ 2 : ℕ) : ℤ)
+  linarith
+
+/-- **Discharge of `h_ge`** for the unit case: under `D ≤ N`, the unit
+set sequence is constantly `1`. -/
+lemma set_difference_sequence_unit_eq_one_of_ge
+    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (h : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) (i : ℤ) :
+    set_difference_sequence_unit α β ω u i = 1 := by
+  show set_sorted_unit α β ω u (i + 1) - set_sorted_unit α β ω u i = 1
+  rw [set_sorted_unit_eq_id_of_ge α β ω u h (i + 1),
+      set_sorted_unit_eq_id_of_ge α β ω u h i]
+  ring
+
+/-- Unit-aware abstract set-valued period theorem. Parallel to
+`set_main_theorem` but uses `main_theorem_unit_concrete` (the unit-aware
+multiset main theorem) for the `N < D` branch. -/
+theorem set_main_theorem_unit
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (set_seq : ℤ → ℤ)
+    [NeZero (α ^ 2 + β ^ 2)]
+    (h_lt : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 →
+            ∀ i, set_seq i = difference_sequence_unit α β ω u i)
+    (h_ge : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat →
+            ∀ i, set_seq i = 1) :
+    HasPeriodLength set_seq
+      (if (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+       else 1) := by
+  by_cases h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2
+  · rw [if_pos h]
+    have h_eq : set_seq = difference_sequence_unit α β ω u := funext (h_lt h)
+    rw [h_eq]
+    have hN_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := N_pos_concrete α β ω h_ω
+    have hND : ¬ (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := by
+      intro hd
+      have := Nat.le_of_dvd hN_pos hd
+      omega
+    have h_main : HasPeriodLength (difference_sequence_unit α β ω u)
+        (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+         then (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+         else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) :=
+      main_theorem_unit_concrete α β h_coprime ω h_ω u
+    rw [if_neg hND] at h_main
+    exact h_main
+  · rw [if_neg h]
+    exact HasPeriodLength_const_one set_seq (h_ge (not_lt.mp h))
+
+/-- Geometric concrete set-valued main theorem. Specialises
+`set_main_theorem_unit` to `u = multiplier α β h_coprime` and discharges
+the dichotomy axioms via the unit-aware Phase C lemmas. -/
+theorem set_main_theorem_geometric_concrete
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    [NeZero (α ^ 2 + β ^ 2)] :
+    HasPeriodLength
+      (set_difference_sequence_unit α β ω (multiplier α β h_coprime))
+      (if (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+       else 1) :=
+  set_main_theorem_unit α β h_coprime ω h_ω (multiplier α β h_coprime)
+    (set_difference_sequence_unit α β ω (multiplier α β h_coprime))
+    (set_difference_sequence_unit_eq_of_lt α β ω (multiplier α β h_coprime))
+    (set_difference_sequence_unit_eq_one_of_ge α β ω (multiplier α β h_coprime))
+
 end CutAndProject

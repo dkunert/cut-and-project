@@ -999,7 +999,7 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 
 The algebraic and combinatorial core of the proof has been formalised in
 Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
-The formalisation comprises approximately 2{,}500 lines of verified code
+The formalisation comprises approximately 2{,}850 lines of verified code
 with no \texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
@@ -1100,6 +1100,10 @@ Set size positivity (well-defined modulo)
   & \texttt{set\_size\_pos} & 2219 \\
 Theorem~\ref{thm:setperiod} (concrete wrapper)
   & \texttt{set\_main\_theorem\_concrete} & 2562 \\
+Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (abstract)
+  & \texttt{set\_main\_theorem\_unit} & 2815 \\
+Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (geometric)
+  & \texttt{set\_main\_theorem\_geometric\_concrete} & 2849 \\
 \hline
 \end{tabular}
 \caption{Correspondence between paper results and Lean~4 declarations
@@ -1165,7 +1169,12 @@ replaces \texttt{V}, \texttt{set\_size} replaces \(N\), and the resulting
 bi-infinite \texttt{set\_difference\_sequence} discharges the abstract
 hypotheses of \texttt{set\_main\_theorem} via the dichotomy
 (\texttt{count\_hits\_lt\_D} versus \texttt{count\_hits\_ge\_D}) on the
-multiplicity function.
+multiplicity function.  The unit-aware analogue
+\texttt{set\_difference\_sequence\_unit} mirrors this construction with
+\texttt{count\_hits\_unit} in place of \texttt{count\_hits}, and
+\texttt{set\_main\_theorem\_geometric\_concrete} establishes
+Theorem~\ref{thm:setperiod} for the actual geometric enumeration with
+the multiplier \(u = -\alpha\beta^{-1}\) threaded through.
 
 \paragraph{Boundary between the two layers.} The hand-verified
 strip-to-residue reduction of Layer~1 is standard cut-and-project
