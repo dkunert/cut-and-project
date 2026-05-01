@@ -1309,4 +1309,25 @@ theorem main_theorem (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (_
     · intro L' hL_pos hL_period
       exact generic_minimality α β ω (difference_sequence α β ω) h_dvd L' hL_pos hL_period
 
+/-! ## Set-valued period (Phase A: `count_hits` dichotomy)
+
+The two lemmas `count_hits_lt_D` (already proved above) and `count_hits_ge_D`
+(below) furnish the structural dichotomy underlying the set-valued period
+theorem: under `N < D` the multiplicity function takes values in `{0,1}`
+(so the gap multiset coincides with the gap set), while under `N ≥ D` every
+residue class is hit (so the underlying set is all of ℤ and the set-valued
+period collapses to 1).
+-/
+
+/--
+Lower bound on `count_hits`: if `N ≥ D`, every residue class is hit at least
+once. Structural complement to `count_hits_lt_D`.
+-/
+lemma count_hits_ge_D (D : ℕ) [NeZero D] (r0 N : ℕ) (h : D ≤ N) (x : ZMod D) :
+    1 ≤ count_hits D r0 N x := by
+  rw [count_hits_eq D r0 N x]
+  have h_pos : 0 < D := Nat.pos_of_ne_zero (NeZero.ne D)
+  have h_div : 1 ≤ N / D := (Nat.one_le_div_iff h_pos).mpr h
+  omega
+
 end CutAndProject
