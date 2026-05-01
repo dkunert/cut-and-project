@@ -25,12 +25,19 @@
 This note collects practical suggestions for submitting the manuscript
 
 \begin{center}
-\emph{A Period Formula for Rational Cut-and-Project Strip Projections
-with Multiplicity}
+\emph{Period Formulas for Rational Cut-and-Project Strip Projections:
+Multiset and Set Cases}
 \end{center}
 
 to arXiv.  It lists suitable subject categories, possible expert readers,
 and a suggested first-contact email.
+
+The paper proves two complementary closed-form period formulas (one for
+the multiset of projected gap values, one for the underlying set) and
+shows that the set period is always at most the multiset period, with
+equality precisely when \(N \le D\).  The algebraic core of both
+theorems is formalised in Lean~4 (\(\sim\)2{,}850 lines, no
+\texttt{sorry}, \texttt{admit}, or \texttt{axiom}).
 
 \section*{Can an independent researcher submit to arXiv?}
 
@@ -67,9 +74,11 @@ A reasonable first choice is
 \texttt{math.CO}
 \end{center}
 
-because the proof is essentially combinatorial and residue-class based.
-If the paper is presented more strongly as a symbolic-dynamical gap-sequence
-result, then \texttt{math.DS} is also plausible.
+because the proofs are essentially combinatorial and residue-class based:
+both the multiset formula and the set-versus-multiset dichotomy reduce
+to counting cumulative residue classes modulo \(D = \alpha^2 + \beta^2\).
+If the paper is presented more strongly as a symbolic-dynamical
+gap-sequence result, then \texttt{math.DS} is also plausible.
 
 \section*{How to approach potential endorsers or expert readers}
 
@@ -186,19 +195,28 @@ Dear Professor [Name],
 I am an independent researcher working on a short note about rational
 one-dimensional cut-and-project strip projections.
 
-The paper proves an explicit formula for the minimal period of the projected
-multiset gap sequence.  For coprime positive integers alpha, beta and window
-parameter omega >= 0, the period is
+The paper proves two complementary closed-form formulas for the minimal
+period of the projected gap sequence.  For coprime positive integers
+alpha, beta and window parameter omega >= 0, set
 
-    lambda = N        if D does not divide N,
-    lambda = N / D    if D divides N,
+    N = floor(omega alpha) + floor(omega beta) + 1,
+    D = alpha^2 + beta^2.
 
-where N = floor(omega alpha) + floor(omega beta) + 1 and
-D = alpha^2 + beta^2.
+Counting projected values with multiplicity gives
 
-The proof is elementary and reduces the problem to the distribution of
-consecutive residue classes modulo D.  The algebraic core has also been
-formalised in Lean 4.
+    lambda_multiset = N        if D does not divide N,
+    lambda_multiset = N / D    if D divides N,
+
+and discarding multiplicities gives
+
+    lambda_set = N             if N < D,
+    lambda_set = 1             if N >= D.
+
+In particular lambda_set <= lambda_multiset, with equality iff N <= D.
+
+The proofs are elementary and reduce the problem to the distribution of
+consecutive residue classes modulo D.  The algebraic core of both
+theorems has also been formalised in Lean 4 (no sorry, admit, or axiom).
 
 Since your work is close to cut-and-project sets / gap problems / symbolic
 dynamics, I would be grateful if you were willing to take a brief look at the
@@ -244,22 +262,35 @@ Before sending the manuscript to potential readers, check the following:
 
 \begin{enumerate}
     \item The paper compiles without errors.
-    \item The title mentions multiplicity or projected multisets.
-    \item The abstract clearly states that projected values are counted with
-    multiplicity.
-    \item The setup contains an explicit multiplicity convention.
+    \item The title names both the multiset and the set case.
+    \item The abstract states both period formulas and the inequality
+    \(\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}\).
+    \item The setup contains an explicit multiplicity convention and is
+    clear that the set case discards multiplicities.
     \item The bi-infinite nondecreasing enumeration of projected values is
-    justified.
+    justified for both the multiset and the set side.
     \item The proof of \(\tilde p_s^{(i+N)}=\tilde p_s^{(i)}+D\) is explicit.
     \item The degenerate case \(D\mid N\) clearly explains the role of zero
     gaps.
-    \item The Lean formalisation is described precisely and not overstated.
+    \item The set-side dichotomy at \(N=D\) (period \(N\) below, period
+    \(1\) at and above) is stated as a separate theorem.
+    \item Table~1 lists the line-by-line correspondence between paper
+    results and Lean declarations and the cited line numbers are correct.
+    \item The Lean formalisation is described precisely and not overstated:
+    \(\sim\)2{,}850 lines in \texttt{Basic.lean}, no \texttt{sorry},
+    \texttt{admit}, or \texttt{axiom}; both
+    \texttt{main\_theorem\_concrete} (multiset) and
+    \texttt{set\_main\_theorem\_concrete} (set) are unconditional.
     \item AI systems are not listed as co-authors.
-    \item AI assistance is mentioned only in the acknowledgements.
+    \item AI assistance is mentioned only in the acknowledgements, with the
+    author taking full responsibility for the mathematical content.
     \item The bibliography is cleaned up, preferably replacing Wikipedia with
     a mathematical reference for the three-gap theorem.
-    \item The GitHub repository builds cleanly if the Lean formalisation is
-    advertised.
+    \item The GitHub repository (\texttt{cut-and-project}) builds cleanly:
+    \texttt{lake build} succeeds against the pinned toolchain
+    (\texttt{leanprover/lean4:v4.29.1}, Mathlib commit
+    \texttt{5e932f97}\dots) and \texttt{verify\_paper.py} passes against
+    the CSV data in \texttt{tests/}.
 \end{enumerate}
 
 \section*{Practical recommendation}
@@ -269,8 +300,10 @@ for example Alan Haynes and Henna Koivusalo, with a short email and the
 manuscript attached.  If there is no response, proceed to James Walton,
 Val\'{e}rie Berth\'{e}, or S\'{e}bastien Labb\'{e}.
 
-The request should initially be for feedback on whether the result appears
-suitable for arXiv and whether the formula is known, not immediately for
-endorsement.
+The request should initially be for feedback on whether the results appear
+suitable for arXiv and whether either formula (multiset or set) is known
+in the literature, not immediately for endorsement.  The set-versus-multiset
+dichotomy is the more distinctive contribution and is worth highlighting
+explicitly when summarising the paper.
 
 \end{document}
