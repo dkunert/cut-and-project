@@ -202,3 +202,10 @@ LaTeX/proof.pdf
 src/c/C_Source_Code.docx
 src/c/**/*.o
 tests/*.tmp
+LaTeX/support/rational_cut_and_project_ingenieur.tex
+LaTeX/support/anmerkungen_lean.tex
+LaTeX/support/gemini-proposals.md
+.gitignore
+.gitignore
+LaTeX/support/neue_anmerkungen_arxiv_cut_project.tex
+LaTeX/support/review_anmerkungen_arxiv_cut_project.tex
