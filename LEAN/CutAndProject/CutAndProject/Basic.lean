@@ -394,6 +394,26 @@ lemma heavy_set_is_cyclic_interval (D : ℕ) [NeZero D] (r0 N : ℕ) :
     have h3 : count_hits D (r0 + q * D) s x = 1 := (count_hits_lt_D_eq_one D s (r0 + q * D) h_s_lt x).mpr h
     rw [h_eq, h3]
 
+/--
+Unit-aware analogue of `heavy_set_is_cyclic_interval`: under the unit-twisted
+count `count_hits_unit D u r0 N`, the heavy residues are precisely those `x`
+for which `u⁻¹ * x` lies in the cyclic interval describing the heavy residues
+of the untwisted `count_hits D r0 N`. Equivalently, the unit-twisted heavy
+set is the image of the untwisted heavy cyclic interval under multiplication
+by `u`.
+
+Proof: direct corollary of the transfer lemma `count_hits_unit_eq_count_hits`
+and `heavy_set_is_cyclic_interval`.
+-/
+lemma heavy_set_unit_is_cyclic_interval (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) :
+    let q := N / D
+    let s := N % D
+    ∀ x : ZMod D, count_hits_unit D u r0 N x = q + 1 ↔
+      ((u⁻¹ : (ZMod D)ˣ) : ZMod D) * x ∈ cyclic_interval D s ((r0 + q * D : ℕ) : ZMod D) := by
+  intro q s x
+  rw [count_hits_unit_eq_count_hits]
+  exact heavy_set_is_cyclic_interval D r0 N ((u⁻¹ : (ZMod D)ˣ) * x)
+
 
 lemma right_boundary_exists (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < s) (h_s_lt : s < D) :
     (x0 + (s - 1 : ℕ) : ZMod D) ∈ cyclic_interval D s x0 ∧ 
@@ -1764,7 +1784,7 @@ so neither requires its caller to provide it. -/
 
 /--
 Concrete multiset-valued period theorem. Wrapper around `main_theorem`
-(line 1398) that internalises the `GeometricProjectionConcrete` instance,
+(line 1418) that internalises the `GeometricProjectionConcrete` instance,
 so callers only need `h_coprime` and `h_ω`. -/
 theorem main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
@@ -1780,7 +1800,7 @@ theorem main_theorem_concrete
 /--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
 above realises the abstract `set_main_theorem`, closing the asymmetry
-between the multiset side (`main_theorem`, line 1398 — instantiated via
+between the multiset side (`main_theorem`, line 1418 — instantiated via
 `GeometricProjectionConcrete`) and the set side. -/
 theorem set_main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
