@@ -476,6 +476,33 @@ class is hit exactly \(N/D\) times.
 \subsection{Step 5: Period equals \(N\) when \(D \nmid N\)}
 \label{subsec:step5}
 
+The minimality argument relies on the following self-contained fact
+about cyclic intervals; we state it separately for reuse and clarity.
+
+\begin{lemma}[Trivial stabiliser of a cyclic interval]
+\label{lem:cyclic_interval_stabilizer}
+Let \(0 < s < D\) and let
+\[
+    H = \{x_0,\, x_0+1,\, \ldots,\, x_0+s-1\} \pmod{D}
+\]
+be a cyclic interval of length \(s\) in \(\mathbb{Z}/D\mathbb{Z}\).
+If \(\tau \in \mathbb{Z}/D\mathbb{Z}\) satisfies \(H + \tau = H\),
+then \(\tau \equiv 0 \pmod{D}\).
+\end{lemma}
+
+\begin{proof}
+The element \(x_0\) lies in \(H\) while \(x_0 - 1\) does not, so
+\(x_0\) is the unique element of \(H\) whose predecessor is not in
+\(H\).  If \(H + \tau = H\), then \(x_0 + \tau\) must have the same
+property and therefore equals \(x_0\), giving
+\(\tau \equiv 0 \pmod{D}\).
+\end{proof}
+
+\begin{proposition}\label{prop:generic_period}
+If \(D \nmid N\), then the multiset difference sequence has minimal
+period \(\lambda = N\).
+\end{proposition}
+
 \begin{proof}
 Within each interval \([kD,\,(k+1)D)\) on the \(\tilde p\)-axis, exactly
 \(N\) points from the multiset \(S\) occur, counted with multiplicity.
@@ -598,16 +625,9 @@ Since \(m\) is invertible modulo~\(D\) and \(0<\sigma<D\), we have
 \(\tau\not\equiv 0\pmod D\).
 Therefore its heavy set \(H\) must satisfy \(H+\tau = H\).
 
-But a proper nonempty cyclic interval in \(\mathbb{Z}/D\mathbb{Z}\) has
-trivial stabiliser: if \(0<s<D\) and
-\[
-    H=\{x_0,x_0+1,\ldots,x_0+s-1\}\pmod D,
-\]
-then \(H+\tau=H\) forces \(\tau\equiv 0\pmod D\).
-Indeed, \(x_0\in H\) while \(x_0-1\notin H\), so \(x_0\) is the unique element
-of \(H\) whose predecessor is not in \(H\).  If \(H+\tau=H\), then
-\(x_0+\tau\) must have the same property and hence must equal \(x_0\).
-Thus \(\tau\equiv0\pmod D\).
+But \(H\) is a cyclic interval of length \(s\) with \(0 < s < D\), so
+by Lemma~\ref{lem:cyclic_interval_stabilizer} the equality
+\(H + \tau = H\) forces \(\tau \equiv 0 \pmod{D}\).
 
 This contradiction shows that no proper divisor \(\lambda' < N\) can be a
 period.  Since \(N\) is a period, it follows that the minimal period is
@@ -646,6 +666,13 @@ The difference sequence is
     \ldots
 \]
 which has period \(N/D\).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+If \(D \nmid N\), Proposition~\ref{prop:generic_period} gives
+\(\lambda_{\mathrm{multiset}} = N\). If \(D \mid N\),
+Theorem~\ref{thm:degenerate} gives \(\lambda_{\mathrm{multiset}} = N/D\).
+The two cases together yield the formula~\eqref{eq:formula}.
 \end{proof}
 
 \begin{example}\label{ex:degenerate}
@@ -799,11 +826,39 @@ For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3/2\): \(N = 5 = D\), so
 
 \begin{example}[\(N > D\), \(D \nmid N\), set and multiset disagree]
 \label{ex:set_gt}
-For \(\alpha = 3\), \(\beta = 4\), \(\omega = 4\): \(N = 12 + 16 + 1 = 29\)
-and \(D = 25\), so \(N > D\) and \(D \nmid N\).  Theorem~\ref{thm:main}
-gives \(\lambda_{\mathrm{multiset}} = 29\), while
-Theorem~\ref{thm:setperiod} gives \(\lambda_{\mathrm{set}} = 1\).  Direct
-computation confirms both values.
+Take \(\alpha = 3\), \(\beta = 4\), \(\omega = 4\).  Then
+\[
+    N = \lfloor 12 \rfloor + \lfloor 16 \rfloor + 1 = 29,
+    \qquad
+    D = 9 + 16 = 25,
+    \qquad
+    N = 1 \cdot D + 4,
+\]
+so the residue distribution
+(Lemma~\ref{lem:nonuniform}) hits exactly \(4\) classes with
+multiplicity \(2\) and the remaining \(21\) classes with
+multiplicity \(1\).
+
+\medskip
+\noindent\emph{Multiset side.}  Within each length-\(D\) window of the
+\(\tilde p\)-axis, the \(N = 29\) projected entries (counted with
+multiplicity) include four duplicated values: each of the four
+heavy residue classes contributes a coincident pair, hence a zero
+gap.  The block of \(N\) gaps therefore contains four \(0\)'s and
+\(N - 4 = 25\) positive values, summing to \(D\).
+Theorem~\ref{thm:main} gives
+\(\lambda_{\mathrm{multiset}} = N = 29\), and the heavy classes form
+a cyclic interval of length \(s = 4\) whose only translational
+symmetry is the identity
+(Lemma~\ref{lem:cyclic_interval_stabilizer}).
+
+\medskip
+\noindent\emph{Set side.}  Since every residue class is hit at least
+once, the underlying point set is all of \(\mathbb{Z}\).  Discarding
+multiplicities collapses the four zero gaps and leaves the constant
+gap sequence \(1, 1, 1, \ldots\); Theorem~\ref{thm:setperiod} gives
+\(\lambda_{\mathrm{set}} = 1\).  Direct computation confirms both
+values.
 \end{example}
 
 \subsection{Empirical evidence}\label{subsec:set_empirical}
@@ -982,9 +1037,9 @@ Lemma~\ref{lem:uniform} (uniform distribution, \(D \mid N\))
   & \texttt{uniform\_residue\_distribution} & 215 \\
 Heavy set is cyclic interval
   & \texttt{heavy\_set\_is\_cyclic\_interval} & 269 \\
-Trivial stabiliser
+Lemma~\ref{lem:cyclic_interval_stabilizer} (trivial stabiliser)
   & \texttt{cyclic\_interval\_stabilizer\_trivial} & 334 \\
-Section~\ref{subsec:step5} (generic minimality)
+Proposition~\ref{prop:generic_period} (generic minimality)
   & \texttt{generic\_minimality} & 388 \\
 Theorem~\ref{thm:degenerate} (\(D \mid N\) case)
   & \texttt{period\_degenerate\_concrete} & 1233 \\
