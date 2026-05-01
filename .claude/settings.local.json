@@ -41,7 +41,20 @@
       "Bash(sed -n '38601p' /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/new_find_patterns_x_max_1000000_51012_lines.csv)",
       "Bash(ps *)",
       "Bash(sort -k2 -n -r)",
-      "Bash(./add_period_set *)"
+      "Bash(./add_period_set *)",
+      "Bash(grep -nA 12 \"dx_alloc\" /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/src/c/set/mathematics.c)",
+      "Bash(grep *)",
+      "Bash(sysctl -n hw.memsize)",
+      "Bash(vm_stat)",
+      "Bash(sort -t';' -k5 -n /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/tests/errors_set_negative_lambda.csv)",
+      "Bash(python3 test_lambda.py 68 149 98281 139 --x_max 20 --sort)",
+      "Bash(python3 test_lambda.py 68 149 98281 139 --x_max 600 --sort)",
+      "Bash(kill 15236)",
+      "Bash(python3 *)",
+      "Bash(pdflatex -interaction=nonstopmode set_analysis_results.tex)",
+      "Bash(rm -f tests/six_examples_output.csv)",
+      "Bash(./src/c/set/add_period_set tests/six_examples_input.csv tests/six_examples_output.csv global 30)",
+      "Bash(./src/c/set/add_period_set tests/seventh_example_input.csv tests/seventh_example_output.csv global 30)"
     ]
   }
 }
