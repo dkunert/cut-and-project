@@ -1,9 +1,8 @@
-\documentclass[11pt]{article}
+\documentclass[11pt,reqno]{amsart}
 
-\usepackage{amsmath, amssymb, amsthm, amsfonts, mathtools}
+\usepackage{amsmath,amssymb,amsthm,amsfonts,mathtools}
 \usepackage[hidelinks]{hyperref}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
+\usepackage[a4paper,margin=1in]{geometry}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
@@ -18,15 +17,22 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
 
-\title{Period Formulas for Rational\\ Cut-and-Project Strip Projections:\\ Multiset and Set Cases}
-\author{
-    Dirk Kunert\thanks{Independent Researcher. Email: \texttt{dirk.kunert@gmail.com}}
-}
+\title[Period Formulas for Rational Cut-and-Project Projections]{%
+  Period Formulas for Rational Cut-and-Project Strip Projections:
+  Multiset and Set Cases}
+
+\author{Dirk Kunert}
+\address{Independent Researcher}
+\email{dirk.kunert@gmail.com}
+
+\subjclass[2020]{Primary 52C23; Secondary 11B25, 37B10, 68V20, 11A07}
+\keywords{cut-and-project sets, projected multisets, gap sequences,
+period length, rational slope, residue classes, lattice projection,
+Lean~4 formalisation}
+
 \date{\today}
 
 \begin{document}
-
-\maketitle
 
 \begin{abstract}
 Consider the one-dimensional cut-and-project construction with coprime
@@ -67,14 +73,7 @@ which rules out any smaller period.  The algebraic core of both proofs
 has been formalised in Lean~4.
 \end{abstract}
 
-\medskip
-\noindent\textbf{Mathematics Subject Classification (2020):}
-Primary 52C23; Secondary 11B25, 37B10, 68V20, 11A07.
-
-\medskip
-\noindent\textbf{Keywords:}
-cut-and-project sets, projected multisets, gap sequences, period length,
-rational slope, residue classes, lattice projection, Lean~4 formalisation.
+\maketitle
 
 % =====================================================================
 \section{Introduction}\label{sec:intro}
