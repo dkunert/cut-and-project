@@ -2498,6 +2498,63 @@ theorem main_theorem_geometric_concrete
   main_theorem_unit_concrete α β h_coprime ω h_ω (multiplier α β h_coprime)
 
 /--
+The geometric residue of the integer point indexed by `r`, as defined in
+equation `eq:residue` of the paper:
+`c_r ≡ -α · β⁻¹ · r (mod D)`.
+
+This formalises the residue-class formula used by Section 3 of the paper
+(strip-to-residue reduction). The function below is just `multiplier · r`
+in `ZMod D`; the bridge lemma `c_r_eq_multiplier_mul_r` makes the equation
+to the paper explicit, and `count_hits_unit_multiplier_eq_c_r_count`
+shows that the unit-twisted hit-counter used in
+`difference_sequence_unit α β ω (multiplier α β h_coprime)` precisely
+counts integer indices `i ∈ [0, N)` with `c_{r0 + i} ≡ x (mod D)`.
+-/
+def c_r (α β : ℕ) (h_coprime : Nat.Coprime α β) [NeZero (α ^ 2 + β ^ 2)]
+    (r : ℤ) : ZMod (α ^ 2 + β ^ 2) :=
+  ((multiplier α β h_coprime : (ZMod (α ^ 2 + β ^ 2))ˣ) : ZMod (α ^ 2 + β ^ 2)) *
+    (r : ZMod (α ^ 2 + β ^ 2))
+
+/--
+Bridge lemma to the paper's c_r formula. The Lean `multiplier` equals
+`-α · β⁻¹` as a unit in `ZMod D`, so `c_r α β h r = -α · β⁻¹ · r (mod D)`
+matches equation `eq:residue` of the paper verbatim.
+-/
+lemma c_r_eq_multiplier_mul_r (α β : ℕ) (h_coprime : Nat.Coprime α β)
+    [NeZero (α ^ 2 + β ^ 2)] (r : ℤ) :
+    c_r α β h_coprime r =
+      -((alpha_unit α β h_coprime : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+          ZMod (α ^ 2 + β ^ 2)) *
+       (((beta_unit α β h_coprime)⁻¹ : (ZMod (α ^ 2 + β ^ 2))ˣ) :
+          ZMod (α ^ 2 + β ^ 2)) *
+       (r : ZMod (α ^ 2 + β ^ 2)) := by
+  unfold c_r multiplier
+  push_cast
+  ring
+
+/--
+Bridge from the paper's residue map to the unit-twisted hit counter.
+`count_hits_unit (α^2+β^2) (multiplier α β h_coprime) r0 N x` is exactly
+the cardinality of `{i ∈ [0, N) : c_{r0+i} ≡ x (mod D)}`, where
+`c_{r0+i}` is the geometric residue from the paper. This makes the
+formalisation of `main_theorem_geometric_concrete` an honest statement
+about the geometric c_r enumeration.
+-/
+lemma count_hits_unit_multiplier_eq_c_r_count
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) [NeZero (α ^ 2 + β ^ 2)]
+    (r0 N : ℕ) (x : ZMod (α ^ 2 + β ^ 2)) :
+    count_hits_unit (α ^ 2 + β ^ 2) (multiplier α β h_coprime) r0 N x =
+    ((Finset.range N).filter
+      (fun i => c_r α β h_coprime ((r0 + i : ℕ) : ℤ) = x)).card := by
+  unfold count_hits_unit c_r
+  congr 1
+  apply Finset.filter_congr
+  intro i _
+  have h_cast : (((r0 + i : ℕ) : ℤ) : ZMod (α ^ 2 + β ^ 2)) =
+      ((r0 : ZMod (α ^ 2 + β ^ 2)) + (i : ZMod (α ^ 2 + β ^ 2))) := by push_cast; ring
+  rw [h_cast]
+
+/--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
 above realises the abstract `set_main_theorem`, closing the asymmetry
 between the multiset side (`main_theorem`, line 1418 — instantiated via
