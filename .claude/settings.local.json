@@ -59,7 +59,11 @@
       "Bash(pdflatex -interaction=nonstopmode rational_cut_and_project_gap_periods.tex)",
       "Bash(pdfinfo rational_cut_and_project_gap_periods.pdf)",
       "Bash(pdfinfo rational_cut_and_project_multiset_gap_periods.pdf)",
-      "Bash(mdls -name kMDItemNumberOfPages rational_cut_and_project_multiset_gap_periods.pdf rational_cut_and_project_gap_periods.pdf)"
+      "Bash(mdls -name kMDItemNumberOfPages rational_cut_and_project_multiset_gap_periods.pdf rational_cut_and_project_gap_periods.pdf)",
+      "Bash(pdflatex -interaction=nonstopmode -halt-on-error rational_cut_and_project_gap_periods.tex)",
+      "Bash(lake env *)",
+      "Read(//private/tmp/**)",
+      "Read(//Users/dirk/.claude/**)"
     ]
   }
 }
