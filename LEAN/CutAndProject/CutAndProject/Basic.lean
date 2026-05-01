@@ -794,7 +794,7 @@ lemma sorted_shift_constant (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
         have := h_step (-↑(k + 1))
         have ha : (-↑(k + 1) : ℤ) + 1 + ↑L = -↑k + ↑L := by push_cast; omega
         have hb : (-↑(k + 1) : ℤ) + 1 = -↑k := by push_cast; omega
-        simp only [ha, hb] at this; linarith
+        simp only [hb] at this; linarith
       linarith
   -- Case split on i
   cases i with
@@ -946,7 +946,7 @@ lemma sorted_shift_constant_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^
         have := h_step (-↑(k + 1))
         have ha : (-↑(k + 1) : ℤ) + 1 + ↑L = -↑k + ↑L := by push_cast; omega
         have hb : (-↑(k + 1) : ℤ) + 1 = -↑k := by push_cast; omega
-        simp only [ha, hb] at this; linarith
+        simp only [hb] at this; linarith
       linarith
   cases i with
   | ofNat n => exact h_nat n
@@ -1079,8 +1079,8 @@ private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 +
     Int.ediv_eq_zero_of_lt (Int.natCast_nonneg k) (by exact_mod_cast hk)
   -- sorted_multiset unfolds to V((...%N).toNat) + (.../N) * D
   -- After substituting h_mod and h_div: V((↑k).toNat) + 0 * D = V(k)
-  simp only [sorted_multiset, h_mod, h_div, Int.toNat_natCast, zero_mul, add_zero,
-             Nat.cast_inj]
+  simp only [sorted_multiset, h_mod, h_div, Int.toNat_natCast, zero_mul,
+             add_zero]
 
 /--
 cumulative_hits is monotone (non-decreasing).
@@ -1407,8 +1407,8 @@ private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
     Int.emod_eq_of_lt (Int.natCast_nonneg k) (by exact_mod_cast hk)
   have h_div : (↑k : ℤ) / ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat = 0 :=
     Int.ediv_eq_zero_of_lt (Int.natCast_nonneg k) (by exact_mod_cast hk)
-  simp only [sorted_multiset_unit, h_mod, h_div, Int.toNat_natCast, zero_mul, add_zero,
-             Nat.cast_inj]
+  simp only [sorted_multiset_unit, h_mod, h_div, Int.toNat_natCast, zero_mul,
+             add_zero]
 
 private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
