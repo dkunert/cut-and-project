@@ -126,8 +126,8 @@ where
 Here \(N\) is the number of admissible values of the invariant
 \(r=\alpha x-\beta y\), and \(D\) is the common difference of the arithmetic
 progressions obtained after projection.  The two formulas agree precisely
-when \(N \le D\); when \(N > D\) the set-valued period collapses to~\(1\),
-because every integer is then a projected value.
+when \(N \le D\); when \(N \ge D\) the set-valued period collapses to~\(1\),
+because every integer residue class is then hit.
 
 The proof of the multiset formula is elementary.  The accepted lattice
 points decompose into parallel tracks indexed by the admissible values of
@@ -603,31 +603,31 @@ for some \(x_0\), because after \(q\) complete cycles the remaining
 \(s\) elements contribute one additional hit on \(s\) consecutive
 classes in the \(m\)-stepping order.
 
-Now suppose, for contradiction, that the minimal period \(\lambda'\) satisfies
-\(\lambda' < N\).  Since \(N\) is a period, by
+Now suppose, for contradiction, that the minimal period \(\lambda_0\) satisfies
+\(\lambda_0 < N\).  Since \(N\) is a period, by
 Lemma~\ref{lem:minperiod_divides_periods} the minimal period divides
 \(N\).  Thus we may write
 \[
-    N = k\lambda'
+    N = k\lambda_0
 \]
 with \(k>1\).
 
 Let
 \[
-    \sigma := \delta^{(0)} + \delta^{(1)} + \cdots + \delta^{(\lambda'-1)}.
+    \sigma := \delta^{(0)} + \delta^{(1)} + \cdots + \delta^{(\lambda_0-1)}.
 \]
-By \(\lambda'\)-periodicity, every block of \(\lambda'\) consecutive
+By \(\lambda_0\)-periodicity, every block of \(\lambda_0\) consecutive
 gaps has the same sum \(\sigma\); that is, for every
 \(i \in \mathbb{Z}\),
 \[
-    \delta^{(i)} + \delta^{(i+1)} + \cdots + \delta^{(i+\lambda'-1)}
+    \delta^{(i)} + \delta^{(i+1)} + \cdots + \delta^{(i+\lambda_0-1)}
     = \sigma.
 \]
 Hence
 \[
-    \tilde{p}_s^{(i+\lambda')} = \tilde{p}_s^{(i)} + \sigma
+    \tilde{p}_s^{(i+\lambda_0)} = \tilde{p}_s^{(i)} + \sigma
 \]
-for all \(i\).  Since \(i \mapsto i+\lambda'\) is a bijection of
+for all \(i\).  Since \(i \mapsto i+\lambda_0\) is a bijection of
 \(\mathbb{Z}\), this translation maps the enumerated multiset
 bijectively onto itself and preserves multiplicities; equivalently,
 the entire multiset \(S\) is invariant under translation
@@ -637,7 +637,7 @@ On the other hand, \(N\) consecutive gaps always sum to \(D\), because
 \[
     \tilde{p}_s^{(i+N)}-\tilde{p}_s^{(i)} = D.
 \]
-Since \(N=k\lambda'\), this gives
+Since \(N=k\lambda_0\), this gives
 \[
     k\sigma = D.
 \]
@@ -662,7 +662,7 @@ But \(H\) is a cyclic interval of length \(s\) with \(0 < s < D\), so
 by Lemma~\ref{lem:cyclic_interval_stabilizer} the equality
 \(H + \tau = H\) forces \(\tau \equiv 0 \pmod{D}\).
 
-This contradiction shows that no proper divisor \(\lambda' < N\) can be a
+This contradiction shows that no proper divisor \(\lambda_0 < N\) can be a
 period.  Since \(N\) is a period, it follows that the minimal period is
 \[
     \lambda = N.
