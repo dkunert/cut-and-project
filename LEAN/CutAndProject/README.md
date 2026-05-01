@@ -2,7 +2,7 @@
 
 This directory contains a Lean 4 formalisation of the algebraic core of the period-length theorem for one-dimensional rational cut-and-project multiset gap sequences, as proved in `../../LaTeX/rational_cut_and_project_multiset_gap_periods.tex`.
 
-The formalisation is approximately 1,800 lines of verified code in `CutAndProject/Basic.lean` and contains no `sorry`, `admit`, or `axiom`.
+The formalisation is approximately 2,500 lines of verified code in `CutAndProject/Basic.lean` and contains no `sorry`, `admit`, or `axiom`.
 
 ## Scope
 

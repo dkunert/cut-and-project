@@ -999,7 +999,7 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 
 The algebraic and combinatorial core of the proof has been formalised in
 Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
-The formalisation comprises approximately 1{,}800 lines of verified code
+The formalisation comprises approximately 2{,}500 lines of verified code
 with no \texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
@@ -1063,26 +1063,43 @@ Lemma~\ref{lem:cyclic_interval_stabilizer} (trivial stabiliser)
 Proposition~\ref{prop:generic_period} (generic minimality)
   & \texttt{generic\_minimality} & 523 \\
 Theorem~\ref{thm:degenerate} (\(D \mid N\) case)
-  & \texttt{period\_degenerate\_concrete} & 1368 \\
+  & \texttt{period\_degenerate\_concrete} & 1853 \\
 \(\sigma N = LD\) from periodicity
-  & \texttt{sigma\_of\_period\_concrete} & 1341 \\
+  & \texttt{sigma\_of\_period\_concrete} & 1826 \\
 Theorem~\ref{thm:main} (main result, abstract)
-  & \texttt{main\_theorem} & 1418 \\
+  & \texttt{main\_theorem} & 1903 \\
 Theorem~\ref{thm:main} (concrete wrapper)
-  & \texttt{main\_theorem\_concrete} & 1789 \\
+  & \texttt{main\_theorem\_concrete} & 2274 \\
+\hline
+\multicolumn{3}{l}{\textit{Multiplier-aware infrastructure (geometric residue map \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\))}} \\
+\hline
+Equation~\eqref{eq:residue} (definition of \(c_r\))
+  & \texttt{c\_r} & 2513 \\
+Bridge to paper formula \(c_r = -\alpha\beta^{-1}r\)
+  & \texttt{c\_r\_eq\_multiplier\_mul\_r} & 2523 \\
+\(c_r\)-counting matches \texttt{count\_hits\_unit}
+  & \texttt{count\_hits\_unit\_multiplier\_eq\_c\_r\_count} & 2543 \\
+Lemma~\ref{lem:nonuniform} with multiplier
+  & \texttt{residue\_distribution\_unit} & 287 \\
+Heavy set under \(c_r\) is cyclic interval (image under \(u\))
+  & \texttt{heavy\_set\_unit\_is\_cyclic\_interval} & 408 \\
+Theorem~\ref{thm:main} for the \(c_r\) enumeration (abstract)
+  & \texttt{main\_theorem\_unit\_concrete} & 2411 \\
+Theorem~\ref{thm:main} for the \(c_r\) enumeration (geometric)
+  & \texttt{main\_theorem\_geometric\_concrete} & 2490 \\
 \hline
 \multicolumn{3}{l}{\textit{Set-valued period (Section~\ref{sec:setvalued})}} \\
 \hline
 Theorem~\ref{thm:setperiod}, lower bound (\(D \le N\))
-  & \texttt{count\_hits\_ge\_D} & 1461 \\
+  & \texttt{count\_hits\_ge\_D} & 1946 \\
 Theorem~\ref{thm:setperiod}, constant-\(1\) period
-  & \texttt{HasPeriodLength\_const\_one} & 1479 \\
+  & \texttt{HasPeriodLength\_const\_one} & 1964 \\
 Theorem~\ref{thm:setperiod} (set-valued period, abstract)
-  & \texttt{set\_main\_theorem} & 1497 \\
+  & \texttt{set\_main\_theorem} & 1982 \\
 Set size positivity (well-defined modulo)
-  & \texttt{set\_size\_pos} & 1734 \\
+  & \texttt{set\_size\_pos} & 2219 \\
 Theorem~\ref{thm:setperiod} (concrete wrapper)
-  & \texttt{set\_main\_theorem\_concrete} & 1805 \\
+  & \texttt{set\_main\_theorem\_concrete} & 2562 \\
 \hline
 \end{tabular}
 \caption{Correspondence between paper results and Lean~4 declarations
@@ -1092,31 +1109,72 @@ in \texttt{Basic.lean}.}
 
 \subsection{Scope of the formalisation}\label{subsec:lean_scope}
 
-The formalised proof covers the algebraic and combinatorial core for both
-periods: coprimality, residue distribution (uniform and non-uniform),
-cyclic interval structure, the trivial stabiliser lemma, the generic
-minimality argument, the degenerate case, and the case dispatch for both
-the multiset and set conventions.
+The formalisation is structured in two layers, distinguishing what is
+machine-checked from what is hand-verified in the present paper.
 
-The geometric construction, namely defining the cut-and-project set,
-projecting lattice points, and sorting the multiset of \(\tilde{p}\)-values,
-is modelled abstractly via the \texttt{GeometricProjection} typeclass rather
-than formalised from first principles.  Concretely, the sorted multiset is
-defined combinatorially as
+\paragraph{Layer~1: hand-verified strip-to-residue reduction
+(Section~\ref{sec:cnp}).} The geometric content of the cut-and-project
+construction --- the strip in~\(\mathbb{R}^2\), the projection onto
+\(y = (\alpha/\beta)x\), and the derivation of the residue formula
+\(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) in
+equation~\eqref{eq:residue} --- is verified by hand in Section~\ref{sec:cnp}.
+This layer reduces the geometric problem to a discrete enumeration of
+\(N\) consecutive residue classes modulo~\(D\) under the multiplier
+\(m = -\alpha\beta^{-1}\).
+
+\paragraph{Layer~2: machine-checked residue model with the geometric
+multiplier (Sections~\ref{sec:residue}--\ref{sec:setvalued}).} Starting
+from the residue model, the Lean formalisation \emph{includes the
+geometric multiplier as a first-class object}.  Specifically:
+
+\begin{itemize}
+    \item Coprimality, residue distribution (uniform and non-uniform), the
+          cyclic interval structure, the trivial stabiliser lemma, the
+          generic minimality argument, the degenerate case, and the case
+          dispatch for both the multiset and set conventions are formalised
+          for the residue model.
+    \item The geometric multiplier \(u = \texttt{multiplier}\,\alpha\,\beta\,h\)
+          is threaded through to the unit-aware infrastructure
+          (\texttt{count\_hits\_unit}, \texttt{residue\_distribution\_unit},
+          \texttt{heavy\_set\_unit\_is\_cyclic\_interval}), and the
+          unit-aware concrete construction
+          (\texttt{cumulative\_hits\_unit}, \texttt{V\_unit},
+          \texttt{sorted\_multiset\_unit}, \texttt{difference\_sequence\_unit}).
+    \item The headline theorem
+          \texttt{main\_theorem\_geometric\_concrete} establishes
+          Theorem~\ref{thm:main} for the actual geometric enumeration
+          \texttt{difference\_sequence\_unit}\,\(\alpha\,\beta\,\omega\,
+          (\texttt{multiplier}\,\alpha\,\beta\,h)\), and the bridge lemma
+          \texttt{c\_r\_eq\_multiplier\_mul\_r} certifies that
+          \texttt{multiplier} agrees verbatim with the paper's
+          \(c_r = -\alpha\beta^{-1}r \pmod{D}\) formula.
+\end{itemize}
+
+The sorted multiset is defined combinatorially as
 \[
-    \tilde{p}^{(i)}_s := V(i \bmod N) + \lfloor i/N \rfloor \cdot D,
+    \tilde{p}^{(i)}_s := V_u(i \bmod N) + \lfloor i/N \rfloor \cdot D,
 \]
-where \(V\) is the quantile function of the cumulative residue distribution.
-The bridge lemma \texttt{count\_hits\_eq\_sorted\_count} verifies that this
-construction is consistent with the residue counting function.
+where \(V_u\) is the quantile function of the cumulative residue
+distribution under the unit twist (\texttt{V\_unit}).  The bridge lemma
+\texttt{count\_hits\_eq\_sorted\_count\_unit} verifies that this
+construction is consistent with the unit-aware residue counting function.
 
 The set-valued enumeration mirrors this construction with multiplicities
-flattened to \(\{0, 1\}\) by an indicator function: \texttt{set\_V} replaces
-\texttt{V}, \texttt{set\_size} replaces \(N\), and the resulting bi-infinite
-\texttt{set\_difference\_sequence} discharges the abstract hypotheses of
-\texttt{set\_main\_theorem} via the dichotomy
+flattened to \(\{0, 1\}\) by an indicator function: \texttt{set\_V}
+replaces \texttt{V}, \texttt{set\_size} replaces \(N\), and the resulting
+bi-infinite \texttt{set\_difference\_sequence} discharges the abstract
+hypotheses of \texttt{set\_main\_theorem} via the dichotomy
 (\texttt{count\_hits\_lt\_D} versus \texttt{count\_hits\_ge\_D}) on the
 multiplicity function.
+
+\paragraph{Boundary between the two layers.} The hand-verified
+strip-to-residue reduction of Layer~1 is standard cut-and-project
+mathematics; what is novel in the formalisation is that Layer~2 closes
+the residual gap left by previous formalisations, in which the abstract
+typeclass \texttt{GeometricProjection} was instantiated only for the
+normalised residue map (\(u = 1\)).  After Phase~2 of the multiplier
+cleanup, the geometric projection is fully threaded through to the period
+theorems on both the multiset and set sides.
 
 % =====================================================================
 \section{Related Literature}\label{sec:literature}

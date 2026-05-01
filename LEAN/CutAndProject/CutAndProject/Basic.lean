@@ -2269,7 +2269,7 @@ so neither requires its caller to provide it. -/
 
 /--
 Concrete multiset-valued period theorem. Wrapper around `main_theorem`
-(line 1418) that internalises the `GeometricProjectionConcrete` instance,
+(line 1903) that internalises the `GeometricProjectionConcrete` instance,
 so callers only need `h_coprime` and `h_ω`. -/
 theorem main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
@@ -2557,7 +2557,7 @@ lemma count_hits_unit_multiplier_eq_c_r_count
 /--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
 above realises the abstract `set_main_theorem`, closing the asymmetry
-between the multiset side (`main_theorem`, line 1418 — instantiated via
+between the multiset side (`main_theorem`, line 1903 — instantiated via
 `GeometricProjectionConcrete`) and the set side. -/
 theorem set_main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
