@@ -148,9 +148,9 @@ Both proofs have been formalised in Lean~4 with the geometric residue map
 \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) threaded through to the period
 theorems on both the multiset and set sides.  The formalisation verifies
 the residue-class and minimal-period arguments; the strip-to-residue
-reduction itself is hand-verified in Section~\ref{sec:cnp} and forms the
-boundary between the two layers documented in
-Section~\ref{subsec:lean_scope}.
+reduction itself is hand-verified in Sections~\ref{sec:setup}
+and~\ref{subsec:step2} and forms the boundary between the two layers
+documented in Section~\ref{subsec:lean_scope}.
 
 The paper is organised as follows.  Section~\ref{sec:setup} gives the
 construction and fixes the two multiplicity conventions.
@@ -482,8 +482,23 @@ class is hit exactly \(N/D\) times.
 \subsection{Step 5: Period equals \(N\) when \(D \nmid N\)}
 \label{subsec:step5}
 
-The minimality argument relies on the following self-contained fact
-about cyclic intervals; we state it separately for reuse and clarity.
+The minimality argument relies on two self-contained facts; we state
+them separately for reuse and clarity.
+
+\begin{lemma}[Minimal period divides every period]
+\label{lem:minperiod_divides_periods}
+Let \((a_i)_{i\in\mathbb Z}\) be a bi-infinite sequence with minimal
+positive period~\(\lambda\).  If \(M > 0\) is also a period, then
+\(\lambda \mid M\).
+\end{lemma}
+
+\begin{proof}
+Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  Since both
+\(M\) and \(\lambda\) are periods, their non-negative integer
+combination \(M - q\lambda = r\) is also a period.  By minimality of
+\(\lambda\), the only possibility is \(r = 0\); hence
+\(\lambda \mid M\).
+\end{proof}
 
 \begin{lemma}[Trivial stabiliser of a cyclic interval]
 \label{lem:cyclic_interval_stabilizer}
@@ -550,7 +565,8 @@ for all \(i\in\mathbb Z\).  Therefore
     \delta^{(i)}
 \]
 for all \(i\).  Thus \(N\) is a period of the gap sequence, and hence
-the minimal period \(\lambda\) divides \(N\).
+by Lemma~\ref{lem:minperiod_divides_periods} the minimal period
+\(\lambda\) divides \(N\).
 
 \medskip
 \noindent\textbf{Minimality.}
@@ -588,8 +604,9 @@ for some \(x_0\), because after \(q\) complete cycles the remaining
 classes in the \(m\)-stepping order.
 
 Now suppose, for contradiction, that the minimal period \(\lambda'\) satisfies
-\(\lambda' < N\).  Since \(N\) is a period, the minimal period divides \(N\).
-Thus we may write
+\(\lambda' < N\).  Since \(N\) is a period, by
+Lemma~\ref{lem:minperiod_divides_periods} the minimal period divides
+\(N\).  Thus we may write
 \[
     N = k\lambda'
 \]
@@ -1124,17 +1141,18 @@ The formalisation is structured in two layers, distinguishing what is
 machine-checked from what is hand-verified in the present paper.
 
 \paragraph{Layer~1: hand-verified strip-to-residue reduction
-(Section~\ref{sec:cnp}).} The geometric content of the cut-and-project
-construction --- the strip in~\(\mathbb{R}^2\), the projection onto
-\(y = (\alpha/\beta)x\), and the derivation of the residue formula
-\(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) in
-equation~\eqref{eq:residue} --- is verified by hand in Section~\ref{sec:cnp}.
+(Sections~\ref{sec:setup} and~\ref{subsec:step2}).} The geometric content
+of the cut-and-project construction --- the strip in~\(\mathbb{R}^2\),
+the projection onto \(y = (\alpha/\beta)x\), and the derivation of the
+residue formula \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) in
+equation~\eqref{eq:residue} --- is verified by hand in
+Sections~\ref{sec:setup} and~\ref{subsec:step2}.
 This layer reduces the geometric problem to a discrete enumeration of
 \(N\) consecutive residue classes modulo~\(D\) under the multiplier
 \(m = -\alpha\beta^{-1}\).
 
 \paragraph{Layer~2: machine-checked residue model with the geometric
-multiplier (Sections~\ref{sec:residue}--\ref{sec:setvalued}).} Starting
+multiplier (Sections~\ref{sec:proof}--\ref{sec:setvalued}).} Starting
 from the residue model, the Lean formalisation \emph{includes the
 geometric multiplier as a first-class object}.  Specifically:
 
