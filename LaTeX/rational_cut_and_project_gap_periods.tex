@@ -144,10 +144,13 @@ formula then follows from the same residue-distribution analysis: under
 and multiset coincide as sequences; under \(N \ge D\) every residue is hit
 and the underlying set is~\(\mathbb{Z}\).
 
-The algebraic and combinatorial core of both proofs has been formalised in Lean~4.  The
-formalisation verifies the residue-class and minimal-period arguments; the
-geometric construction is represented at the combinatorial level described
-above.
+Both proofs have been formalised in Lean~4 with the geometric residue map
+\(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) threaded through to the period
+theorems on both the multiset and set sides.  The formalisation verifies
+the residue-class and minimal-period arguments; the strip-to-residue
+reduction itself is hand-verified in Section~\ref{sec:cnp} and forms the
+boundary between the two layers documented in
+Section~\ref{subsec:lean_scope}.
 
 The paper is organised as follows.  Section~\ref{sec:setup} gives the
 construction and fixes the two multiplicity conventions.
@@ -997,10 +1000,14 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 \section{Machine-Checked Formalisation}\label{sec:lean}
 % =====================================================================
 
-The algebraic and combinatorial core of the proof has been formalised in
-Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
-The formalisation comprises approximately 2{,}850 lines of verified code
-with no \texttt{sorry} axioms, and is available in the companion
+Both period theorems have been formalised in
+Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020},
+including the geometric residue map \(c_r \equiv -\alpha\beta^{-1}r
+\pmod{D}\) (the multiplier is threaded through to the headline theorems
+\texttt{main\_theorem\_geometric\_concrete} and
+\texttt{set\_main\_theorem\_geometric\_concrete}).  The formalisation
+comprises approximately 2{,}850 lines of verified code with no
+\texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
 \subsection{Architecture}\label{subsec:lean_arch}
