@@ -1330,4 +1330,66 @@ lemma count_hits_ge_D (D : ℕ) [NeZero D] (r0 N : ℕ) (h : D ≤ N) (x : ZMod 
   have h_div : 1 ≤ N / D := (Nat.one_le_div_iff h_pos).mpr h
   omega
 
+/-! ## Set-valued period (Phase B: dichotomy theorem, abstract form)
+
+Together with `count_hits_lt_D` and `count_hits_ge_D` (Phase A), this section
+gives the abstract version of the set-valued period theorem:
+`λ_set = N` if `N < D`, else `1`. The dichotomy is reduced to two hypotheses
+on the candidate set sequence — pointwise agreement with the multiset gap
+sequence (when `N < D`), respectively constancy at `1` (when `N ≥ D`) —
+which a concrete construction would discharge.
+-/
+
+/-- A sequence that is identically `1` has minimal period `1`. -/
+lemma HasPeriodLength_const_one (s : ℤ → ℤ) (h : ∀ i, s i = 1) :
+    HasPeriodLength s 1 := by
+  refine ⟨⟨Nat.one_pos, fun i => ?_⟩, ?_⟩
+  · rw [h, h]
+  · intro L' hL_pos _
+    exact hL_pos
+
+/--
+Set-valued period theorem (abstract form).
+
+If `set_seq : ℤ → ℤ` agrees pointwise with `difference_sequence` whenever
+`N < D`, and is constantly `1` whenever `N ≥ D`, then its minimal period is
+`N` in the first case and `1` in the second.
+
+The two hypotheses are exactly what the structural dichotomy
+(`count_hits_lt_D` / `count_hits_ge_D`) lets a concrete enumeration of the
+underlying point set verify.
+-/
+theorem set_main_theorem
+    (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
+    (set_seq : ℤ → ℤ)
+    [NeZero (α ^ 2 + β ^ 2)]
+    [GeometricProjection α β ω (difference_sequence α β ω)]
+    (h_lt : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 →
+            ∀ i, set_seq i = difference_sequence α β ω i)
+    (h_ge : α ^ 2 + β ^ 2 ≤ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat →
+            ∀ i, set_seq i = 1) :
+    HasPeriodLength set_seq
+      (if (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 then
+        (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+       else 1) := by
+  by_cases h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2
+  · -- Case N < D: set_seq = difference_sequence, period N (since N > 0 and ¬ D ∣ N).
+    rw [if_pos h]
+    have h_eq : set_seq = difference_sequence α β ω := funext (h_lt h)
+    rw [h_eq]
+    have hN_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := N_pos_concrete α β ω h_ω
+    have hND : ¬ (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := by
+      intro hd
+      have := Nat.le_of_dvd hN_pos hd
+      omega
+    have h_main : HasPeriodLength (difference_sequence α β ω)
+        (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+         then (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
+         else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := main_theorem α β h_coprime ω h_ω
+    rw [if_neg hND] at h_main
+    exact h_main
+  · -- Case ¬ (N < D), i.e., N ≥ D: set_seq ≡ 1, period 1.
+    rw [if_neg h]
+    exact HasPeriodLength_const_one set_seq (h_ge (not_lt.mp h))
+
 end CutAndProject
