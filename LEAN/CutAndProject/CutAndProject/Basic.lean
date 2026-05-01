@@ -167,7 +167,7 @@ theorem residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
           have h2 := hc_le x
           omega
       _ = s := h_sum
-
+  -- Cardinality of the count-0 set: complement of the count-1 set in ZMod D.
   have h_card0 : (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card = D - s := by
     have h_union : Finset.univ = Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0) ∪ Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1) := by
       ext x
@@ -188,7 +188,7 @@ theorem residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
     calc (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card
       _ = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 0)).card + s - s := by rw [Nat.add_sub_cancel]
       _ = D - s := by rw [← h_eq_card]
-
+  -- Lift the count-(r0+qD,s) cardinalities back to count-(r0,N) via heq.
   constructor
   · have h_eq_set1 : (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q + 1)) = (Finset.univ.filter (fun x : ZMod D => count_hits D (r0 + q * D) s x = 1)) := by
       ext x
