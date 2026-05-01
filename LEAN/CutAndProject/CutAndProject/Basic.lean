@@ -54,10 +54,10 @@ def residue_bijection (α β : ℕ) (h : Nat.Coprime α β) [NeZero (α ^ 2 + β
 section ResidueDistribution
 
 /--
-Lemma 4.3: Non-uniform residue distribution.
-
 `count_hits D r0 N x` counts the number of times the residue `x` (modulo `D`) is hit
 by the arithmetic progression `r0, r0+1, ..., r0+N-1` of length `N`.
+The residue distribution theorem (`residue_distribution`, Lemma 4.3 in the
+paper) describes the multiset of multiplicities.
 -/
 def count_hits (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) : ℕ :=
   (Finset.range N).filter (fun (i : ℕ) => (r0 + i : ZMod D) = x) |>.card
@@ -137,7 +137,7 @@ lemma count_hits_eq (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) :
   nth_rw 1 [h_div]
   rw [count_hits_add, count_hits_mul_D]
 
-theorem non_uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
+theorem residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
     let q := N / D
     let s := N % D
     (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q + 1)).card = s ∧
@@ -203,6 +203,22 @@ theorem non_uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) :
       omega
     rw [h_eq_set0, h_card0]
 
+/--
+Specialisation of `residue_distribution` to the genuinely non-uniform
+case `D ∤ N`: here `s = N % D` is positive, so the heavy classes form a
+non-empty proper subset of `ZMod D`.
+-/
+theorem non_uniform_residue_distribution_of_not_dvd
+    (D : ℕ) [NeZero D] (r0 N : ℕ) (h : ¬ D ∣ N) :
+    let q := N / D
+    let s := N % D
+    0 < s ∧
+    (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q + 1)).card = s ∧
+    (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = q)).card = D - s := by
+  have h_pos : 0 < N % D :=
+    Nat.pos_of_ne_zero (fun h_eq => h (Nat.dvd_of_mod_eq_zero h_eq))
+  exact ⟨h_pos, (residue_distribution D r0 N).1, (residue_distribution D r0 N).2⟩
+
 lemma count_hits_zero (D : ℕ) [NeZero D] (r0 : ℕ) (x : ZMod D) :
     count_hits D r0 0 x = 0 := by
   dsimp [count_hits]
@@ -218,6 +234,100 @@ theorem uniform_residue_distribution (D : ℕ) [NeZero D] (r0 N : ℕ) (h : D �
   have h_mod : N % D = 0 := Nat.mod_eq_zero_of_dvd h
   rw [h_mod, count_hits_zero] at h_eq
   exact h_eq
+
+/--
+`count_hits_unit D u r0 N x` is the unit-aware variant of `count_hits`:
+it counts how many `i ∈ Finset.range N` satisfy `(u : ZMod D) * (r0 + i) = x`.
+
+This corresponds to the geometric residue map `r ↦ m * r (mod D)` from the
+paper, where `m = -α · β⁻¹ ∈ (ZMod D)ˣ` is the multiplier introduced via
+`multiplier`. For `u = 1` it reduces to `count_hits` (`count_hits_unit_one`);
+in general it reduces to `count_hits` after applying `u⁻¹` to the target
+residue (`count_hits_unit_eq_count_hits`).
+-/
+def count_hits_unit (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) (x : ZMod D) : ℕ :=
+  (Finset.range N).filter (fun (i : ℕ) => (u : ZMod D) * (r0 + i : ZMod D) = x) |>.card
+
+/--
+Transfer lemma: counting hits of the multiplier-twisted progression
+`u * (r0 + i)` against the target `x` equals counting hits of the plain
+progression `r0 + i` against `u⁻¹ * x`. Multiplication by a unit is a
+bijection of `ZMod D`, so the two counts agree pointwise.
+-/
+lemma count_hits_unit_eq_count_hits
+    (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) (x : ZMod D) :
+    count_hits_unit D u r0 N x = count_hits D r0 N ((u⁻¹ : (ZMod D)ˣ) * x) := by
+  unfold count_hits_unit count_hits
+  congr 1
+  ext i
+  simp only [Finset.mem_filter, Finset.mem_range, and_congr_right_iff]
+  intro _
+  constructor
+  · intro h
+    rw [← h, ← mul_assoc, Units.inv_mul, one_mul]
+  · intro h
+    rw [h, ← mul_assoc, Units.mul_inv, one_mul]
+
+/--
+Specialisation of `count_hits_unit_eq_count_hits` to `u = 1`:
+the unit-aware count with trivial multiplier reduces to `count_hits`.
+-/
+lemma count_hits_unit_one (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) :
+    count_hits_unit D 1 r0 N x = count_hits D r0 N x := by
+  rw [count_hits_unit_eq_count_hits]
+  simp
+
+/--
+Unit-aware analogue of `residue_distribution` (Lemma 4.3): the multiset of
+multiplicities of `count_hits_unit D u r0 N` agrees with that of
+`count_hits D r0 N`. Multiplication by `u : (ZMod D)ˣ` is a bijection of
+`ZMod D`, so the cardinalities of the level sets `{x | count = k}` are
+preserved.
+-/
+theorem residue_distribution_unit (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) :
+    let q := N / D
+    let s := N % D
+    (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = q + 1)).card = s ∧
+    (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = q)).card = D - s := by
+  intro q s
+  have h_inj : Function.Injective (fun y : ZMod D => (u : ZMod D) * y) := by
+    intro a b hab
+    change (u : ZMod D) * a = (u : ZMod D) * b at hab
+    have hcancel := congrArg (fun z : ZMod D => (u⁻¹ : (ZMod D)ˣ) * z) hab
+    simp only [← mul_assoc, Units.inv_mul, one_mul] at hcancel
+    exact hcancel
+  have h_card : ∀ k,
+      (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = k)).card =
+      (Finset.univ.filter (fun x : ZMod D => count_hits D r0 N x = k)).card := by
+    intro k
+    have h_set :
+        (Finset.univ.filter (fun x : ZMod D => count_hits_unit D u r0 N x = k)) =
+        (Finset.univ.filter (fun y : ZMod D => count_hits D r0 N y = k)).image
+          (fun y : ZMod D => (u : ZMod D) * y) := by
+      ext x
+      simp only [Finset.mem_filter, Finset.mem_univ, Finset.mem_image, true_and]
+      constructor
+      · intro h
+        rw [count_hits_unit_eq_count_hits] at h
+        exact ⟨(u⁻¹ : (ZMod D)ˣ) * x, h, by rw [← mul_assoc, Units.mul_inv, one_mul]⟩
+      · rintro ⟨y, hy, rfl⟩
+        rw [count_hits_unit_eq_count_hits, ← mul_assoc, Units.inv_mul, one_mul]
+        exact hy
+    rw [h_set, Finset.card_image_of_injective _ h_inj]
+  refine ⟨?_, ?_⟩
+  · rw [h_card]; exact (residue_distribution D r0 N).1
+  · rw [h_card]; exact (residue_distribution D r0 N).2
+
+/--
+Unit-aware analogue of `uniform_residue_distribution`: in the degenerate
+case `D ∣ N`, every residue class is hit exactly `N / D` times under the
+multiplier-twisted progression `u * (r0 + i)`.
+-/
+theorem uniform_residue_distribution_unit
+    (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) (h : D ∣ N) (x : ZMod D) :
+    count_hits_unit D u r0 N x = N / D := by
+  rw [count_hits_unit_eq_count_hits]
+  exact uniform_residue_distribution D r0 N h _
 
 end ResidueDistribution
 
@@ -372,7 +482,12 @@ def HasPeriodLength (s : ℤ → ℤ) (L : ℕ) : Prop :=
   IsPeriod s L ∧ ∀ L' > 0, IsPeriod s L' → L ≤ L'
 
 /--
-Axioms linking the geometric difference sequence to the residue distribution.
+Abstract interface for the combinatorial residue model obtained by reducing
+the cut-and-project geometry to the distribution of `N` consecutive residue
+classes modulo `D = α² + β²`. The four axioms are periodic-combinatorial
+in nature; the geometric construction is not formalised from first
+principles. Concrete instances are built from the geometric data via
+`GeometricProjectionConcrete`.
 -/
 class GeometricProjection (α β : ℕ) (ω : ℝ) (s : ℤ → ℤ) [NeZero (α ^ 2 + β ^ 2)] where
   N_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
@@ -1496,7 +1611,7 @@ lemma set_size_eq_N_of_lt
   let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
   have h_div : N / D = 0 := Nat.div_eq_of_lt h
   have h_mod : N % D = N := Nat.mod_eq_of_lt h
-  have h_dist := (non_uniform_residue_distribution D r0 N).1
+  have h_dist := (residue_distribution D r0 N).1
   simp only [h_div, h_mod, zero_add] at h_dist
   have h_le : ∀ x : ZMod D, count_hits D r0 N x ≤ 1 :=
     fun x => count_hits_lt_D D r0 N h x
@@ -1590,6 +1705,20 @@ lemma set_size_eq_D_of_ge
     ext x; simp [h_ge x]
   rw [h_filter_eq, Finset.card_univ, ZMod.card]
 
+/--
+The set size is positive in either branch of the dichotomy: it equals `N`
+when `N < D` (and `N ≥ 1` from `N_pos_concrete`), and equals `D` when
+`N ≥ D` (and `D ≥ 1` from `NeZero`). Hence the modulo arithmetic in
+`set_sorted` is well-defined as a period-block enumeration.
+-/
+lemma set_size_pos (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] :
+    0 < set_size α β ω := by
+  by_cases h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2
+  · rw [set_size_eq_N_of_lt α β ω h]
+    exact N_pos_concrete α β ω h_ω
+  · rw [set_size_eq_D_of_ge α β ω (Nat.le_of_not_lt h)]
+    exact NeZero.pos _
+
 /-- Under `D ≤ N`, `set_sorted i = i`. -/
 lemma set_sorted_eq_id_of_ge
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
@@ -1635,7 +1764,7 @@ so neither requires its caller to provide it. -/
 
 /--
 Concrete multiset-valued period theorem. Wrapper around `main_theorem`
-(line 1283) that internalises the `GeometricProjectionConcrete` instance,
+(line 1398) that internalises the `GeometricProjectionConcrete` instance,
 so callers only need `h_coprime` and `h_ω`. -/
 theorem main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
@@ -1651,7 +1780,7 @@ theorem main_theorem_concrete
 /--
 Concrete set-valued period theorem. The `set_difference_sequence` defined
 above realises the abstract `set_main_theorem`, closing the asymmetry
-between the multiset side (`main_theorem`, line 1283 — instantiated via
+between the multiset side (`main_theorem`, line 1398 — instantiated via
 `GeometricProjectionConcrete`) and the set side. -/
 theorem set_main_theorem_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)

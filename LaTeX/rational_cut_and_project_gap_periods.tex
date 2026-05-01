@@ -144,7 +144,7 @@ formula then follows from the same residue-distribution analysis: under
 and multiset coincide as sequences; under \(N \ge D\) every residue is hit
 and the underlying set is~\(\mathbb{Z}\).
 
-The algebraic core of both proofs has been formalised in Lean~4.  The
+The algebraic and combinatorial core of both proofs has been formalised in Lean~4.  The
 formalisation verifies the residue-class and minimal-period arguments; the
 geometric construction is represented at the combinatorial level described
 above.
@@ -580,9 +580,9 @@ is a contiguous cyclic interval of length \(s\):
 \[
     H = \{x_0, x_0+1, \ldots, x_0+s-1\}\pmod D
 \]
-for some \(x_0\), because the final \(s\) elements of the consecutive block
-\(r_0,r_0+1,\ldots,r_0+N-1\) contribute one extra hit exactly on \(s\)
-consecutive values in the \(m\)-stepping order.
+for some \(x_0\), because after \(q\) complete cycles the remaining
+\(s\) elements contribute one additional hit on \(s\) consecutive
+classes in the \(m\)-stepping order.
 
 Now suppose, for contradiction, that the minimal period \(\lambda'\) satisfies
 \(\lambda' < N\).  Since \(N\) is a period, the minimal period divides \(N\).
@@ -596,12 +596,22 @@ Let
 \[
     \sigma := \delta^{(0)} + \delta^{(1)} + \cdots + \delta^{(\lambda'-1)}.
 \]
-Since the gap sequence has period \(\lambda'\), we have
+By \(\lambda'\)-periodicity, every block of \(\lambda'\) consecutive
+gaps has the same sum \(\sigma\); that is, for every
+\(i \in \mathbb{Z}\),
+\[
+    \delta^{(i)} + \delta^{(i+1)} + \cdots + \delta^{(i+\lambda'-1)}
+    = \sigma.
+\]
+Hence
 \[
     \tilde{p}_s^{(i+\lambda')} = \tilde{p}_s^{(i)} + \sigma
 \]
-for all \(i\).  Hence the entire multiset \(S\) is invariant under
-translation by \(\sigma\).
+for all \(i\).  Since \(i \mapsto i+\lambda'\) is a bijection of
+\(\mathbb{Z}\), this translation maps the enumerated multiset
+bijectively onto itself and preserves multiplicities; equivalently,
+the entire multiset \(S\) is invariant under translation
+by \(\sigma\).
 
 On the other hand, \(N\) consecutive gaps always sum to \(D\), because
 \[
@@ -668,7 +678,12 @@ The gap sequence is
     \underbrace{0,\, 0,\, \ldots,\, 0}_{N/D - 1},\; 1,\;
     \ldots
 \]
-which has period \(N/D\).
+which has period \(N/D\).  This period is also minimal: if
+\(N/D = 1\), the constant sequence has minimal period~\(1\); if
+\(N/D > 1\), the value~\(1\) occurs exactly once in each block of
+length \(N/D\) while all other entries in the block are~\(0\), so no
+smaller positive period can preserve the positions of the entries
+equal to~\(1\).  Hence the minimal period is~\(N/D\).
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
@@ -982,9 +997,9 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 \section{Machine-Checked Formalisation}\label{sec:lean}
 % =====================================================================
 
-The algebraic core of the proof has been formalised in
+The algebraic and combinatorial core of the proof has been formalised in
 Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
-The formalisation comprises approximately 1{,}650 lines of verified code
+The formalisation comprises approximately 1{,}800 lines of verified code
 with no \texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
@@ -1035,35 +1050,39 @@ Lemma~\ref{lem:gcd} (\(\gcd(\beta,D)=1\))
   & \texttt{coprime\_beta\_D} & 20 \\
 Corollary~\ref{cor:inverse} (residue bijection)
   & \texttt{residue\_bijection} & 43 \\
-Lemma~\ref{lem:nonuniform} (non-uniform distribution)
-  & \texttt{non\_uniform\_residue\_distribution} & 140 \\
+Residue distribution (general)
+  & \texttt{residue\_distribution} & 140 \\
+Lemma~\ref{lem:nonuniform} (non-uniform distribution, \(D \nmid N\))
+  & \texttt{non\_uniform\_residue\_distribution\_of\_not\_dvd} & 211 \\
 Lemma~\ref{lem:uniform} (uniform distribution, \(D \mid N\))
-  & \texttt{uniform\_residue\_distribution} & 215 \\
+  & \texttt{uniform\_residue\_distribution} & 231 \\
 Heavy set is cyclic interval
-  & \texttt{heavy\_set\_is\_cyclic\_interval} & 269 \\
+  & \texttt{heavy\_set\_is\_cyclic\_interval} & 379 \\
 Lemma~\ref{lem:cyclic_interval_stabilizer} (trivial stabiliser)
-  & \texttt{cyclic\_interval\_stabilizer\_trivial} & 334 \\
+  & \texttt{cyclic\_interval\_stabilizer\_trivial} & 444 \\
 Proposition~\ref{prop:generic_period} (generic minimality)
-  & \texttt{generic\_minimality} & 388 \\
+  & \texttt{generic\_minimality} & 503 \\
 Theorem~\ref{thm:degenerate} (\(D \mid N\) case)
-  & \texttt{period\_degenerate\_concrete} & 1233 \\
+  & \texttt{period\_degenerate\_concrete} & 1348 \\
 \(\sigma N = LD\) from periodicity
-  & \texttt{sigma\_of\_period\_concrete} & 1206 \\
+  & \texttt{sigma\_of\_period\_concrete} & 1321 \\
 Theorem~\ref{thm:main} (main result, abstract)
-  & \texttt{main\_theorem} & 1283 \\
+  & \texttt{main\_theorem} & 1398 \\
 Theorem~\ref{thm:main} (concrete wrapper)
-  & \texttt{main\_theorem\_concrete} & 1640 \\
+  & \texttt{main\_theorem\_concrete} & 1769 \\
 \hline
 \multicolumn{3}{l}{\textit{Set-valued period (Section~\ref{sec:setvalued})}} \\
 \hline
 Theorem~\ref{thm:setperiod}, lower bound (\(D \le N\))
-  & \texttt{count\_hits\_ge\_D} & 1326 \\
+  & \texttt{count\_hits\_ge\_D} & 1441 \\
 Theorem~\ref{thm:setperiod}, constant-\(1\) period
-  & \texttt{HasPeriodLength\_const\_one} & 1344 \\
+  & \texttt{HasPeriodLength\_const\_one} & 1459 \\
 Theorem~\ref{thm:setperiod} (set-valued period, abstract)
-  & \texttt{set\_main\_theorem} & 1362 \\
+  & \texttt{set\_main\_theorem} & 1477 \\
+Set size positivity (well-defined modulo)
+  & \texttt{set\_size\_pos} & 1714 \\
 Theorem~\ref{thm:setperiod} (concrete wrapper)
-  & \texttt{set\_main\_theorem\_concrete} & 1656 \\
+  & \texttt{set\_main\_theorem\_concrete} & 1785 \\
 \hline
 \end{tabular}
 \caption{Correspondence between paper results and Lean~4 declarations
