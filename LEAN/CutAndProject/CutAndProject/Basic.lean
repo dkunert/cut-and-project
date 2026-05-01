@@ -593,6 +593,55 @@ The concrete difference sequence from the cut-and-project set.
 noncomputable def difference_sequence (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) : ℤ :=
   sorted_multiset α β ω (i + 1) - sorted_multiset α β ω i
 
+open Classical in
+/--
+Unit-aware concrete construction. `cumulative_hits_unit α β ω u x` is the
+total number of hits in the integer range `[0, x]` of the multiplier-twisted
+arithmetic progression `u * (r0 + i)` for `i ∈ [0, N)`. With `u = 1` it
+reduces to `cumulative_hits` (`cumulative_hits_unit_one`); with
+`u = multiplier α β h` it realises the geometric residue map
+`c_r ≡ -αβ⁻¹·(r0 + r) (mod D)` from the paper.
+-/
+noncomputable def cumulative_hits_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (x : ℕ) : ℕ :=
+  let D := α ^ 2 + β ^ 2
+  let r0 := ((-⌊ω * β⌋ : ℤ) : ZMod D).val
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  (Finset.range (x + 1)).sum (fun y => count_hits_unit D u r0 N (y : ZMod D))
+
+open Classical in
+noncomputable def V_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (k : ℕ) : ℕ :=
+  if h : ∃ x, k < cumulative_hits_unit α β ω u x then
+    Nat.find h
+  else
+    0
+
+noncomputable def sorted_multiset_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
+  let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
+  let D := α ^ 2 + β ^ 2
+  let r := (i % (N : ℤ)).toNat
+  let q := i / (N : ℤ)
+  (V_unit α β ω u r : ℤ) + q * D
+
+/--
+Unit-aware concrete difference sequence. With `u = multiplier α β h_coprime`
+this realises the geometric gap sequence of the cut-and-project construction
+in the paper.
+-/
+noncomputable def difference_sequence_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
+  sorted_multiset_unit α β ω u (i + 1) - sorted_multiset_unit α β ω u i
+
+/-- `u = 1` specialisation: the unit-aware cumulative count agrees with `cumulative_hits`. -/
+lemma cumulative_hits_unit_one (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] (x : ℕ) :
+    cumulative_hits_unit α β ω 1 x = cumulative_hits α β ω x := by
+  unfold cumulative_hits_unit cumulative_hits
+  apply Finset.sum_congr rfl
+  intro y _
+  exact count_hits_unit_one _ _ _ _
+
 lemma N_pos_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := by
   have h1 : 0 ≤ ⌊ω * α⌋ := Int.floor_nonneg.mpr (mul_nonneg h_ω (Nat.cast_nonneg α))
   have h2 : 0 ≤ ⌊ω * β⌋ := Int.floor_nonneg.mpr (mul_nonneg h_ω (Nat.cast_nonneg β))
