@@ -167,6 +167,9 @@ Section~\ref{sec:discussion} collects open questions.
 
 \subsection{Accepted lattice points}\label{subsec:construction}
 
+Throughout the paper, \(\mathbb{N} = \{1, 2, 3, \ldots\}\) denotes the
+positive integers.
+
 Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha, \beta) = 1\) and let
 \(\omega \in \mathbb{R}_{\ge 0}\).
 Consider the line \(f(x) = \frac{\alpha}{\beta}\,x\) in \(\mathbb{R}^2\)
@@ -240,7 +243,7 @@ Unless otherwise stated, the technical development in
 Sections~\ref{sec:mainresult}--\ref{sec:degenerate} uses the multiset
 convention.
 
-\subsection{Distance sequence and period}\label{subsec:distance}
+\subsection{Gap sequence and period}\label{subsec:gapseq}
 
 As shown below in Section~\ref{subsec:step2}, the projected values form a
 finite union of arithmetic progressions with common difference
@@ -252,14 +255,14 @@ unique up to translation of the index.
 Sort the multiset of all \(\tilde{p}\)-values in nondecreasing order, with
 multiplicities retained, to obtain
 \((\tilde{p}^{(i)}_s)_{i \in \mathbb{Z}}\), and define the
-\emph{difference sequence}
+\emph{gap sequence}
 \begin{equation}\label{eq:delta}
     \delta^{(i)} \;:=\; \tilde{p}^{(i+1)}_s - \tilde{p}^{(i)}_s.
 \end{equation}
 Since orthogonal projection onto the line rescales the ordered
-\(\tilde p\)-coordinate by a positive constant, the period length of
+\(\tilde{p}\)-coordinate by a positive constant, the period length of
 \((\delta^{(i)})\) equals the period length of the corresponding Euclidean
-distance sequence between consecutive projected multiset entries, including
+gap sequence between consecutive projected multiset entries, including
 zero distances arising from coincident projected points.
 
 \begin{definition}\label{def:period}
@@ -293,7 +296,7 @@ Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha, \beta) = 1\) and let
     \qquad
     D \;:=\; \alpha^2 + \beta^2.
 \end{equation}
-Then the period length of the difference sequence~\eqref{eq:delta} is
+Then the period length of the gap sequence~\eqref{eq:delta} is
 \begin{equation}\label{eq:formula}
     \lambda_{\mathrm{multiset}} \;=\;
     \begin{cases}
@@ -499,12 +502,12 @@ property and therefore equals \(x_0\), giving
 \end{proof}
 
 \begin{proposition}\label{prop:generic_period}
-If \(D \nmid N\), then the multiset difference sequence has minimal
+If \(D \nmid N\), then the multiset gap sequence has minimal
 period \(\lambda = N\).
 \end{proposition}
 
 \begin{proof}
-Within each interval \([kD,\,(k+1)D)\) on the \(\tilde p\)-axis, exactly
+Within each interval \([kD,\,(k+1)D)\) on the \(\tilde{p}\)-axis, exactly
 \(N\) points from the multiset \(S\) occur, counted with multiplicity.
 Their positions within the interval are determined by the residues
 \(c_r \bmod D\), again counted with multiplicity.
@@ -525,25 +528,25 @@ indexing, every \(i \in \mathbb Z\) can be written uniquely as
 \]
 and
 \[
-    \tilde p_s^{(i)} = kD + v_j.
+    \tilde{p}_s^{(i)} = kD + v_j.
 \]
 Consequently,
 \[
-    \tilde p_s^{(i+N)}
+    \tilde{p}_s^{(i+N)}
     =
-    \tilde p_s^{(i)} + D
+    \tilde{p}_s^{(i)} + D
 \]
 for all \(i\in\mathbb Z\).  Therefore
 \[
     \delta^{(i+N)}
     =
-    \tilde p_s^{(i+N+1)}-\tilde p_s^{(i+N)}
+    \tilde{p}_s^{(i+N+1)}-\tilde{p}_s^{(i+N)}
     =
-    \tilde p_s^{(i+1)}-\tilde p_s^{(i)}
+    \tilde{p}_s^{(i+1)}-\tilde{p}_s^{(i)}
     =
     \delta^{(i)}
 \]
-for all \(i\).  Thus \(N\) is a period of the difference sequence, and hence
+for all \(i\).  Thus \(N\) is a period of the gap sequence, and hence
 the minimal period \(\lambda\) divides \(N\).
 
 \medskip
@@ -595,14 +598,14 @@ Let
 \]
 Since the gap sequence has period \(\lambda'\), we have
 \[
-    \tilde p_s^{(i+\lambda')} = \tilde p_s^{(i)} + \sigma
+    \tilde{p}_s^{(i+\lambda')} = \tilde{p}_s^{(i)} + \sigma
 \]
 for all \(i\).  Hence the entire multiset \(S\) is invariant under
 translation by \(\sigma\).
 
 On the other hand, \(N\) consecutive gaps always sum to \(D\), because
 \[
-    \tilde p_s^{(i+N)}-\tilde p_s^{(i)} = D.
+    \tilde{p}_s^{(i+N)}-\tilde{p}_s^{(i)} = D.
 \]
 Since \(N=k\lambda'\), this gives
 \[
@@ -659,7 +662,7 @@ consists of each integer repeated \(N/D\) times:
     \underbrace{t+1,\, t+1,\, \ldots,\, t+1}_{N/D},\;
     \ldots
 \]
-The difference sequence is
+The gap sequence is
 \[
     \underbrace{0,\, 0,\, \ldots,\, 0}_{N/D - 1},\; 1,\;
     \underbrace{0,\, 0,\, \ldots,\, 0}_{N/D - 1},\; 1,\;
@@ -683,7 +686,7 @@ For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3\):
     D = 5.
 \]
 Since \(5 \mid 10\), the formula gives \(\lambda = 10/5 = 2\).
-Direct computation confirms the difference sequence
+Direct computation confirms the gap sequence
 \((0, 1, 0, 1, \ldots)\) with period~\(2\).
 \end{example}
 
@@ -712,22 +715,22 @@ Corollary~\ref{cor:setlemultiset}).
 
 We now treat the set convention introduced in
 Section~\ref{subsec:multiplicity}: coincident projected points are
-identified, so each \(\tilde p\)-value occurs at most once in the sorted
+identified, so each \(\tilde{p}\)-value occurs at most once in the sorted
 sequence.
 
 \subsection{Definition of the set-valued gap sequence}\label{subsec:setdef}
 
 Sort the underlying set
-\(\bigl\{\tilde p \,:\, \tilde p\text{ occurs as a projected value}\bigr\}
+\(\bigl\{\tilde{p} \,:\, \tilde{p}\text{ occurs as a projected value}\bigr\}
 \subseteq \mathbb{Z}\) in increasing order, with each value listed once.
 By Section~\ref{subsec:step2} this set is locally finite and unbounded in
 both directions, so it admits a strictly increasing enumeration indexed by
 \(\mathbb{Z}\), unique up to translation of the index.  Write this
-enumeration \((\tilde p^{(i)}_{\mathrm{set}})_{i \in \mathbb{Z}}\) and
-define the \emph{set-valued difference sequence}
+enumeration \((\tilde{p}^{(i)}_{\mathrm{set}})_{i \in \mathbb{Z}}\) and
+define the \emph{set-valued gap sequence}
 \begin{equation}\label{eq:delta_set}
     \delta^{(i)}_{\mathrm{set}}
-    \;:=\; \tilde p^{(i+1)}_{\mathrm{set}} - \tilde p^{(i)}_{\mathrm{set}}.
+    \;:=\; \tilde{p}^{(i+1)}_{\mathrm{set}} - \tilde{p}^{(i)}_{\mathrm{set}}.
 \end{equation}
 Its minimal period \(\lambda_{\mathrm{set}}\) is defined exactly as in
 Definition~\ref{def:period}.
@@ -737,7 +740,7 @@ Definition~\ref{def:period}.
 \begin{theorem}[Set-valued period]\label{thm:setperiod}
 Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha,\beta) = 1\) and
 \(\omega \in \mathbb{R}_{\ge 0}\).  With \(N\) and \(D\) as
-in~\eqref{eq:ND}, the set-valued difference sequence~\eqref{eq:delta_set}
+in~\eqref{eq:ND}, the set-valued gap sequence~\eqref{eq:delta_set}
 has minimal period
 \begin{equation}\label{eq:setformula}
     \lambda_{\mathrm{set}} \;=\;
@@ -749,7 +752,8 @@ has minimal period
 \end{theorem}
 
 \begin{proof}
-Write \(N = qD + s\) with \(0 \le s < D\) as in §\ref{subsec:step5}, and
+Write \(N = qD + s\) with \(0 \le s < D\) as in
+Section~\ref{subsec:step5}, and
 let \(\mu \colon \mathbb{Z}/D\mathbb{Z} \to \mathbb{N}_0\) be the
 multiplicity function defined there.
 
@@ -772,7 +776,7 @@ Lemma~\ref{lem:nonuniform} (if \(D \nmid N\)) and
 Lemma~\ref{lem:uniform} (if \(D \mid N\)), the function \(\mu\) takes
 only positive values.  Hence every residue class is hit at least once,
 and by~\eqref{eq:Pr} every integer is a projected value.  The underlying
-set is therefore \(\mathbb{Z}\) in the \(\tilde p\)-coordinate, its gap
+set is therefore \(\mathbb{Z}\) in the \(\tilde{p}\)-coordinate, its gap
 sequence is constantly \(1\), and \(\lambda_{\mathrm{set}} = 1\).
 \qedhere
 \end{proof}
@@ -841,7 +845,7 @@ multiplicity \(1\).
 
 \medskip
 \noindent\emph{Multiset side.}  Within each length-\(D\) window of the
-\(\tilde p\)-axis, the \(N = 29\) projected entries (counted with
+\(\tilde{p}\)-axis, the \(N = 29\) projected entries (counted with
 multiplicity) include four duplicated values: each of the four
 heavy residue classes contributes a coincident pair, hence a zero
 gap.  The block of \(N\) gaps therefore contains four \(0\)'s and
@@ -991,7 +995,7 @@ Theorem~\ref{thm:main} from four abstract axioms collected in a
 typeclass \texttt{GeometricProjection}:
 \begin{enumerate}
     \item \(N > 0\) \hfill (\texttt{N\_pos})
-    \item The difference sequence has period \(N\)
+    \item The gap sequence has period \(N\)
           \hfill (\texttt{period\_N})
     \item If \(D \mid N\), the minimal period is \(N/D\)
           \hfill (\texttt{period\_degenerate})
@@ -1006,7 +1010,7 @@ Section~\ref{subsec:step5}) and the case dispatch
 are proved purely algebraically.
 
 The second layer constructs a concrete instance of this typeclass
-by defining the sorted multiset and difference sequence explicitly.
+by defining the sorted multiset and gap sequence explicitly.
 Each axiom is discharged by a separate lemma
 (\texttt{N\_pos\_concrete}, \texttt{period\_N\_concrete},
 \texttt{period\_degenerate\_concrete},
@@ -1140,10 +1144,11 @@ HaynesEtAl2016} focuses largely on irrational slopes and aperiodic order.
 Rational slopes yield periodic structures and are therefore often less
 central from that perspective.
 
-The author is not aware of a reference that states the above formula for the
-minimal period of the multiset gap sequence associated with a rational
-one-dimensional cut-and-project strip.  The result is elementary once the
-appropriate residue-class description is introduced, but it appears useful to
+To the author's knowledge, the specific minimal-period formula for
+the multiset gap sequence in the rational strip-projection model
+considered here does not appear explicitly in the standard
+references.  The result is elementary once the appropriate
+residue-class description is introduced, but it appears useful to
 record explicitly.
 
 % =====================================================================
@@ -1169,12 +1174,12 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
 
 \begin{enumerate}
     \item \textbf{Dependence on the window position.}
-    The present paper considers a strip in the specific position used in
-    \eqref{eq:points}.  If one translates the window transversally, the set of
-    admissible invariant values changes by a shifted interval, but boundary
-    effects may alter the interleaving pattern.  It would be interesting to
-    determine whether the same period formulas persist for arbitrary window
-    offsets.
+    A natural extension is to allow arbitrary transversal offsets of
+    the strip.  In that case the admissible \(r\)-values should again
+    form an interval of integers, but its endpoints and cardinality
+    depend on the offset.  It would be useful to formulate the
+    resulting period formulas explicitly in terms of that cardinality
+    and to check whether any genuinely new boundary phenomena occur.
 
     \item \textbf{Higher dimensions.}
     The cut-and-project construction generalises to higher-dimensional
