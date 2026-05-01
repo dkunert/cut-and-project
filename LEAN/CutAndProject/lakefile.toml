@@ -1,6 +1,8 @@
 name = "CutAndProject"
 version = "0.1.0"
-keywords = ["math"]
+description = "Lean 4 formalization of period length formulas for one-dimensional rational cut-and-project sequences (multiset and set conventions)"
+keywords = ["math", "number-theory", "combinatorics", "lean4", "formalization", "cut-and-project"]
+license = "MIT"
 defaultTargets = ["CutAndProject"]
 
 [leanOptions]
