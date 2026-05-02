@@ -1,7 +1,7 @@
 # cut-and-project
 
 Period formulas for one-dimensional cut-and-project sequences with
-rational slope, formalised in Lean 4.
+rational slope, formalized in Lean 4.
 
 ## Setup
 
@@ -53,31 +53,41 @@ with equality if and only if $N \le D$.
 
 - `LaTeX/rational_cut_and_project_gap_periods.tex` — main paper
   (statements, proofs, Lean correspondence in Table 1).
-- `LaTeX/rational_cut_and_project_multiset_gap_periods.tex` —
-  earlier multiset-only version, kept for archival.
-- `support/LaTeX/set_analysis_results.tex` — empirical analysis on
-  the 51,012-row dataset; verifies the dichotomy regime by regime.
 
-## Lean 4 formalisation
+## Lean 4 formalization
 
-The algebraic core of both theorems is formalised in
-`Lean/CutAndProject/CutAndProject/Basic.lean` (~1,650 lines; no
-`sorry`, `admit`, or `axiom`).
+Both period theorems are formalized in
+`Lean/CutAndProject/CutAndProject/Basic.lean` (~2,862 lines; no
+`sorry`, `admit`, or `axiom`), using Lean 4 and Mathlib.
 
-Both period formulas are proved as concrete, unconditional theorems:
+The headline theorems for the actual geometric enumeration are:
 
-- `main_theorem_concrete` — multiset.
-- `set_main_theorem_concrete` — set.
+- `main_theorem_geometric_concrete` — multiset period.
+- `set_main_theorem_geometric_concrete` — set period.
 
-A line-by-line correspondence between paper results and Lean
-declarations is given in Table 1 of the paper.
+Both thread the geometric residue map
+$c_r \equiv -\alpha\beta^{-1}r \pmod{D}$ through to the concrete
+period statement. A full line-by-line correspondence between paper
+results and Lean declarations is given in Table 1 of the paper.
 
-The geometric construction (defining the cut-and-project set,
-projecting, sorting) is modelled abstractly via the
-`GeometricProjection` typeclass; the concrete instance
+### Architecture
+
+The proof has two layers.
+
+**Layer 1:** The strip geometry and projection are reduced to a
+discrete enumeration of $N$ consecutive residue classes modulo $D$
+under the multiplier $m = -\alpha\beta^{-1}$ (Sections 2–3 of the
+paper).
+
+**Layer 2:** Starting from the residue model, Lean
+proves coprimality, residue distribution (uniform and non-uniform),
+the cyclic-interval structure, the trivial stabilizer lemma, generic
+minimality, the degenerate case, and the case dispatch — for both the
+multiset and set conventions. The geometric multiplier is threaded
+through via the `GeometricProjection` typeclass; the concrete instance
 `GeometricProjectionConcrete` discharges its four axioms. The
-set-side enumeration reuses the same machinery with multiplicities
-flattened to $\{0, 1\}$.
+set-valued enumeration mirrors the multiset construction with
+multiplicities flattened to $\{0,1\}$.
 
 ### Versions
 
@@ -124,7 +134,8 @@ against the CSV data in `tests/`. Targets: `make run` / `make clean`.
 
 ## Acknowledgement
 
-AI assistants were used during mathematical exploration, drafting,
-informal proof checking, and the preparation of the Lean
-formalisation. The author has independently verified the mathematical
-content and accepts full responsibility for the results.
+The author used ChatGPT, Gemini, and Claude as AI assistants during
+mathematical exploration, drafting, proof construction, and the
+creation of the Lean formalization. The author has independently
+verified the mathematical content and accepts full responsibility for
+the results and any errors.
