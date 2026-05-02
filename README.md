@@ -10,12 +10,12 @@ $\omega \in \mathbb{R}_{\ge 0}$, the set of accepted lattice points is
 
 $$
 C =
-\biggl\{
+\left\{
 (x, y) \in \mathbb{Z}^2
-\Bigm|
+\;\middle|\;
 y \in
-\bigl[\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega\bigr]
-\biggr\}.
+\left[\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega\right]
+\right\}.
 $$
 
 After projecting orthogonally onto $f(x) = (\alpha/\beta)\,x$ and
