@@ -35,7 +35,7 @@
 \subjclass[2020]{Primary 52C23; Secondary 11B25, 37B10, 68V20, 11A07}
 \keywords{cut-and-project sets, projected multisets, gap sequences,
 period length, rational slope, residue classes, lattice projection,
-Lean~4 formalisation}
+Lean~4 formalization}
 
 \date{\today}
 
@@ -75,9 +75,9 @@ case, with equality if and only if \(N \le D\).  The proof reduces the
 geometry to the distribution of \(N\) consecutive residue classes
 modulo~\(D\).  When this distribution is non-uniform, the residue classes
 with larger multiplicity form a proper cyclic interval in the natural
-residue parametrisation; its only translational symmetry is the identity,
+residue parametrization; its only translational symmetry is the identity,
 which rules out any smaller period.  The algebraic core of both proofs
-has been formalised in Lean~4.
+has been formalized in Lean~4.
 \end{abstract}
 
 \maketitle
@@ -141,7 +141,7 @@ points decompose into parallel tracks indexed by the admissible values of
 common difference \(D\), and the relevant residues modulo \(D\) are
 obtained from \(N\) consecutive integers by multiplication with a unit
 modulo \(D\).  If \(D\nmid N\), the residue classes with larger multiplicity
-form a proper cyclic interval in the natural residue parametrisation; its
+form a proper cyclic interval in the natural residue parametrization; its
 only translational symmetry is the identity, which rules out any smaller
 period.  If \(D\mid N\), the residues are uniformly distributed and the gap
 sequence collapses to a simple pattern of period \(N/D\).  The set-valued
@@ -150,15 +150,15 @@ formula then follows from the same residue-distribution analysis: under
 and multiset coincide as sequences; under \(N \ge D\) every residue is hit
 and the underlying set is~\(\mathbb{Z}\).
 
-Both proofs have been formalised in Lean~4 with the geometric residue map
+Both proofs have been formalized in Lean~4 with the geometric residue map
 \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) threaded through to the period
-theorems on both the multiset and set sides.  The formalisation verifies
+theorems on both the multiset and set sides.  The formalization verifies
 the residue-class and minimal-period arguments; the strip-to-residue
 reduction itself is hand-verified in Sections~\ref{sec:setup}
 and~\ref{subsec:step2} and forms the boundary between the two layers
 documented in Section~\ref{subsec:lean_scope}.
 
-The paper is organised as follows.  Section~\ref{sec:setup} gives the
+The paper is organized as follows.  Section~\ref{sec:setup} gives the
 construction and fixes the two multiplicity conventions.
 Section~\ref{sec:mainresult} states the multiset main result.
 Section~\ref{sec:proof} proves the generic case \(D \nmid N\).
@@ -166,7 +166,7 @@ Section~\ref{sec:degenerate} treats the uniform case \(D \mid N\).
 Section~\ref{sec:setvalued} states and proves the set-valued period formula
 and records its comparison with the multiset period.
 Section~\ref{sec:corollaries} records some immediate corollaries.
-Section~\ref{sec:lean} describes the Lean~4 formalisation.
+Section~\ref{sec:lean} describes the Lean~4 formalization.
 Section~\ref{sec:literature} discusses related literature.
 Section~\ref{sec:discussion} collects open questions.
 
@@ -506,7 +506,7 @@ combination \(M - q\lambda = r\) is also a period.  By minimality of
 \(\lambda \mid M\).
 \end{proof}
 
-\begin{lemma}[Trivial stabiliser of a cyclic interval]
+\begin{lemma}[Trivial stabilizer of a cyclic interval]
 \label{lem:cyclic_interval_stabilizer}
 Let \(0 < s < D\) and let
 \[
@@ -591,13 +591,13 @@ By Lemma~\ref{lem:nonuniform}, with \(N = qD + s\) and \(0 < s < D\),
 the function \(\mu\) takes exactly two values: \(q+1\) on a set of \(s\)
 residue classes and \(q\) on the remaining \(D - s\) classes.
 
-It is convenient to pass to the \(m\)-stepping parametrisation
+It is convenient to pass to the \(m\)-stepping parametrization
 \[
     f(x) := \mu(mx), \qquad x \in \mathbb{Z}/D\mathbb{Z},
 \]
 where \(m=-\alpha\beta^{-1}\pmod D\).
-Since \(m\) is invertible modulo \(D\), this is only a relabelling of the
-same data.  In this parametrisation, the heavy set
+Since \(m\) is invertible modulo \(D\), this is only a relabeling of the
+same data.  In this parametrization, the heavy set
 \[
     H := \{x \in \mathbb{Z}/D\mathbb{Z} : f(x)=q+1\}
 \]
@@ -656,7 +656,7 @@ multiplicity function:
 \[
     \mu(c+\sigma)=\mu(c) \qquad \text{for all } c\in \mathbb{Z}/D\mathbb{Z}.
 \]
-Equivalently, the relabelled function \(f\) satisfies
+Equivalently, the relabeled function \(f\) satisfies
 \[
     f(x+\tau)=f(x), \qquad \tau := m^{-1}\sigma \pmod D.
 \]
@@ -1019,15 +1019,15 @@ that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 \end{remark}
 
 % =====================================================================
-\section{Machine-Checked Formalisation}\label{sec:lean}
+\section{Machine-Checked Formalization}\label{sec:lean}
 % =====================================================================
 
-Both period theorems have been formalised in
+Both period theorems have been formalized in
 Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020},
 including the geometric residue map \(c_r \equiv -\alpha\beta^{-1}r
 \pmod{D}\) (the multiplier is threaded through to the headline theorems
 \texttt{main\_theorem\_geometric\_concrete} and
-\texttt{set\_main\_theorem\_geometric\_concrete}).  The formalisation
+\texttt{set\_main\_theorem\_geometric\_concrete}).  The formalization
 comprises approximately 2{,}850 lines of verified code with no
 \texttt{sorry} axioms, and is available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
@@ -1088,7 +1088,7 @@ Lemma~\ref{lem:uniform} (uniform distribution, \(D \mid N\))
   & \texttt{uniform\_residue\_distribution} & 231 \\
 Heavy set is cyclic interval
   & \texttt{heavy\_set\_is\_cyclic\_interval} & 379 \\
-Lemma~\ref{lem:cyclic_interval_stabilizer} (trivial stabiliser)
+Lemma~\ref{lem:cyclic_interval_stabilizer} (trivial stabilizer)
   & \texttt{cyclic\_interval\_stabilizer\_trivial} & 464 \\
 Proposition~\ref{prop:generic_period} (generic minimality)
   & \texttt{generic\_minimality} & 523 \\
@@ -1141,9 +1141,9 @@ in \texttt{Basic.lean}.}
 \label{tab:lean}
 \end{table}
 
-\subsection{Scope of the formalisation}\label{subsec:lean_scope}
+\subsection{Scope of the formalization}\label{subsec:lean_scope}
 
-The formalisation is structured in two layers, distinguishing what is
+The formalization is structured in two layers, distinguishing what is
 machine-checked from what is hand-verified in the present paper.
 
 \paragraph{Layer~1: hand-verified strip-to-residue reduction
@@ -1159,14 +1159,14 @@ This layer reduces the geometric problem to a discrete enumeration of
 
 \paragraph{Layer~2: machine-checked residue model with the geometric
 multiplier (Sections~\ref{sec:proof}--\ref{sec:setvalued}).} Starting
-from the residue model, the Lean formalisation \emph{includes the
+from the residue model, the Lean formalization \emph{includes the
 geometric multiplier as a first-class object}.  Specifically:
 
 \begin{itemize}
     \item Coprimality, residue distribution (uniform and non-uniform), the
-          cyclic interval structure, the trivial stabiliser lemma, the
+          cyclic interval structure, the trivial stabilizer lemma, the
           generic minimality argument, the degenerate case, and the case
-          dispatch for both the multiset and set conventions are formalised
+          dispatch for both the multiset and set conventions are formalized
           for the residue model.
     \item The geometric multiplier \(u = \texttt{multiplier}\,\alpha\,\beta\,h\)
           is threaded through to the unit-aware infrastructure
@@ -1209,10 +1209,10 @@ the multiplier \(u = -\alpha\beta^{-1}\) threaded through.
 
 \paragraph{Boundary between the two layers.} The hand-verified
 strip-to-residue reduction of Layer~1 is standard cut-and-project
-mathematics; what is novel in the formalisation is that Layer~2 closes
-the residual gap left by previous formalisations, in which the abstract
+mathematics; what is novel in the formalization is that Layer~2 closes
+the residual gap left by previous formalizations, in which the abstract
 typeclass \texttt{GeometricProjection} was instantiated only for the
-normalised residue map (\(u = 1\)).  After Phase~2 of the multiplier
+normalized residue map (\(u = 1\)).  After Phase~2 of the multiplier
 cleanup, the geometric projection is fully threaded through to the period
 theorems on both the multiset and set sides.
 
@@ -1233,7 +1233,7 @@ two essential ways:
 \begin{itemize}
     \item It concerns rotations on a circle rather than lattice projections
           through a strip of finite width.
-    \item It characterises the number of distinct gap lengths, not the
+    \item It characterizes the number of distinct gap lengths, not the
           minimal period length of a gap sequence.
 \end{itemize}
 
@@ -1279,7 +1279,7 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
 \begin{itemize}
     \item When \(D \nmid N\), the tracks distribute non-uniformly among the
           \(D\) residue classes.  The heavy residue classes form a proper
-          cyclic interval in the natural residue parametrisation, whose only
+          cyclic interval in the natural residue parametrization, whose only
           translational symmetry is the identity.  This gives
           \(\lambda = N\).
     \item When \(D \mid N\), each residue class is hit exactly \(N/D\) times.
@@ -1299,13 +1299,13 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
     and to check whether any genuinely new boundary phenomena occur.
 
     \item \textbf{Higher dimensions.}
-    The cut-and-project construction generalises to higher-dimensional
+    The cut-and-project construction generalizes to higher-dimensional
     lattices.  Whether analogous period formulas hold in dimension
     \(d \ge 2\) is unexplored.
 
     \item \textbf{Distribution of gap lengths.}
     For fixed \(\alpha, \beta, \omega\), one may ask for a precise
-    characterisation of the distinct gap values and their multiplicities
+    characterization of the distinct gap values and their multiplicities
     within one minimal period (in either convention).
 \end{enumerate}
 
@@ -1314,7 +1314,7 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
 % =====================================================================
 
 The author used ChatGPT, Gemini, and Claude as AI assistants during mathematical
-exploration, drafting, proof construction, and the creation of the Lean formalisation.
+exploration, drafting, proof construction, and the creation of the Lean formalization.
 The author has independently verified the mathematical content and accepts full 
 responsibility for the results and any errors.
 
