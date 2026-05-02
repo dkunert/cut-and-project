@@ -9,13 +9,7 @@ For coprime $\alpha, \beta \in \mathbb{N}$ and a window parameter
 $\omega \in \mathbb{R}_{\ge 0}$, the set of accepted lattice points is
 
 $$
-C =
-\left\{
-(x, y) \in \mathbb{Z}^2
-\;\middle|\;
-y \in
-\left[\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega\right]
-\right\}.
+C = \{(x, y) \in \mathbb{Z}^2 \mid y \in [\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega]\}.
 $$
 
 After projecting orthogonally onto $f(x) = (\alpha/\beta)\,x$ and
