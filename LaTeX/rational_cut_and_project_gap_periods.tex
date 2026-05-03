@@ -134,7 +134,8 @@ Here \(N\) is the number of admissible values of the invariant
 \(r=\alpha x-\beta y\), and \(D\) is the common difference of the arithmetic
 progressions obtained after projection.  The two formulas agree precisely
 when \(N \le D\); when \(N \ge D\) the set-valued period collapses to~\(1\),
-because every integer residue class is then hit.
+because every integer residue class in the \(\tilde{p}\)-coordinate is then
+hit.
 
 The proof of the multiset formula is elementary.  The accepted lattice
 points decompose into parallel tracks indexed by the admissible values of
@@ -149,7 +150,7 @@ sequence collapses to a simple pattern of period \(N/D\).  The set-valued
 formula then follows from the same residue-distribution analysis: under
 \(N < D\) the multiplicity function takes values in \(\{0, 1\}\), so set
 and multiset coincide as sequences; under \(N \ge D\) every residue is hit
-and the underlying set is~\(\mathbb{Z}\).
+and the underlying set is~\(\mathbb{Z}\) in the \(\tilde{p}\)-coordinate.
 
 Both proofs have been formalized in Lean~4 with the geometric residue map
 \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) threaded through to the period
@@ -317,8 +318,11 @@ Then the period length of the gap sequence~\eqref{eq:delta} is
 \end{theorem}
 
 \begin{remark}[Interpretation of \(N\)]\label{rem:N}
-The quantity \(N\) equals the number of integers in the interval
-\([-\beta\omega,\; \alpha\omega]\), which is the range of the invariant
+The quantity \(N\) equals
+\[
+    \#\bigl([-\beta\omega,\,\alpha\omega]\cap\mathbb{Z}\bigr),
+\]
+the number of integers in the range of the invariant
 \(r = \alpha x - \beta y\) (see Section~\ref{subsec:step1}).
 Geometrically, \(N\) counts the number of tracks, namely the parallel
 arithmetic progressions of projected values counted with multiplicity.
@@ -342,7 +346,9 @@ The formula has been verified against:
           \(D \mid N\) (with \(\alpha, \beta \le 10\) and \(N\) up to
           \({\sim}500\)), verifying the \(\lambda = N/D\) branch.
 \end{itemize}
-All 51{,}480 cases produce exact matches with zero failures.
+All 51{,}480 cases produce exact matches with zero failures.  These
+computations are used only as consistency checks; the proof below is
+independent of the empirical verification.
 \end{remark}
 
 % =====================================================================
@@ -412,12 +418,17 @@ automatic: from~\eqref{eq:residue},
     \;\equiv\; 0 \pmod{D},
 \]
 so both coordinates in~\eqref{eq:solution} are integers.
-The set of \(\tilde{p}\)-values for invariant~\(r\) is the arithmetic
-progression
+The set of \(\tilde{p}\)-values for invariant~\(r\) is therefore the
+arithmetic progression
 \begin{equation}\label{eq:Pr}
     P_r \;=\; \{c_r + kD : k \in \mathbb{Z}\}.
 \end{equation}
-The complete multiset of projected values is
+Conversely, if \(\tilde{p} \in P_r\), then the congruence
+\eqref{eq:residue} makes both coordinates in~\eqref{eq:solution} integral,
+and since \(r \in \mathcal{R}\), the resulting lattice point satisfies the
+strip condition~\eqref{eq:r_range}.  Thus \(P_r\) is exactly the set of
+\(\tilde{p}\)-values with invariant \(r\).  The complete multiset of
+projected values is
 \[
     S = \bigcup_{r \in \mathcal{R}} P_r,
 \]
@@ -744,9 +755,9 @@ Since \(13 \mid 26\), the formula gives \(\lambda = 26/13 = 2\).
 
 \begin{remark}\label{rem:boundary}
 The boundary case \(N = D\), i.e. \(N/D = 1\), gives
-\(\lambda_{\mathrm{multiset}} = 1\): every integer is a projected value with
-multiplicity~\(1\), and all gaps equal~\(1\).  At this boundary the
-multiset and set conventions agree
+\(\lambda_{\mathrm{multiset}} = 1\): every integer is a projected value in
+the \(\tilde{p}\)-coordinate with multiplicity~\(1\), and all gaps
+equal~\(1\).  At this boundary the multiset and set conventions agree
 (Theorem~\ref{thm:setperiod}, case \(N \ge D\); see also
 Corollary~\ref{cor:setlemultiset}).
 \end{remark}
@@ -816,9 +827,10 @@ after a possible translation of the index).  In particular
 Lemma~\ref{lem:nonuniform} (if \(D \nmid N\)) and
 Lemma~\ref{lem:uniform} (if \(D \mid N\)), the function \(\mu\) takes
 only positive values.  Hence every residue class is hit at least once,
-and by~\eqref{eq:Pr} every integer is a projected value.  The underlying
-set is therefore \(\mathbb{Z}\) in the \(\tilde{p}\)-coordinate, its gap
-sequence is constantly \(1\), and \(\lambda_{\mathrm{set}} = 1\).
+and by~\eqref{eq:Pr} every integer is a projected value in the
+\(\tilde{p}\)-coordinate.  The underlying set is therefore \(\mathbb{Z}\)
+in the \(\tilde{p}\)-coordinate, its gap sequence in this coordinate is
+constantly \(1\), and \(\lambda_{\mathrm{set}} = 1\).
 \qedhere
 \end{proof}
 
@@ -899,9 +911,10 @@ symmetry is the identity
 
 \medskip
 \noindent\emph{Set side.}  Since every residue class is hit at least
-once, the underlying point set is all of \(\mathbb{Z}\).  Discarding
-multiplicities collapses the four zero gaps and leaves the constant
-gap sequence \(1, 1, 1, \ldots\); Theorem~\ref{thm:setperiod} gives
+once, the underlying point set is all of \(\mathbb{Z}\) in the
+\(\tilde{p}\)-coordinate.  Discarding multiplicities collapses the four
+zero gaps and leaves the constant gap sequence \(1, 1, 1, \ldots\);
+Theorem~\ref{thm:setperiod} gives
 \(\lambda_{\mathrm{set}} = 1\).  Direct computation confirms both
 values.
 \end{example}
@@ -913,7 +926,8 @@ companion empirical data in~\cite{Kunert2025}; see in particular the
 report \texttt{set\_analysis\_results.tex} and the worked input/output
 files \texttt{tests/six\_examples\_*.csv} and
 \texttt{tests/seventh\_example\_*.csv}, covering all eight regimes of the
-case split.
+case split.  These computations are consistency checks and are not used
+in the proof.
 
 % =====================================================================
 \section{Corollaries}\label{sec:corollaries}
@@ -1284,8 +1298,9 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
           translational symmetry is the identity.  This gives
           \(\lambda = N\).
     \item When \(D \mid N\), each residue class is hit exactly \(N/D\) times.
-          Every integer is a projected value with multiplicity \(N/D\),
-          collapsing the gap structure to a simple pattern of period \(N/D\).
+          Every integer is a projected value with multiplicity \(N/D\) in the
+          \(\tilde{p}\)-coordinate, collapsing the gap structure to a simple
+          pattern of period \(N/D\).
 \end{itemize}
 
 \subsection{Open problems}
