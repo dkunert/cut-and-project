@@ -214,6 +214,12 @@ support/LaTeX/qa_set_multiset_period.fls
 support/LaTeX/qa_set_multiset_period.out
 support/LaTeX/qa_set_multiset_period.synctex.gz
 support/LaTeX/qa_set_multiset_period.pdf
+support/LaTeX/studies.aux
+support/LaTeX/studies.fdb_latexmk
+support/LaTeX/studies.fls
+support/LaTeX/studies.out
+support/LaTeX/studies.synctex.gz
+support/LaTeX/studies.pdf
 support/LaTeX/arXiv.pdf
 support/LaTeX/final_paper_and_lean_findings_chat_gpt.pdf
 support/haynes_email.html
@@ -222,3 +228,4 @@ support/LaTeX/qa_set_multiset_period.tex
 support/LaTeX/qa_set_multiset_period.tex
 support/LaTeX/review_feedback_gemini.tex
 support/LaTeX/qa_set_multiset_period.tex
+support/LaTeX/studies.tex

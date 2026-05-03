@@ -1092,6 +1092,47 @@ finite.
 \(N\) is a finite positive integer, and \(\lambda \le N\).
 \end{proof}
 
+\begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
+Let \(a \in \mathbb{R} \setminus \mathbb{Q}\) and \(\omega > 0\), and consider
+the analogous strip projection with line \(f(x) = a x\) and strip
+\(\{(x,y) : a(x-\omega) \le y \le a x + \omega\}\).  Then the resulting
+projected gap sequence has \emph{no} finite period.
+\end{proposition}
+
+\begin{proof}
+Suppose, for contradiction, that the gap sequence has a finite period
+\(\lambda \in \mathbb{N}\).  Then there exists \(\sigma > 0\) (the sum of
+\(\lambda\) consecutive gaps) such that the projected set
+\(S' \subset \mathbb{R}\) satisfies \(S' + \sigma = S'\).  Since \(S'\) is
+the orthogonal projection of \(\mathbb{Z}^2 \cap \text{strip}\) onto the
+line, this translational symmetry must lift to a lattice translation
+\((x, y) \mapsto (x + m, y + n)\) with \((m, n) \in \mathbb{Z}^2 \setminus
+\{(0, 0)\}\) that preserves the strip.
+
+For the strip to be invariant under \((x, y) \mapsto (x + m, y + n)\), the
+inequalities \(a(x - \omega) \le y \le a x + \omega\) must transform into
+themselves; this forces
+\[
+    n \;=\; a \cdot m, \qquad m \ne 0.
+\]
+Hence \(a = n/m \in \mathbb{Q}\), contradicting the irrationality of \(a\).
+\end{proof}
+
+\begin{remark}[Period dichotomy]\label{rem:dichotomy}
+Together, Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational}
+form a complete dichotomy:
+\[
+    \text{the gap sequence has a finite period}
+    \;\;\Longleftrightarrow\;\;
+    \text{the slope is rational.}
+\]
+There are no exceptional irrational slopes that produce a finite period;
+the boundary between the periodic and the aperiodic regime coincides exactly
+with the boundary \(\mathbb{Q} \subset \mathbb{R}\).  The aperiodic side
+is the classical setting of model sets and aperiodic order
+(see Section~\ref{sec:literature}).
+\end{remark}
+
 \begin{corollary}[Period at \(\omega = 1\)]\label{cor:omega1}
 For \(\omega = 1\), \(\lambda = \alpha + \beta + 1 = \Lambda_{\alpha,\beta}\).
 \end{corollary}
