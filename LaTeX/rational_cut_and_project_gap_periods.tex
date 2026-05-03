@@ -1,6 +1,7 @@
 \documentclass[11pt,reqno]{amsart}
 
 \usepackage{amsmath,amssymb,amsthm,amsfonts,mathtools}
+\usepackage{tikz}
 \usepackage[hidelinks]{hyperref}
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{caption}
@@ -48,8 +49,8 @@ positive integers \(\alpha,\beta\) defining the rational slope
 \(\alpha/\beta\), and window parameter \(\omega \ge 0\).  Projecting lattice
 points from the resulting strip onto the line yields, after ordering, a
 periodic sequence of consecutive gaps.  We give two complementary period
-formulas, one for each natural way to count projected points.  Counting
-with multiplicity (the projected multiset), the minimal period is
+formulas, one for each natural way to count projected points.  For the
+projected multiset (values counted with multiplicity), the minimal period is
 \[
 \lambda_{\mathrm{multiset}} =
 \begin{cases}
@@ -63,7 +64,7 @@ N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
 \qquad
 D=\alpha^2+\beta^2.
 \]
-Discarding multiplicities (the projected set), the minimal period is
+For the projected set (multiplicities discarded), the minimal period is
 \[
 \lambda_{\mathrm{set}} =
 \begin{cases}
@@ -74,7 +75,7 @@ N, & N < D,\\
 and \(\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}\) in every
 case, with equality if and only if \(N \le D\).  The proof reduces the
 geometry to the distribution of \(N\) consecutive residue classes
-modulo~\(D\).  When this distribution is non-uniform, the residue classes
+modulo~\(D\).  When this distribution is nonuniform, the residue classes
 with larger multiplicity form a proper cyclic interval in the natural
 residue parametrization; its only translational symmetry is the identity,
 which rules out any smaller period.  The algebraic core of both proofs
@@ -223,6 +224,79 @@ the ordering of projected points is determined by
 \begin{equation}\label{eq:ptilde}
     \tilde{p} \;:=\; \beta x + \alpha y.
 \end{equation}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=stealth, scale=0.78]
+
+  % background lattice (faint gray)
+  \foreach \x in {0,...,3} {
+    \foreach \y in {-1,...,7} {
+      \fill[gray!40] (\x,\y) circle (1.6pt);
+    }
+  }
+
+  % strip shading (between l(x)=2x-2 and u(x)=2x+1)
+  \begin{scope}
+    \clip (-0.3,-1.3) rectangle (3.6,7.6);
+    \fill[blue!9] (-0.3,-2.6) -- (-0.3,0.4) -- (3.6,8.2) -- (3.6,5.2) -- cycle;
+  \end{scope}
+
+  % strip boundaries and projection line (clipped)
+  \begin{scope}
+    \clip (-0.3,-1.3) rectangle (3.6,7.6);
+    \draw[blue!55!black, thick, dashed] (-0.3, 0.4) -- (3.6, 8.2);   % u(x)
+    \draw[blue!55!black, thick, dashed] (-0.3,-2.6) -- (3.6, 5.2);   % l(x)
+    \draw[red!70!black,  very thick]    (-0.3,-0.6) -- (3.6, 7.2);   % f(x)
+  \end{scope}
+
+  % line labels (outside clip, near right edge)
+  \node[font=\scriptsize, blue!55!black, anchor=west] at (3.62, 7.55)
+    {$u(x)=\tfrac{\alpha}{\beta}x+\omega$};
+  \node[font=\scriptsize, red!70!black,  anchor=west] at (3.62, 6.85)
+    {$f(x)=\tfrac{\alpha}{\beta}x$};
+  \node[font=\scriptsize, blue!55!black, anchor=west] at (3.62, 5.20)
+    {$l(x)=\tfrac{\alpha}{\beta}(x-\omega)$};
+
+  % accepted lattice points (large blue dots)
+  \foreach \x/\y in {0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+                     2/2, 2/3, 2/4, 2/5,
+                     3/4, 3/5, 3/6, 3/7} {
+    \fill[blue!65!black] (\x,\y) circle (2.6pt);
+  }
+
+  % projection of selected accepted points onto f
+  % proj of (x,y) onto f(x)=2x is at ((x+2y)/5, 2(x+2y)/5)
+  \draw[gray!65, thin] (0,1) -- (0.4, 0.8);
+  \fill[red!70!black] (0.4, 0.8) circle (1.9pt);
+  \draw[gray!65, thin] (1,3) -- (1.4, 2.8);
+  \fill[red!70!black] (1.4, 2.8) circle (1.9pt);
+  \draw[gray!65, thin] (2,3) -- (1.6, 3.2);
+  \fill[red!70!black] (1.6, 3.2) circle (1.9pt);
+  \draw[gray!65, thin] (3,5) -- (2.6, 5.2);
+  \fill[red!70!black] (2.6, 5.2) circle (1.9pt);
+
+  % axes
+  \draw[->] (-0.3, 0) -- (3.7, 0) node[right, font=\small] {$x$};
+  \draw[->] (0, -1.3) -- (0, 7.7) node[above, font=\small] {$y$};
+  \foreach \x in {1,2,3}
+    \node[below, font=\scriptsize] at (\x, -0.05) {$\x$};
+  \foreach \y in {-1,1,2,3,4,5,6,7}
+    \node[left, font=\scriptsize] at (-0.05, \y) {$\y$};
+
+\end{tikzpicture}
+\caption{Construction of the cut-and-project sequence for
+  \(\alpha=2\), \(\beta=1\), \(\omega=1\).
+  The strip (shaded) is bounded by the parallel lines
+  \(u(x)=(\alpha/\beta)x+\omega\) and \(l(x)=(\alpha/\beta)(x-\omega)\).
+  Accepted lattice points (filled blue dots) lie inside the strip; faint dots
+  show rejected lattice points.  Each accepted point is projected orthogonally
+  onto the line \(f(x)=(\alpha/\beta)x\) (red); four such projections are shown
+  as red dots on \(f\) connected to the lattice point by a thin line.
+  The ordered sequence of projected values
+  \(\tilde{p}=\beta x+\alpha y\) defines the gap sequence studied in this paper.}
+\label{fig:construction}
+\end{figure}
 
 \subsection{Multiplicity convention}\label{subsec:multiplicity}
 
@@ -389,6 +463,75 @@ since
 \]
 The step \((\beta, \alpha)\) is the direction of~\(f\).
 
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=stealth, scale=0.78]
+
+  % strip shading (same setup as Figure~\ref{fig:construction}: alpha=2, beta=1, omega=1)
+  \begin{scope}
+    \clip (-0.3,-1.3) rectangle (3.6,7.6);
+    \fill[blue!9] (-0.3,-2.6) -- (-0.3,0.4) -- (3.6,8.2) -- (3.6,5.2) -- cycle;
+  \end{scope}
+
+  % faint background lattice
+  \foreach \x in {0,...,3} {
+    \foreach \y in {-1,...,7} {
+      \fill[gray!40] (\x,\y) circle (1.6pt);
+    }
+  }
+
+  % four track lines (one per value of r)
+  \draw[blue!70!black,   thick] (0,1)   -- (3,7);   % r=-1: y=2x+1
+  \draw[green!55!black,  thick] (0,0)   -- (3,6);   % r= 0: y=2x
+  \draw[orange!80!black, thick] (0.5,0) -- (3,5);   % r= 1: y=2x-1
+  \draw[red!65!black,    thick] (1,0)   -- (3,4);   % r= 2: y=2x-2
+
+  % accepted lattice points coloured by track
+  \foreach \x/\y in {0/1, 1/3, 2/5, 3/7}
+    \fill[blue!70!black]   (\x,\y) circle (2.6pt);
+  \foreach \x/\y in {0/0, 1/2, 2/4, 3/6}
+    \fill[green!55!black]  (\x,\y) circle (2.6pt);
+  \foreach \x/\y in {1/1, 2/3, 3/5}
+    \fill[orange!80!black] (\x,\y) circle (2.6pt);
+  \foreach \x/\y in {1/0, 2/2, 3/4}
+    \fill[red!65!black]    (\x,\y) circle (2.6pt);
+
+  % r labels on the right
+  \node[right, font=\scriptsize\bfseries, blue!70!black]
+    at (3.10,7) {$r{=}{-1}$};
+  \node[right, font=\scriptsize\bfseries, green!55!black]
+    at (3.10,6) {$r{=}0$};
+  \node[right, font=\scriptsize\bfseries, orange!80!black]
+    at (3.10,5) {$r{=}1$};
+  \node[right, font=\scriptsize\bfseries, red!65!black]
+    at (3.10,4) {$r{=}2$};
+
+  % direction (beta, alpha) arrow on track r=0
+  \draw[->, very thick, purple!70!black] (1,2) -- (2,4);
+  \node[above left, font=\scriptsize, purple!70!black] at (1.5,3)
+    {$(\beta,\alpha)$};
+
+  % axes
+  \draw[->] (-0.3, 0) -- (3.7, 0) node[right, font=\small] {$x$};
+  \draw[->] (0, -1.3) -- (0, 7.7) node[above, font=\small] {$y$};
+  \foreach \x in {1,2,3}
+    \node[below, font=\scriptsize] at (\x, -0.05) {$\x$};
+  \foreach \y in {-1,1,2,3,4,5,6,7}
+    \node[left, font=\scriptsize] at (-0.05, \y) {$\y$};
+
+\end{tikzpicture}
+\caption{The same setup as Figure~\ref{fig:construction}
+  (\(\alpha = 2\), \(\beta = 1\), \(\omega = 1\)), now decomposed by the
+  invariant \(r = \alpha x - \beta y\).  Each coloured line is a \emph{track}:
+  the set of accepted lattice points sharing one value of \(r\).  The four
+  admissible values \(r \in \{-1, 0, 1, 2\}\) give \(N = 4\) tracks, all
+  parallel to the projection direction \((\beta, \alpha) = (1, 2)\) (purple
+  arrow).  Step~2 of the proof shows that the projected
+  \(\tilde{p}\)-values along a single track form an arithmetic progression
+  with common difference \(D = \alpha^2 + \beta^2 = 5\).}
+\label{fig:tracks}
+\end{figure}
+
 \subsection{Step 2: Each value of \(r\) yields one arithmetic progression}
 \label{subsec:step2}
 
@@ -464,7 +607,7 @@ consecutive integers under multiplication by
 \end{equation}
 where \(r_0 = -\lfloor\beta\omega\rfloor\).
 
-\begin{lemma}[Non-uniform residue distribution]\label{lem:nonuniform}
+\begin{lemma}[Nonuniform residue distribution]\label{lem:nonuniform}
 If \(D \nmid N\), the multiset of \(N\) residues
 \(\{c_r \bmod D : r \in \mathcal{R}\}\) is not uniformly distributed over
 \(\mathbb{Z}/D\mathbb{Z}\).  More precisely, writing \(N = qD + s\) with
@@ -512,7 +655,7 @@ positive period~\(\lambda\).  If \(M > 0\) is also a period, then
 
 \begin{proof}
 Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  Since both
-\(M\) and \(\lambda\) are periods, their non-negative integer
+\(M\) and \(\lambda\) are periods, their nonnegative integer
 combination \(M - q\lambda = r\) is also a period.  By minimality of
 \(\lambda\), the only possibility is \(r = 0\); hence
 \(\lambda \mid M\).
@@ -1097,7 +1240,7 @@ Corollary~\ref{cor:inverse} (residue bijection)
   & \texttt{residue\_bijection} & 43 \\
 Residue distribution (general)
   & \texttt{residue\_distribution} & 140 \\
-Lemma~\ref{lem:nonuniform} (non-uniform distribution, \(D \nmid N\))
+Lemma~\ref{lem:nonuniform} (nonuniform distribution, \(D \nmid N\))
   & \texttt{non\_uniform\_residue\_distribution\_of\_not\_dvd} & 211 \\
 Lemma~\ref{lem:uniform} (uniform distribution, \(D \mid N\))
   & \texttt{uniform\_residue\_distribution} & 231 \\
@@ -1178,7 +1321,7 @@ from the residue model, the Lean formalization \emph{includes the
 geometric multiplier as a first-class object}.  Specifically:
 
 \begin{itemize}
-    \item Coprimality, residue distribution (uniform and non-uniform), the
+    \item Coprimality, residue distribution (uniform and nonuniform), the
           cyclic interval structure, the trivial stabilizer lemma, the
           generic minimality argument, the degenerate case, and the case
           dispatch for both the multiset and set conventions are formalized
@@ -1292,7 +1435,7 @@ record explicitly.
 The key structural distinction is whether the \(N\) tracks, viewed as
 arithmetic progressions modulo~\(D\), distribute uniformly or not:
 \begin{itemize}
-    \item When \(D \nmid N\), the tracks distribute non-uniformly among the
+    \item When \(D \nmid N\), the tracks distribute nonuniformly among the
           \(D\) residue classes.  The heavy residue classes form a proper
           cyclic interval in the natural residue parametrization, whose only
           translational symmetry is the identity.  This gives
@@ -1326,7 +1469,7 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
 \end{enumerate}
 
 % =====================================================================
-\section*{Acknowledgements}
+\section*{Acknowledgments}
 % =====================================================================
 
 The author used ChatGPT, Gemini, and Claude as AI assistants during mathematical
