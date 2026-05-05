@@ -93,9 +93,10 @@ point sets from lattices.  In the one-dimensional planar case, one selects
 lattice points lying in a strip around a line and projects them onto that
 line.  When the slope is irrational, the resulting objects are typically
 aperiodic and belong to the classical theory of model sets and aperiodic
-order.  When the slope is rational, the resulting structure is periodic and
-is therefore often regarded as a degenerate or elementary case from the
-aperiodic-order point of view.
+order; we record this fact for the present strip-projection setting in
+Proposition~\ref{prop:irrational}.  When the slope is rational, the
+resulting structure is periodic and is therefore often regarded as a
+degenerate or elementary case from the aperiodic-order point of view.
 
 Nevertheless, even in the rational case there are natural quantitative
 questions.  One such question is the following: after projecting the accepted
@@ -265,16 +266,16 @@ the ordering of projected points is determined by
     \fill[blue!65!black] (\x,\y) circle (2.6pt);
   }
 
-  % projection of selected accepted points onto f
+  % orthogonal projection of every accepted point onto f(x)=2x
   % proj of (x,y) onto f(x)=2x is at ((x+2y)/5, 2(x+2y)/5)
-  \draw[gray!65, thin] (0,1) -- (0.4, 0.8);
-  \fill[red!70!black] (0.4, 0.8) circle (1.9pt);
-  \draw[gray!65, thin] (1,3) -- (1.4, 2.8);
-  \fill[red!70!black] (1.4, 2.8) circle (1.9pt);
-  \draw[gray!65, thin] (2,3) -- (1.6, 3.2);
-  \fill[red!70!black] (1.6, 3.2) circle (1.9pt);
-  \draw[gray!65, thin] (3,5) -- (2.6, 5.2);
-  \fill[red!70!black] (2.6, 5.2) circle (1.9pt);
+  \foreach \x/\y in {0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+                     2/2, 2/3, 2/4, 2/5,
+                     3/4, 3/5, 3/6, 3/7} {
+    \pgfmathsetmacro{\px}{(\x + 2*\y)/5}
+    \pgfmathsetmacro{\py}{2*(\x + 2*\y)/5}
+    \draw[gray!65, thin] (\x,\y) -- (\px,\py);
+    \fill[red!70!black] (\px,\py) circle (1.9pt);
+  }
 
   % axes
   \draw[->] (-0.3, 0) -- (3.7, 0) node[right, font=\small] {$x$};
@@ -291,8 +292,8 @@ the ordering of projected points is determined by
   \(u(x)=(\alpha/\beta)x+\omega\) and \(l(x)=(\alpha/\beta)(x-\omega)\).
   Accepted lattice points (filled blue dots) lie inside the strip; faint dots
   show rejected lattice points.  Each accepted point is projected orthogonally
-  onto the line \(f(x)=(\alpha/\beta)x\) (red); four such projections are shown
-  as red dots on \(f\) connected to the lattice point by a thin line.
+  onto the line \(f(x)=(\alpha/\beta)x\) (red); the resulting projected points
+  are drawn as red dots on \(f\), each connected to its preimage by a thin line.
   The ordered sequence of projected values
   \(\tilde{p}=\beta x+\alpha y\) defines the gap sequence studied in this paper.}
 \label{fig:construction}
