@@ -68,7 +68,8 @@
       "Bash(cut -d',' -f1-5 \"tests/multiset_and_set_new_find_patterns_x_max_1000000_51012_lines.csv\")",
       "Bash(cut -d',' -f1-5 \"tests/multiset_new_find_patterns_x_max_1000000_51012_lines.csv\")",
       "Bash(pdflatex -interaction=nonstopmode qa_set_multiset_period.tex)",
-      "Bash(pdflatex -interaction=nonstopmode studies.tex)"
+      "Bash(pdflatex -interaction=nonstopmode studies.tex)",
+      "Bash(xxd)"
     ]
   }
 }
