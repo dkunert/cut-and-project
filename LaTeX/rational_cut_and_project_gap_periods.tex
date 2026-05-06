@@ -1102,47 +1102,6 @@ finite.
 \(N\) is a finite positive integer, and \(\lambda \le N\).
 \end{proof}
 
-\begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
-Let \(a \in \mathbb{R} \setminus \mathbb{Q}\) and \(\omega > 0\), and consider
-the analogous strip projection with line \(f(x) = a x\) and strip
-\(\{(x,y) : a(x-\omega) \le y \le a x + \omega\}\).  Then the resulting
-projected gap sequence has \emph{no} finite period.
-\end{proposition}
-
-\begin{proof}
-Suppose, for contradiction, that the gap sequence has a finite period
-\(\lambda \in \mathbb{N}\).  Then there exists \(\sigma > 0\) (the sum of
-\(\lambda\) consecutive gaps) such that the projected set
-\(S' \subset \mathbb{R}\) satisfies \(S' + \sigma = S'\).  Since \(S'\) is
-the orthogonal projection of \(\mathbb{Z}^2 \cap \text{strip}\) onto the
-line, this translational symmetry must lift to a lattice translation
-\((x, y) \mapsto (x + m, y + n)\) with \((m, n) \in \mathbb{Z}^2 \setminus
-\{(0, 0)\}\) that preserves the strip.
-
-For the strip to be invariant under \((x, y) \mapsto (x + m, y + n)\), the
-inequalities \(a(x - \omega) \le y \le a x + \omega\) must transform into
-themselves; this forces
-\[
-    n \;=\; a \cdot m, \qquad m \ne 0.
-\]
-Hence \(a = n/m \in \mathbb{Q}\), contradicting the irrationality of \(a\).
-\end{proof}
-
-\begin{remark}[Period dichotomy]\label{rem:dichotomy}
-Together, Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational}
-form a complete dichotomy:
-\[
-    \text{the gap sequence has a finite period}
-    \;\;\Longleftrightarrow\;\;
-    \text{the slope is rational.}
-\]
-There are no exceptional irrational slopes that produce a finite period;
-the boundary between the periodic and the aperiodic regime coincides exactly
-with the boundary \(\mathbb{Q} \subset \mathbb{R}\).  The aperiodic side
-is the classical setting of model sets and aperiodic order
-(see Section~\ref{sec:literature}).
-\end{remark}
-
 \begin{corollary}[Period at \(\omega = 1\)]\label{cor:omega1}
 For \(\omega = 1\), \(\lambda = \alpha + \beta + 1 = \Lambda_{\alpha,\beta}\).
 \end{corollary}
@@ -1225,6 +1184,103 @@ In both corollaries above, the degenerate case \(D \mid N\) can produce
 small periods: \(\lambda = N/D\) may be much less than
 \(\Lambda_{\alpha,\beta}\).  This occurs when the window width is tuned so
 that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
+\end{remark}
+
+% =====================================================================
+\section{The Irrational Case}\label{sec:irrational}
+% =====================================================================
+
+The body of this paper concerns positive rational slopes \(\alpha/\beta\).
+For completeness we record the complementary regime of irrational slopes,
+where the projected gap sequence fails to be periodic.  This statement is
+not a corollary of Theorem~\ref{thm:main}; we include it to make the
+periodic--aperiodic boundary explicit.
+
+\begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
+Let \(a \in \mathbb{R}_{>0} \setminus \mathbb{Q}\) and \(\omega > 0\), and
+consider the analogous strip projection with line \(f(x) = a x\) and strip
+\(\{(x,y) : a(x-\omega) \le y \le a x + \omega\}\).  Then the projected
+gap sequence has \emph{no} finite period.  Moreover, the orthogonal
+projection is injective on \(\mathbb{Z}^2\), so the multiset and set
+conventions coincide in this case.
+\end{proposition}
+
+\begin{proof}
+Define the physical and internal coordinates
+\[
+    \tilde p(x, y) \;:=\; x + a y,
+    \qquad
+    s(x, y) \;:=\; y - a x.
+\]
+The orthogonal projection of \((x, y)\) onto the line \(y = a x\) has
+signed position \(\tilde p(x, y)/\sqrt{1 + a^2}\); hence \(\tilde p\)
+determines the order of projected points up to the positive constant
+\(1/\sqrt{1 + a^2}\).  The strip condition is equivalent to
+\[
+    -a\omega \;\le\; s(x, y) \;\le\; \omega,
+\]
+so the accepted lattice points are
+\[
+    A \;:=\; \bigl\{(x, y) \in \mathbb{Z}^2 : s(x, y) \in W\bigr\},
+    \qquad
+    W \;:=\; [-a\omega,\, \omega].
+\]
+
+\emph{Step 1: \(\tilde p\) is injective on \(\mathbb{Z}^2\).}\quad
+If \(\tilde p(x_1, y_1) = \tilde p(x_2, y_2)\), then
+\(x_1 - x_2 = -a\,(y_1 - y_2)\), which, since \(a\) is irrational and
+\(x_i, y_i \in \mathbb{Z}\), forces \(y_1 = y_2\) and hence \(x_1 = x_2\).
+
+\emph{Step 2: A projected period lifts to a lattice translation of
+\(A\).}\quad
+Suppose, for contradiction, that the projected gap sequence has a finite
+period \(\lambda \in \mathbb{N}\).  Let \(\Lambda := \tilde p(A) \subset
+\mathbb{R}\) be the projected set, and let \(\sigma > 0\) be the sum of
+one full period of consecutive gaps; then \(\Lambda + \sigma = \Lambda\).
+Choose any \(z_0 \in A\); since \(\tilde p(z_0) + \sigma \in \Lambda\),
+there exists \(z_1 \in A\) with
+\(\tilde p(z_1) = \tilde p(z_0) + \sigma\).  Set
+\(v := z_1 - z_0 \in \mathbb{Z}^2\), so \(\tilde p(v) = \sigma\).
+
+We claim \(A + v = A\).  For any \(z \in A\),
+\(\tilde p(z) + \sigma \in \Lambda\), so there is \(z' \in A\) with
+\(\tilde p(z') = \tilde p(z) + \sigma = \tilde p(z + v)\); injectivity of
+\(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives \(z' = z + v\), hence
+\(z + v \in A\).  Applying the same argument to the period \(-\sigma\)
+yields the reverse inclusion, so \(A + v = A\).
+
+\emph{Step 3: Internal density forces \(v = 0\).}\quad
+Write \(v = (m, n)\) and let \(\tau := s(v) = n - a m\).  The invariance
+\(A + v = A\) translates, in internal coordinates, into
+\[
+    \bigl(W \cap s(\mathbb{Z}^2)\bigr) + \tau
+    \;=\;
+    W \cap s(\mathbb{Z}^2).
+\]
+Since \(a\) is irrational,
+\(s(\mathbb{Z}^2) = \{n - a m : m, n \in \mathbb{Z}\}\) is dense in
+\(\mathbb{R}\).  If \(\tau > 0\), pick
+\(t \in s(\mathbb{Z}^2) \cap W\) with \(t > \omega - \tau\); then
+\(t + \tau > \omega\), contradicting the invariance.  If \(\tau < 0\),
+an analogous choice near the lower endpoint \(-a\omega\) yields the same
+contradiction.  Hence \(\tau = 0\), i.e.\ \(n = a m\).  Since \(a\) is
+irrational and \(m, n \in \mathbb{Z}\), this forces \(m = n = 0\), so
+\(v = 0\) and \(\sigma = \tilde p(v) = 0\), contradicting \(\sigma > 0\).
+\end{proof}
+
+\begin{remark}[Period dichotomy]\label{rem:dichotomy}
+Together, Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational}
+form a complete dichotomy:
+\[
+    \text{the gap sequence has a finite period}
+    \;\;\Longleftrightarrow\;\;
+    \text{the slope is rational.}
+\]
+There are no exceptional irrational slopes that produce a finite period;
+the boundary between the periodic and the aperiodic regime coincides exactly
+with the boundary \(\mathbb{Q} \subset \mathbb{R}\).  The aperiodic side
+is the classical setting of model sets and aperiodic order
+(see Section~\ref{sec:literature}).
 \end{remark}
 
 % =====================================================================
