@@ -1,0 +1,406 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\title{Precise Feedback on the Improved Version\\
+\large Especially on the Irrational-Slope Section}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The improved version is substantially stronger than the previous one.  In
+particular, the new Section ``The Irrational Case'' now uses the correct
+cut-and-project mechanism:
+\[
+    \text{physical injectivity}
+    \;+
+    \text{internal density}
+    \;+
+    \text{absence of non-trivial interval stabilizers}.
+\]
+The previous unjustified lifting step has essentially been repaired.
+
+The rational part of the paper still appears mathematically sound.  The
+period formulas, the residue reduction, the generic minimality argument, and
+the set-valued comparison remain coherent.  I do not see a fatal flaw in the
+main rational theorem.
+
+That said, I would not yet send the paper to a specialist without a few
+precise corrections.  The most concrete mathematical problem is in the
+figures: an accepted lattice point is missing.  The irrational proof is now
+basically correct, but one implication should be written out more explicitly.
+
+\section{Must-fix point: the figures omit an accepted lattice point}
+
+In both TikZ figures the chosen example is
+\[
+    \alpha=2,\qquad \beta=1,\qquad \omega=1.
+\]
+The strip condition is therefore
+\[
+    2(x-1) \le y \le 2x+1.
+\]
+For \(x=0\), this gives
+\[
+    -2 \le y \le 1.
+\]
+Your visible lattice includes \(y=-1\), and the point \((0,-1)\) lies inside
+the strip.  It is therefore an accepted lattice point.  However, Figure~1
+currently lists only
+\begin{lstlisting}
+0/0, 0/1
+\end{lstlisting}
+for \(x=0\), omitting
+\begin{lstlisting}
+0/-1
+\end{lstlisting}
+
+This is not merely cosmetic: a specialist could notice it immediately.
+
+\subsection*{Correction for Figure 1}
+
+Add \texttt{0/-1} to both loops, the blue accepted-point loop and the
+projection loop.  Replace the accepted-point list by:
+
+\begin{lstlisting}
+\foreach \x/\y in {0/-1, 0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+                   2/2, 2/3, 2/4, 2/5,
+                   3/4, 3/5, 3/6, 3/7} {
+  \fill[blue!65!black] (\x,\y) circle (2.6pt);
+}
+\end{lstlisting}
+
+and likewise replace the projection loop by:
+
+\begin{lstlisting}
+\foreach \x/\y in {0/-1, 0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+                   2/2, 2/3, 2/4, 2/5,
+                   3/4, 3/5, 3/6, 3/7} {
+  \pgfmathsetmacro{\px}{(\x + 2*\y)/5}
+  \pgfmathsetmacro{\py}{2*(\x + 2*\y)/5}
+  \draw[gray!65, thin] (\x,\y) -- (\px,\py);
+  \fill[red!70!black] (\px,\py) circle (1.9pt);
+}
+\end{lstlisting}
+
+\subsection*{Correction for Figure 2}
+
+For the same example, the track \(r=1\) is
+\[
+    r=2x-y=1,
+    \qquad\text{equivalently}\qquad
+    y=2x-1.
+\]
+Thus it contains \((0,-1)\).  The orange line should pass through this point.
+Replace
+
+\begin{lstlisting}
+\draw[orange!80!black, thick] (0.5,0) -- (3,5);
+\end{lstlisting}
+
+by
+
+\begin{lstlisting}
+\draw[orange!80!black, thick] (0,-1) -- (3,5);
+\end{lstlisting}
+
+and replace the orange accepted points by
+
+\begin{lstlisting}
+\foreach \x/\y in {0/-1, 1/1, 2/3, 3/5}
+  \fill[orange!80!black] (\x,\y) circle (2.6pt);
+\end{lstlisting}
+
+\section{The irrational-slope proof}
+
+The new proof of Proposition~\texttt{\textbackslash ref\{prop:irrational\}}
+is now based on the right idea.  The definitions
+\[
+    \tilde p(x,y)=x+ay,
+    \qquad
+    s(x,y)=y-ax
+\]
+are appropriate.  The strip becomes
+\[
+    -a\omega \le s(x,y) \le \omega,
+\]
+and for irrational \(a\), the map \(\tilde p\) is injective on
+\(\mathbb Z^2\).  The internal group
+\[
+    s(\mathbb Z^2)=\{n-am:m,n\in\mathbb Z\}
+\]
+is dense in \(\mathbb R\).  These are exactly the ingredients one should use.
+
+However, Step~2 is still slightly compressed.  You write that if the projected
+gap sequence has a finite period \(\lambda\), and \(\sigma\) is the sum of one
+period of consecutive gaps, then
+\[
+    \Lambda+\sigma=\Lambda.
+\]
+This is true, but I recommend spelling out the enumeration argument.
+
+\subsection*{Recommended replacement for the beginning of Step 2}
+
+Replace the first paragraph of Step~2 by the following more explicit version:
+
+\begin{lstlisting}
+Suppose, for contradiction, that the projected gap sequence has a finite
+period \(\lambda \in \mathbb{N}\).  Let
+\[
+    \Lambda := \tilde p(A)\subset\mathbb R.
+\]
+Since \(\Lambda\) is locally finite and unbounded in both directions, write
+its increasing enumeration as \((\ell_i)_{i\in\mathbb Z}\).  If
+\[
+    g_i := \ell_{i+1}-\ell_i
+\]
+denotes the gap sequence and \(g_{i+\lambda}=g_i\) for all \(i\), then the
+sum
+\[
+    \sigma := g_i+g_{i+1}+\cdots+g_{i+\lambda-1}
+\]
+is independent of \(i\).  Hence
+\[
+    \ell_{i+\lambda}-\ell_i=\sigma
+    \qquad\text{for all }i\in\mathbb Z.
+\]
+Since all gaps are positive, \(\sigma>0\), and therefore
+\[
+    \Lambda+\sigma=\Lambda.
+\]
+\end{lstlisting}
+
+Then continue with:
+
+\begin{lstlisting}
+Choose any \(z_0\in A\); since \(\tilde p(z_0)+\sigma\in\Lambda\), ...
+\end{lstlisting}
+
+This makes the implication from periodic gaps to translation symmetry fully
+transparent.
+
+\section{Local finiteness in the irrational case}
+
+The phrase ``projected gap sequence'' in the irrational case presupposes that
+\(\Lambda=\tilde p(A)\) admits a bi-infinite increasing enumeration.  This is
+standard for regular one-dimensional cut-and-project sets, but for maximum
+precision it should be mentioned.
+
+A concise sentence before Proposition~\texttt{\textbackslash ref\{prop:irrational\}}
+would suffice:
+
+\begin{lstlisting}
+For irrational \(a\), the projected set is locally finite and unbounded in
+both directions, so its gap sequence is defined by the increasing
+\(\mathbb Z\)-indexed enumeration.
+\end{lstlisting}
+
+If you want to be more explicit, use:
+
+\begin{lstlisting}
+The strip has bounded width in the internal direction, while the lattice is
+discrete; hence bounded intervals in physical space contain only finitely
+many projected points.  The set is unbounded in both directions because
+\(s(\mathbb Z^2)\) is dense and the window \(W\) has nonempty interior.
+\end{lstlisting}
+
+The first sentence is probably enough for this paper.
+
+\section{Step 3 in the irrational proof}
+
+Step~3 is essentially correct.  The invariance
+\[
+    \bigl(W\cap s(\mathbb Z^2)\bigr)+\tau
+    =
+    W\cap s(\mathbb Z^2)
+\]
+combined with density of \(s(\mathbb Z^2)\) rules out every nonzero
+\(\tau\).  This is the standard internal-space argument.
+
+One small stylistic improvement: instead of
+
+\begin{lstlisting}
+pick \(t \in s(\mathbb{Z}^2) \cap W\) with \(t > \omega - \tau\)
+\end{lstlisting}
+
+write
+
+\begin{lstlisting}
+By density, choose \(t\in s(\mathbb Z^2)\cap W\) sufficiently close to
+\(\omega\) so that \(t+\tau>\omega\).
+\end{lstlisting}
+
+This avoids any possible edge-case discomfort when \(\tau\) is large.  Use the
+analogous wording near the lower endpoint for \(\tau<0\).
+
+\section{The period dichotomy remark}
+
+The dichotomy remark should explicitly include the hypothesis \(\omega>0\).
+Your rational theorem allows \(\omega\ge0\), while the irrational proposition
+assumes \(\omega>0\).  For \(\omega=0\) and irrational slope, the strip
+degenerates to the irrational line, which contains only \((0,0)\) as a lattice
+point, so the bi-infinite gap sequence is not defined in the same way.
+
+Replace
+
+\begin{lstlisting}
+Within the family of positive slopes considered here,
+Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational} together
+form a complete dichotomy:
+\end{lstlisting}
+
+by
+
+\begin{lstlisting}
+Within the family of positive slopes considered here, and for \(\omega>0\),
+Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational} together
+form a complete dichotomy:
+\end{lstlisting}
+
+Then the equivalence
+\[
+    \text{finite gap period}
+    \quad\Longleftrightarrow\quad
+    \text{rational slope}
+\]
+is precise.
+
+\section{Organization paragraph}
+
+The introduction now mentions the paper organization, but it does not yet
+mention the new irrational section.  Insert one sentence:
+
+\begin{lstlisting}
+Section~\ref{sec:corollaries} records some immediate corollaries.
+Section~\ref{sec:irrational} records the complementary irrational case.
+Section~\ref{sec:lean} describes the Lean~4 formalization.
+\end{lstlisting}
+
+\section{Terminology: window parameter, not window width}
+
+Near the end of the corollaries you still write:
+
+\begin{lstlisting}
+This occurs when the window width is tuned so
+that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
+\end{lstlisting}
+
+Since \(\omega\) is a parameter of the defining inequalities, not literally
+the orthogonal width, I recommend:
+
+\begin{lstlisting}
+This occurs when the window parameter is tuned so
+that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
+\end{lstlisting}
+
+\section{Lean table caption: check path capitalization}
+
+The commit hash in the table caption is a good improvement.  However, please
+check the path capitalization.  You currently write:
+
+\begin{lstlisting}
+\texttt{LEAN/CutAndProject/CutAndProject/Basic.lean}
+\end{lstlisting}
+
+Earlier versions used something like \texttt{Lean/CutAndProject/}.  GitHub
+paths are case-sensitive.  If the repository uses \texttt{Lean}, the caption
+should say exactly:
+
+\begin{lstlisting}
+\texttt{Lean/CutAndProject/CutAndProject/Basic.lean}
+\end{lstlisting}
+
+or whatever the actual path is.  Also, if possible, use the full commit hash
+rather than only \texttt{0b12c26}.
+
+\section{Residue-distribution wording}
+
+This sentence is correct but slightly informal:
+
+\begin{lstlisting}
+As \(r\) runs through \(N\) consecutive integers, the residues \(mr \bmod D\)
+cycle through all \(D\) classes with period~\(D\).
+\end{lstlisting}
+
+I would write instead:
+
+\begin{lstlisting}
+As \(r\) runs through consecutive integers, the residues \(mr\bmod D\)
+advance by the fixed unit \(m\).  Hence every block of \(D\) consecutive
+values of \(r\) hits each residue class exactly once.
+\end{lstlisting}
+
+This is more precise because the cyclic order is the \(m\)-stepping order,
+not necessarily the natural order.
+
+\section{Acknowledgments}
+
+The acknowledgement still contains the phrase ``proof construction'':
+
+\begin{lstlisting}
+The author used ChatGPT, Gemini, and Claude as AI assistants during mathematical
+exploration, drafting, proof construction, and the creation of the Lean formalization.
+\end{lstlisting}
+
+I would soften this.  A safer and more professional version is:
+
+\begin{lstlisting}
+The author used AI assistants during exploratory computations, drafting,
+and the preparation of the Lean formalization.  The author has independently
+verified the mathematical content and accepts full responsibility for the
+results and any errors.
+\end{lstlisting}
+
+This is transparent without inviting the interpretation that the proofs were
+outsourced.
+
+\section{Minor consistency: nonuniform vs. non-uniform}
+
+You use both ``nonuniform'' and ``non-uniform''.  This is not a mathematical
+issue, but choose one spelling throughout.  I would use ``non-uniform'' in
+prose and theorem captions.  The Lean names can of course retain their exact
+identifier spelling.
+
+\section*{Final verdict}
+
+The paper is now close to being ready for external expert feedback.  The
+rational part remains solid, and the irrational section now has the right
+mathematical structure.  Before sending it, I would make the following changes:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Add the missing accepted point \((0,-1)\) to both figures.
+    \item Expand the proof that a finite gap period implies
+          \(\Lambda+\sigma=\Lambda\).
+    \item Mention local finiteness and bi-infinite enumerability in the
+          irrational case.
+    \item State the rational/irrational dichotomy for \(\omega>0\).
+    \item Add Section~\texttt{\textbackslash ref\{sec:irrational\}} to the
+          organization paragraph.
+    \item Replace ``window width'' by ``window parameter''.
+    \item Check capitalization of the Lean repository path and preferably use
+          the full commit hash.
+    \item Soften the AI acknowledgement.
+\end{enumerate}
+
+With these changes, I would consider the version mathematically serious and
+suitable for sending to a specialist for feedback.
+
+\end{document}
