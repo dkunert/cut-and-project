@@ -170,6 +170,7 @@ Section~\ref{sec:degenerate} treats the uniform case \(D \mid N\).
 Section~\ref{sec:setvalued} states and proves the set-valued period formula
 and records its comparison with the multiset period.
 Section~\ref{sec:corollaries} records some immediate corollaries.
+Section~\ref{sec:irrational} records the complementary irrational case.
 Section~\ref{sec:lean} describes the Lean~4 formalization.
 Section~\ref{sec:literature} discusses related literature.
 Section~\ref{sec:discussion} collects open questions.
@@ -260,7 +261,7 @@ the ordering of projected points is determined by
     {$l(x)=\tfrac{\alpha}{\beta}(x-\omega)$};
 
   % accepted lattice points (large blue dots)
-  \foreach \x/\y in {0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+  \foreach \x/\y in {0/-1, 0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
                      2/2, 2/3, 2/4, 2/5,
                      3/4, 3/5, 3/6, 3/7} {
     \fill[blue!65!black] (\x,\y) circle (2.6pt);
@@ -268,7 +269,7 @@ the ordering of projected points is determined by
 
   % orthogonal projection of every accepted point onto f(x)=2x
   % proj of (x,y) onto f(x)=2x is at ((x+2y)/5, 2(x+2y)/5)
-  \foreach \x/\y in {0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
+  \foreach \x/\y in {0/-1, 0/0, 0/1, 1/0, 1/1, 1/2, 1/3,
                      2/2, 2/3, 2/4, 2/5,
                      3/4, 3/5, 3/6, 3/7} {
     \pgfmathsetmacro{\px}{(\x + 2*\y)/5}
@@ -487,7 +488,7 @@ The step \((\beta, \alpha)\) is the direction of~\(f\).
   % four track lines (one per value of r)
   \draw[blue!70!black,   thick] (0,1)   -- (3,7);   % r=-1: y=2x+1
   \draw[green!55!black,  thick] (0,0)   -- (3,6);   % r= 0: y=2x
-  \draw[orange!80!black, thick] (0.5,0) -- (3,5);   % r= 1: y=2x-1
+  \draw[orange!80!black, thick] (0,-1) -- (3,5);   % r= 1: y=2x-1
   \draw[red!65!black,    thick] (1,0)   -- (3,4);   % r= 2: y=2x-2
 
   % accepted lattice points coloured by track
@@ -495,7 +496,7 @@ The step \((\beta, \alpha)\) is the direction of~\(f\).
     \fill[blue!70!black]   (\x,\y) circle (2.6pt);
   \foreach \x/\y in {0/0, 1/2, 2/4, 3/6}
     \fill[green!55!black]  (\x,\y) circle (2.6pt);
-  \foreach \x/\y in {1/1, 2/3, 3/5}
+  \foreach \x/\y in {0/-1, 1/1, 2/3, 3/5}
     \fill[orange!80!black] (\x,\y) circle (2.6pt);
   \foreach \x/\y in {1/0, 2/2, 3/4}
     \fill[red!65!black]    (\x,\y) circle (2.6pt);
@@ -622,8 +623,9 @@ If \(D \nmid N\), the multiset of \(N\) residues
 \begin{proof}
 The map \(r \mapsto mr \bmod D\) is a bijection on
 \(\mathbb{Z}/D\mathbb{Z}\) by Corollary~\ref{cor:inverse}.
-As \(r\) runs through \(N\) consecutive integers, the residues \(mr \bmod D\)
-cycle through all \(D\) classes with period~\(D\).
+As \(r\) runs through consecutive integers, the residues \(mr \bmod D\)
+advance by the fixed unit \(m\); since \(\gcd(m, D) = 1\), every block of
+\(D\) consecutive values of \(r\) hits each residue class exactly once.
 After \(q\) complete cycles, all classes have been hit exactly \(q\) times.
 The remaining \(s = N - qD\) values hit \(s\) additional classes exactly once
 each.
@@ -1182,7 +1184,7 @@ Since \(D \nmid N\), \(\lambda = N > \Lambda_{\alpha,\beta}\).
 \begin{remark}
 In both corollaries above, the degenerate case \(D \mid N\) can produce
 small periods: \(\lambda = N/D\) may be much less than
-\(\Lambda_{\alpha,\beta}\).  This occurs when the window width is tuned so
+\(\Lambda_{\alpha,\beta}\).  This occurs when the window parameter is tuned so
 that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
 \end{remark}
 
@@ -1195,6 +1197,10 @@ For completeness we record the complementary regime of irrational slopes,
 where the projected gap sequence fails to be periodic.  This statement is
 not a corollary of Theorem~\ref{thm:main}; we include it to make the
 periodic--aperiodic boundary explicit.
+
+For irrational \(a\) and \(\omega > 0\), the projected set is locally finite
+and unbounded in both directions, so its gap sequence is well defined via
+the increasing \(\mathbb{Z}\)-indexed enumeration of \(\tilde p(A)\).
 
 \begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
 Let \(a \in \mathbb{R}_{>0} \setminus \mathbb{Q}\) and \(\omega > 0\), and
@@ -1235,8 +1241,14 @@ If \(\tilde p(x_1, y_1) = \tilde p(x_2, y_2)\), then
 \(A\).}\quad
 Suppose, for contradiction, that the projected gap sequence has a finite
 period \(\lambda \in \mathbb{N}\).  Let \(\Lambda := \tilde p(A) \subset
-\mathbb{R}\) be the projected set, and let \(\sigma > 0\) be the sum of
-one full period of consecutive gaps; then \(\Lambda + \sigma = \Lambda\).
+\mathbb{R}\) be the projected set, and write its increasing enumeration
+as \((\ell_i)_{i \in \mathbb{Z}}\) (well defined by local finiteness and
+unboundedness).  Let \(g_i := \ell_{i+1} - \ell_i\) be the gap sequence;
+the periodicity \(g_{i+\lambda} = g_i\) makes the partial sum
+\(\sigma := g_i + g_{i+1} + \cdots + g_{i+\lambda - 1}\) independent of
+\(i\), so \(\ell_{i+\lambda} - \ell_i = \sigma\) for all \(i\).  Since all
+gaps are positive, \(\sigma > 0\), and consequently
+\(\Lambda + \sigma = \Lambda\).
 Choose any \(z_0 \in A\); since \(\tilde p(z_0) + \sigma \in \Lambda\),
 there exists \(z_1 \in A\) with
 \(\tilde p(z_1) = \tilde p(z_0) + \sigma\).  Set
@@ -1269,7 +1281,7 @@ irrational and \(m, n \in \mathbb{Z}\), this forces \(m = n = 0\), so
 \end{proof}
 
 \begin{remark}[Period dichotomy]\label{rem:dichotomy}
-Within the family of positive slopes considered here,
+Within the family of positive slopes considered here, and for \(\omega > 0\),
 Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational} together
 form a complete dichotomy:
 \[
