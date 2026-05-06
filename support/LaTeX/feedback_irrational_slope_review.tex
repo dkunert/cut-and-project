@@ -1,0 +1,281 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\title{Feedback on the Revised Paper\\
+\large Especially on the Section ``Aperiodicity for Irrational Slope''}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The rational part of the paper remains in good shape.  The new figures are
+helpful, the added converse statement in Step~2 is a real improvement, and
+the clarifications concerning the \(\tilde p\)-coordinate make the set-valued
+case easier to read.
+
+The main issue is the new proposition on irrational slopes.  The statement is
+plausible, and in the usual cut-and-project formulation it is essentially the
+expected result.  However, the proof as currently written contains a serious
+unjustified step.  In particular, the following assertion is too fast:
+\begin{quote}
+Since \(S'\) is the orthogonal projection of \(\mathbb Z^2\cap\text{strip}\)
+onto the line, this translational symmetry must lift to a lattice translation
+\((x,y)\mapsto(x+m,y+n)\) that preserves the strip.
+\end{quote}
+A period of the projected set gives a translation symmetry in physical space,
+but it does not automatically follow, without proof, that this symmetry is
+induced by one fixed lattice vector preserving the accepted set.  Fortunately,
+for irrational slope this can be repaired cleanly using the injectivity of the
+physical projection on \(\mathbb Z^2\) and the density of the internal
+projection.
+
+\section*{Main recommendation}
+
+I recommend replacing the current proposition and proof by a more standard
+cut-and-project argument.  The key points are:
+\begin{enumerate}[label=\arabic*.]
+    \item assume \(a>0\), not merely \(a\in\mathbb R\setminus\mathbb Q\);
+    \item introduce physical and internal coordinates explicitly;
+    \item use irrationality to prove injectivity of the physical projection;
+    \item derive a genuine lattice translation from a projected period;
+    \item use density of the internal projection to show that no nonzero
+          internal shift can preserve the window interval.
+\end{enumerate}
+
+The following replacement is substantially safer.
+
+\section*{Suggested replacement for the irrational-slope proposition}
+
+\begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational_replacement}
+Let \(a \in \mathbb{R}_{>0}\setminus\mathbb{Q}\) and \(\omega>0\).  Consider
+the analogous strip projection with line \(f(x)=ax\) and strip
+\[
+    a(x-\omega)\le y\le ax+\omega.
+\]
+Then the projected gap sequence has no finite period.  Since the projection
+map is injective on \(\mathbb Z^2\) for irrational \(a\), the multiset and set
+conventions coincide in this case.
+\end{proposition}
+
+\begin{proof}
+It is convenient to use the physical and internal coordinates
+\[
+    \pi(x,y) := x + ay,
+    \qquad
+    \pi^\star(x,y) := y - ax.
+\]
+The physical coordinate \(\pi\) determines the order of the orthogonal
+projections onto the line \(y=ax\), up to multiplication by a positive
+constant.  The strip condition is equivalent to
+\[
+    -a\omega \le \pi^\star(x,y) \le \omega.
+\]
+Thus the accepted lattice points are precisely
+\[
+    A := \{(x,y)\in\mathbb Z^2 : \pi^\star(x,y)\in W\},
+    \qquad
+    W := [-a\omega,\omega].
+\]
+
+First note that \(\pi\) is injective on \(\mathbb Z^2\).  Indeed, if
+\(\pi(x_1,y_1)=\pi(x_2,y_2)\), then
+\[
+    x_1-x_2 = -a(y_1-y_2),
+\]
+which, since \(a\) is irrational and all entries are integers, forces
+\(x_1=x_2\) and \(y_1=y_2\).
+
+Suppose, for contradiction, that the projected gap sequence has a finite
+period \(\lambda\).  Let
+\[
+    \Lambda := \pi(A)\subset\mathbb R
+\]
+be the projected set, and let \((s_i)_{i\in\mathbb Z}\) be its increasing
+enumeration.  If the gap sequence has period \(\lambda\), then
+\[
+    s_{i+\lambda}-s_i = \sigma
+\]
+for all \(i\), where \(\sigma>0\) is the sum of one full period of consecutive
+gaps.  Hence
+\[
+    \Lambda+\sigma=\Lambda.
+\]
+
+Choose any \(z_0\in A\).  Since \(\pi(z_0)+\sigma\in\Lambda\), there exists
+\(z_1\in A\) such that
+\[
+    \pi(z_1)=\pi(z_0)+\sigma.
+\]
+Set \(v:=z_1-z_0\in\mathbb Z^2\).  Then \(\pi(v)=\sigma\).
+
+We claim that \(A+v=A\).  Let \(z\in A\).  Since
+\(\pi(z)+\sigma\in\Lambda\), there exists \(z'\in A\) with
+\[
+    \pi(z')=\pi(z)+\sigma=\pi(z+v).
+\]
+By injectivity of \(\pi\) on \(\mathbb Z^2\), this gives \(z'=z+v\).  Hence
+\(z+v\in A\).  Applying the same argument to the period \(-\sigma\) gives
+the reverse inclusion, so \(A+v=A\).
+
+Write \(v=(m,n)\).  In internal coordinates, translation by \(v\) changes
+\(\pi^\star\) by
+\[
+    \tau := \pi^\star(v)=n-am.
+\]
+Thus
+\[
+    \bigl(W\cap \pi^\star(\mathbb Z^2)\bigr)+\tau
+    =
+    W\cap \pi^\star(\mathbb Z^2).
+\]
+But
+\[
+    \pi^\star(\mathbb Z^2)=\{n-am:m,n\in\mathbb Z\}
+\]
+is dense in \(\mathbb R\), because \(a\) is irrational.
+
+We now show that \(\tau=0\).  If \(\tau>0\), then by density we can choose
+\(t\in\pi^\star(\mathbb Z^2)\cap W\) arbitrarily close to the upper endpoint
+\(\omega\), with \(t+\tau>\omega\).  This contradicts the invariance above.
+Similarly, if \(\tau<0\), choose
+\(t\in\pi^\star(\mathbb Z^2)\cap W\) arbitrarily close to the lower endpoint
+\(-a\omega\), with \(t+\tau<-a\omega\).  This is again a contradiction.
+Hence \(\tau=0\).
+
+Therefore
+\[
+    n-am=0.
+\]
+Since \(a\) is irrational and \(m,n\in\mathbb Z\), this forces \(m=n=0\).
+Hence \(v=0\), and consequently
+\[
+    \sigma=\pi(v)=0,
+\]
+contradicting \(\sigma>0\).  Thus the projected gap sequence has no finite
+period.
+\end{proof}
+
+\section*{Comments on the replacement proof}
+
+This proof makes explicit the step that was implicit in the original draft.
+The projected period first gives a physical translation by \(\sigma\).  Because
+\(\pi\) is injective on the lattice for irrational \(a\), this physical
+translation corresponds to one fixed lattice vector \(v\).  Once the lift to
+\(v\) is justified, the internal coordinate shows that the acceptance window
+would have to be invariant under a shift \(\tau=n-am\).  Since the internal
+projection of the lattice is dense and the window is a compact interval with
+endpoints, the only possible such shift is \(\tau=0\), which would force
+\(a=n/m\) unless \(v=0\).  This contradicts the existence of a positive period.
+
+\section*{Suggested revision of the dichotomy remark}
+
+The current remark says, in effect,
+\[
+    \text{finite period}
+    \quad\Longleftrightarrow\quad
+    \text{rational slope}.
+\]
+This is fine in spirit, but I would phrase it slightly more carefully, because
+the body of the paper is formulated mainly for positive rational slopes
+\(\alpha/\beta\).  A safer version is:
+
+\begin{quote}
+Within the family of positive slopes considered here, the rational and
+irrational cases therefore exhibit a sharp dichotomy: rational slopes give
+periodic projected gap sequences, while irrational slopes give no finite
+period.
+\end{quote}
+
+If you keep the equivalence notation, add explicitly that it is meant for the
+present strip model with positive slopes.
+
+\section*{Suggested revision in the introduction}
+
+The introduction currently says that irrational slopes are ``typically
+aperiodic''.  After the repaired proposition, you can state this more directly
+for the present model.  I suggest:
+
+\begin{quote}
+When the slope is irrational, the resulting objects fall into the classical
+aperiodic cut-and-project setting; for the present strip model we record the
+corresponding absence of a finite gap period in
+Proposition~\ref{prop:irrational}.
+\end{quote}
+
+This avoids the vague word ``typically''.
+
+\section*{Placement recommendation}
+
+The irrational-slope proposition is not really a corollary of the rational
+period formula.  It is a separate statement about the complementary regime.
+Thus I would either rename the section
+\begin{quote}
+\verb|\section{Corollaries}|
+\end{quote}
+to something like
+\begin{quote}
+\verb|\section{Consequences and the Irrational Case}|
+\end{quote}
+or, preferably, give the irrational statement its own short section:
+\begin{quote}
+\verb|\section{The Irrational Case}\label{sec:irrational}|
+\end{quote}
+This would make the structure clearer.
+
+\section*{Other comments on the paper}
+
+\begin{enumerate}[label=\arabic*.]
+    \item The phrase ``strip around a line'' should still be changed to
+    ``strip parallel to a line'', since the strip is not generally symmetric
+    around the line \(y=(\alpha/\beta)x\).
+
+    \item The statement ``the underlying set is \(\mathbb Z\)'' should always
+    be qualified as ``in the \(\tilde p\)-coordinate''.  The current version
+    mostly does this correctly.
+
+    \item The figures are helpful, especially the track decomposition figure.
+    For a specialist audience, however, you may consider reducing their size
+    or keeping only the second figure.  This is a matter of presentation, not
+    correctness.
+
+    \item The empirical verification remarks are now appropriately framed as
+    consistency checks rather than evidence needed for the proof.  This is
+    good.
+
+    \item The Lean table remains impressive but somewhat fragile if it contains
+    exact line numbers.  If you keep the line numbers, it would be best to cite
+    a repository commit hash.  Otherwise, consider omitting the line-number
+    column.
+
+    \item The acknowledgment should perhaps avoid the phrase ``proof
+    construction''.  A more professional version would be:
+    \begin{quote}
+    The author used AI assistants during exploratory computations, drafting,
+    and the preparation of the Lean formalization.  The author has
+    independently verified the mathematical content and accepts full
+    responsibility for the results and any errors.
+    \end{quote}
+\end{enumerate}
+
+\section*{Final verdict}
+
+The rational part of the paper is substantially improved and appears coherent.
+The new irrational-slope section is a valuable addition, because it gives a
+clear conceptual boundary between the rational periodic regime and the
+irrational aperiodic regime.  However, the original proof of the irrational
+proposition should not be sent in its present form.  It should be replaced by
+an argument based on physical injectivity, internal density, and the absence of
+nontrivial translations preserving an interval window, as suggested above.
+
+\end{document}
