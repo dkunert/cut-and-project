@@ -129,8 +129,16 @@ a `Makefile` with targets `make all` / `make perf` / `make debug` /
 
 ### Python (`src/python/`)
 
-Verification script `verify_paper.py` checks all claims in the paper
-against the CSV data in `tests/`. Targets: `make run` / `make clean`.
+- `verify_paper.py` — checks both period theorems and all corollaries
+  against the six-column CSVs in `tests/`. Pure stdlib, no
+  dependencies. Targets: `make run` / `make clean`.
+- `recompute_broken_set_periods.py` — utility that recomputes
+  `period_set` for any CSV row whose value is a negative sentinel
+  (i.e. an aborted C-side run). Computes the set period from the
+  residue model independently of the theorem; requires `numpy`.
+- `generate_set_test_file.py` — generates an independent
+  set/multiset CSV (`tests/set_theorem_balanced_test.csv`) from
+  Python implementations of both period algorithms.
 
 ## Acknowledgement
 

@@ -1,8 +1,8 @@
 # CutAndProject — Lean 4 Formalisation
 
-This directory contains a Lean 4 formalisation of the algebraic core of the period-length theorem for one-dimensional rational cut-and-project multiset gap sequences, as proved in `../../LaTeX/rational_cut_and_project_multiset_gap_periods.tex`.
+This directory contains a Lean 4 formalisation of the residue-combinatorial core of both period-length theorems for one-dimensional rational cut-and-project gap sequences (multiset and set conventions), as proved in `../../LaTeX/rational_cut_and_project_gap_periods.tex`.
 
-The formalisation is approximately 2,850 lines of verified code in `CutAndProject/Basic.lean` and contains no `sorry`, `admit`, or `axiom`.
+The formalisation is approximately 2,860 lines of verified code in `CutAndProject/Basic.lean` and contains no `sorry`, `admit`, or `axiom`.
 
 ## Scope
 
@@ -17,6 +17,8 @@ The second layer constructs a concrete instance (`GeometricProjectionConcrete`) 
 * `period_degenerate_concrete`
 * `sigma_of_period_concrete`
 
+The set-valued companion theorem mirrors this construction with the multiplicity function flattened to `{0, 1}`: `set_V` replaces `V`, `set_size` replaces `N`, and `set_main_theorem` / `set_main_theorem_concrete` discharge the dichotomy `N < D` versus `N ≥ D`. The unit-aware variants (`main_theorem_geometric_concrete`, `set_main_theorem_geometric_concrete`) thread the geometric multiplier `c_r ≡ -α β⁻¹ r (mod D)` through to the headline statements.
+
 The geometric reduction from the strip construction to the residue multiset is represented at the combinatorial level: the sorted multiset is defined as
 
 ```
@@ -25,7 +27,7 @@ p_s(i) := V(i mod N) + (i / N) * D
 
 where `V` is the quantile function of the cumulative residue distribution. The bridge lemma `count_hits_eq_sorted_count` verifies this is consistent with the residue counting function.
 
-Thus the formalisation verifies the algebraic core of the proof, not the full analytic geometry from first principles.
+Thus the formalisation verifies the residue-combinatorial core of both proofs (multiset and set), with the geometric multiplier threaded through to the headline statements; the strip-to-residue reduction itself is hand-verified in Sections 2 and 3.2 of the paper.
 
 ## Correspondence with the paper
 
@@ -45,7 +47,7 @@ lake exe cache get   # download Mathlib build cache (recommended)
 lake build
 ```
 
-`lake build` should report `Build completed successfully`. Some Mathlib style linter warnings (long lines, deprecated tactics) remain; none affect correctness.
+`lake build` should report `Build completed successfully` with no warnings. Three Mathlib style linters (`linter.style.longLine`, `linter.style.maxHeartbeats`, `linter.style.induction`) are silenced in `lakefile.toml`; their fixes would shift line numbers referenced by Table 1 of the companion paper.
 
 ## Layout
 
