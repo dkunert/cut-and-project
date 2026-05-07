@@ -1,0 +1,310 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\title{Review Findings for \texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Codex Review Notes}
+\date{May 7, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Executive Summary}
+
+I reviewed
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex}
+with an emphasis on mathematical correctness, arXiv readiness,
+reproducibility, and consistency with the Lean and CSV artifacts in the
+repository.
+
+The main rational proof line appears mathematically sound: the strip
+condition reduces correctly to an interval of admissible invariants
+\[
+  r = \alpha x - \beta y,
+\]
+each invariant class gives one arithmetic progression in the
+\(\tilde p\)-coordinate, and the multiset and set period formulas follow
+from the residue-distribution dichotomy modulo
+\[
+  D = \alpha^2+\beta^2.
+\]
+I did not find a mathematical flaw in the main rational period theorem.
+
+The most important issues before arXiv submission are not in the core
+formula, but in reproducibility and presentation.  In particular, the
+empirical verification claims in the paper are currently too strong for the
+CSV data in the repository.
+
+\section*{Publication-Critical Findings}
+
+\begin{enumerate}[label=\textbf{F\arabic*.},leftmargin=*]
+
+\item \textbf{The empirical verification claim is currently false as written.}
+
+In
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:414--438}
+\]
+and again at
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1088--1090},
+\]
+the manuscript states that all \(51{,}729\) CSV cases match both the multiset
+formula and the set formula with zero failures.
+
+For the files currently present in \texttt{tests/}, the multiset formula does
+match all \(51{,}729\) data rows.  The set formula, however, matches only
+\(51{,}686\) rows.  There are \(43\) rows in
+\[
+\texttt{tests/multiset\_and\_set\_new\_find\_patterns\_51012\_lines.csv}
+\]
+where \texttt{period\_set} is a negative error code rather than a period.
+For example, CSV line 3345 has
+\[
+  N=35{,}103{,}140,\qquad D=7{,}720{,}913{,}978,
+\]
+so the theorem predicts
+\[
+  \lambda_{\mathrm{set}} = N = 35{,}103{,}140,
+\]
+but the stored \texttt{period\_set} value is \texttt{-2}.
+
+\textbf{Recommendation.}  Either regenerate the affected set-period column
+so that all rows contain genuine periods, or rewrite the empirical remark to
+separate proved theorem checks from incomplete/failed numerical set-period
+computations.  For arXiv, the cleanest option is to cite only the verified
+rows, or to replace the CSV with a fully theorem-consistent file.
+
+\item \textbf{The verification script is out of sync with the current CSV
+format.}
+
+The script
+\[
+\texttt{src/python/verify\_paper.py}
+\]
+expects five columns
+\[
+\texttt{o\_n,o\_d,a\_n,a\_d,period},
+\]
+but the current main CSV files contain six columns:
+\[
+\texttt{o\_n,o\_d,a\_n,a\_d,period\_multiset,period\_set}.
+\]
+Running the script on
+\[
+\texttt{tests/multiset\_and\_set\_new\_find\_patterns\_51012\_lines.csv}
+\]
+therefore fails with
+\[
+\texttt{ValueError: too many values to unpack (expected 5)}.
+\]
+
+\textbf{Recommendation.}  Update the verification script so that it checks
+both formulas against the six-column CSV format, reports negative
+\texttt{period\_set} values explicitly, and prints the exact aggregate counts
+used in the paper.
+
+\end{enumerate}
+
+\section*{Mathematical Precision Findings}
+
+\begin{enumerate}[label=\textbf{M\arabic*.},leftmargin=*]
+
+\item \textbf{The residue-bijection corollary should include a proof.}
+
+At
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:605--609},
+\]
+the residue-bijection corollary states that the map
+\[
+  r \mapsto c_r = -\alpha\beta^{-1}r \pmod D
+\]
+is a bijection on \(\mathbb Z/D\mathbb Z\), but no proof is given.
+
+The result is correct.  A short proof would improve the paper:
+\(\beta^{-1}\) exists because \(\gcd(\beta,D)=1\), and
+\(-\alpha\beta^{-1}\) is a unit modulo \(D\) because
+\(\gcd(\alpha,D)=1\).  Multiplication by a unit is a bijection.
+
+\item \textbf{Clarify that \(D\) is a common difference in the
+\(\tilde p\)-coordinate.}
+
+In the introduction, around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:135--137},
+\]
+the manuscript says that \(D\) is the common difference of the arithmetic
+progressions obtained after projection.
+
+Strictly speaking, \(D\) is the common difference in the integer coordinate
+\[
+  \tilde p = \beta x + \alpha y.
+\]
+The Euclidean distance along the projected line is obtained from
+\(\tilde p\) by multiplication by a positive scale factor.  The later text
+mostly makes this clear, but the introductory statement should be sharpened.
+
+\item \textbf{The irrational-case setup should explicitly justify
+unboundedness.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1217--1226},
+\]
+the manuscript says that the irrational projected set is locally finite and
+unbounded in both directions.  The local finiteness argument is clear.  The
+unboundedness assertion should be justified explicitly, for example from the
+density of \(s(\mathbb Z^2)\) and the fact that the window
+\[
+  W=[-a\omega,\omega]
+\]
+has nonempty interior when \(\omega>0\).
+
+The later proof of aperiodicity appears correct, but this preliminary
+well-definedness step would benefit from one or two added sentences.
+
+\item \textbf{The main minimality argument is sound, but one bridge could be
+made more explicit.}
+
+In the proof of the generic-period proposition, especially around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:787--839},
+\]
+the key step is that a smaller gap period gives a translation symmetry of
+the entire projected multiset, hence of the residue multiplicity function.
+This is correct.  For maximum readability, it would help to add one sentence
+spelling out that translation by an integer \(\sigma\) sends residue class
+\(c\) modulo \(D\) to \(c+\sigma\), so multiset invariance forces
+\[
+  \mu(c+\sigma)=\mu(c)
+\]
+for every residue class.
+
+\end{enumerate}
+
+\section*{Lean and Repository Findings}
+
+\begin{enumerate}[label=\textbf{L\arabic*.},leftmargin=*]
+
+\item \textbf{The current Lean file builds successfully.}
+
+Running
+\[
+\texttt{lake build}
+\]
+inside \texttt{Lean/CutAndProject} completed successfully.  The current file
+\[
+\texttt{Lean/CutAndProject/CutAndProject/Basic.lean}
+\]
+contains no occurrences of \texttt{sorry}, \texttt{admit}, or \texttt{axiom}.
+
+\item \textbf{Stored build logs are stale.}
+
+The repository files
+\[
+\texttt{Lean/CutAndProject/build\_output.txt}
+\quad\text{and}\quad
+\texttt{Lean/CutAndProject/build\_out.txt}
+\]
+contain old build failures and old \texttt{sorry} warnings.  These logs are
+inconsistent with the current successful build.
+
+\textbf{Recommendation.}  Delete these logs before release, or replace them
+with current successful build output.
+
+\item \textbf{Small path typo in the Lean correspondence table.}
+
+At
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1444--1447},
+\]
+the table caption refers to
+\[
+\texttt{LEAN/CutAndProject/CutAndProject/Basic.lean}.
+\]
+The repository path is
+\[
+\texttt{Lean/CutAndProject/CutAndProject/Basic.lean}.
+\]
+
+\end{enumerate}
+
+\section*{LaTeX and arXiv Readiness}
+
+\begin{enumerate}[label=\textbf{A\arabic*.},leftmargin=*]
+
+\item \textbf{The paper compiles successfully.}
+
+Running
+\[
+\texttt{latexmk -g -pdf -interaction=nonstopmode -halt-on-error}
+\]
+on the manuscript completed successfully.  There were no undefined
+references or undefined citations.
+
+\item \textbf{There are several harmless but fixable hyperref warnings.}
+
+The log reports warnings of the form
+\[
+\texttt{Token not allowed in a PDF string}
+\]
+for headings containing mathematics, for example
+\(\omega=0\), \(D\nmid N\), and \(D\mid N\).
+
+\textbf{Recommendation.}  Use \verb|\texorpdfstring| in
+section or subsection headings containing mathematical notation.
+
+\item \textbf{Underfull boxes are present but not publication-critical.}
+
+The compilation log contains several underfull \verb|\hbox|
+warnings, mostly caused by long \verb|\texttt| identifiers
+and narrow table/caption text.  I did not see overfull boxes.  These warnings
+are not mathematically significant, but the Lean correspondence table and
+long file names could be visually polished before submission.
+
+\end{enumerate}
+
+\section*{Recommended Action List}
+
+\begin{enumerate}[leftmargin=*]
+
+\item Fix the empirical verification claim before arXiv submission.  This is
+the only issue I regard as publication-critical.
+
+\item Update \texttt{src/python/verify\_paper.py} to the current six-column
+CSV format and use it to regenerate the exact numbers quoted in the paper.
+
+\item Add a short proof of the residue-bijection corollary.
+
+\item Clarify that \(D\) is the common difference in the \(\tilde p\)-coordinate,
+not directly the Euclidean projected distance.
+
+\item Add an explicit sentence proving unboundedness of the irrational
+projected set.
+
+\item Remove or refresh stale Lean build logs.
+
+\item Fix the path capitalization \texttt{LEAN} \(\to\) \texttt{Lean}.
+
+\item Optionally clean the hyperref warnings caused by mathematics in PDF
+bookmarks.
+
+\end{enumerate}
+
+\section*{Overall Assessment}
+
+The rational main theorem and its set-valued companion appear strong and
+mathematically coherent.  The proof strategy is well chosen: it isolates the
+geometry in the strip-to-residue reduction and then proves the period
+formulas through finite residue-counting and cyclic-interval symmetry.
+
+After correcting the empirical-verification passage and the small
+reproducibility issues above, the manuscript should be much closer to a
+high-quality arXiv submission.
+
+\end{document}
