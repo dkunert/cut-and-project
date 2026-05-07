@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\title{Deep Review of\\
+\large \texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Claude (Opus 4.7)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Correctness check}
+
+The mathematics is solid.  The irrational proof in particular is now
+genuinely repaired: Step~1 establishes injectivity of \(\tilde p\) on
+\(\mathbb{Z}^2\), Step~2 uses that injectivity to lift the projected
+period to a single lattice vector \(v\), and Step~3 uses density of
+\(s(\mathbb{Z}^2)\) plus the compactness of \(W\) to force \(v=0\).  I
+traced the four equalities
+\[
+    \Lambda+\sigma=\Lambda,
+    \quad
+    A+v=A,
+    \quad
+    s(A)=W\cap s(\mathbb{Z}^2),
+    \quad
+    (W\cap s(\mathbb{Z}^2))+\tau \;=\; W\cap s(\mathbb{Z}^2),
+\]
+and each follows.  The earlier ``translational symmetry must lift to a
+lattice translation'' gap (the one ChatGPT flagged in
+\texttt{feedback\_irrational\_slope\_review.tex}) is closed.
+
+The rational proofs (multiset and set) are also correct, including the
+case analysis at the boundary \(N=D\) and the bijectivity of
+\(r\mapsto mr\bmod D\) underlying both residue lemmas.
+
+\section*{Substantive suggestions (worth applying)}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Coordinate-symbol overload.}\quad
+    \(\tilde p\) means \(\beta x + \alpha y\) in \S2.2 (line~227) but
+    \(x + a y\) in \S9 (line~1217).  With \(a=\alpha/\beta\), the
+    irrational form is the rational form divided by~\(\beta\) --- same
+    ordering, different normalization.  Reusing the symbol is mildly
+    confusing for a reader cross-referencing the two sections.  Two clean
+    fixes:
+    \begin{itemize}
+        \item call the irrational invariant \(\tilde p_{\mathrm{irr}}\)
+              or \(\pi\); or
+        \item add a one-sentence footnote at the start of \S9 noting the
+              rescaling.
+    \end{itemize}
+
+    \item \textbf{Local finiteness of the irrational projected set is
+    asserted, not argued} (lines 1201--1203).  A reader has to take it
+    on faith.  One sentence suffices:
+    \begin{quote}
+    The strip has bounded internal-coordinate width
+    \(W=[-a\omega,\omega]\); since \(s\) is injective on \(\mathbb{Z}^2\)
+    and \(\tilde p\) restricted to the strip has finite fibres over any
+    bounded interval (the preimage is a bounded parallelogram),
+    \(\tilde p(A)\) is locally finite and unbounded.
+    \end{quote}
+
+    \item \textbf{Step~1 of the irrational proof is too compressed}
+    (line~1238).  ``\ldots forces \(y_1=y_2\) and hence \(x_1=x_2\)''
+    elides the case split.  Spell it out:
+    \begin{quote}
+    If \(y_1 \ne y_2\), the equation gives
+    \(a = -(x_1-x_2)/(y_1-y_2) \in \mathbb{Q}\), contradicting
+    irrationality.  Hence \(y_1=y_2\), and the equation then forces
+    \(x_1=x_2\).
+    \end{quote}
+    Three lines, no extra space.
+
+    \item \textbf{Density of \(s(\mathbb{Z}^2)\) is invoked without
+    citation} (line~1272).  Add ``(Kronecker / Weyl equidistribution)''
+    or a one-line proof --- minor, but a referee may flag it as a
+    load-bearing fact stated as obvious.
+\end{enumerate}
+
+\section*{Polish (lower priority)}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, start=5]
+    \item \textbf{Step~5 of the multiset proof, the relabeling
+    \(f(x):=\mu(mx)\)} (line~755), is sandwiched between defining
+    \(\mu\) and the contradiction setup.  The reader gets \(\mu\), then
+    has to re-orient when \(f\) appears.  Briefly motivate up front:
+    \begin{quote}
+    Since the multiset of residues comes from \(N\) consecutive integers
+    under multiplication by \(m\), it is convenient to relabel
+    coordinates so that the heavy classes form a contiguous interval.
+    \end{quote}
+    Gives the strategy before the algebra.
+
+    \item \textbf{Lemma~4.4 (uniform residue distribution) proof}
+    (lines 642--647): the phrasing ``spans exactly \(N/D\) complete
+    cycles'' reads slightly oddly.  The cleaner statement is:
+    \begin{quote}
+    Each block of \(D\) consecutive values of \(r\) hits every residue
+    class exactly once (Cor.~3.4).  \(N/D\) such blocks fit in
+    \(\mathcal{R}\), so each class is hit \(N/D\) times.
+    \end{quote}
+    Parallels the wording used in Lemma~4.3.
+
+    \item \textbf{Remark~3.3 (computational verification)} mentions only
+    multiset numbers (51\,489 cases).  The set-side numbers are buried
+    in \S4.5.  Consider promoting the \emph{combined} count
+    (\(51\,489 + 240 = 51\,729\)) to one place, or making it explicit
+    in~3.3 that those CSVs also verify the set theorem (the filenames
+    already say \texttt{multiset\_and\_set\_\ldots}).
+
+    \item \textbf{Section~9 placement vs.\ the rest of the paper.}\quad
+    \S9 introduces a \emph{new} set of coordinates
+    (\(\tilde p, s, W, A\)) that don't appear anywhere else.  A two-line
+    bridge at the start of \S9 saying
+    \begin{quote}
+    In this section we momentarily replace the rational invariants
+    \(r\), \(\tilde p\), \(\mathcal{R}\) by the standard
+    physical/internal coordinates \(\tilde p, s\) of cut-and-project
+    theory; the rational analogues are recovered by setting
+    \(a = \alpha/\beta\).
+    \end{quote}
+    would tie it back to \S2.
+\end{enumerate}
+
+\section*{Deliberately not in scope}
+
+\begin{itemize}
+    \item \textbf{Acknowledgements wording} (``proof construction'') ---
+    per the prior session's \emph{Redlichkeit} decision, leaving as-is.
+    \item \textbf{Lean line numbers in Table~1} --- already pinned to
+    commit \texttt{0b12c26}, so no fragility.
+    \item \textbf{Figures} --- verified during the previous review
+    round; both are correct and useful.
+\end{itemize}
+
+\section*{Net assessment}
+
+The paper is in good shape.  Items~1--4 are the ones I would actually
+recommend acting on; 5--8 are presentation tweaks the reader can read
+past.  No correctness issues remain.
+
+\end{document}
