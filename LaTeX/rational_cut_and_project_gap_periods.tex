@@ -1238,12 +1238,23 @@ strip has finite fibres over any bounded interval --- the preimage of such
 an interval intersected with the strip is a bounded parallelogram in
 \(\mathbb{R}^2\) and hence contains only finitely many lattice points ---
 the projected set \(\tilde p(A)\) is locally finite.  Unboundedness in
-both directions follows from \(s(\mathbb{Z}^2)\) being dense in
-\(\mathbb{R}\) and \(W\) having nonempty interior: for every \(M > 0\)
-there exists \((x,y) \in \mathbb{Z}^2\) with \(s(x,y) \in W\) and
-\(|x| > M\), and \(\tilde p(x,y) = x + a y\) is unbounded as such
-\(x\) is.  Its gap sequence is therefore well defined via the increasing
-\(\mathbb{Z}\)-indexed enumeration of \(\tilde p(A)\).
+both directions follows from the identity
+\[
+    \tilde p(x,y) \;=\; x + a y
+    \;=\; (1 + a^2)\,x + a\,s(x,y),
+\]
+combined with the boundedness of \(s\) on accepted points
+(\(s(x,y) \in W\)): on \(A\) the term \(a\,s(x,y)\) is uniformly bounded,
+so \(\tilde p(x,y) \to \pm\infty\) precisely as \(x \to \pm\infty\) along
+accepted points.  The required existence of accepted points with
+\(x \to \pm\infty\) follows from the density of
+\(s(\mathbb{Z}^2)=\{n - a m : m, n \in \mathbb{Z}\}\) in \(\mathbb{R}\)
+(Kronecker / Weyl equidistribution): for any \(M > 0\) and any
+\(t \in W\) we can find \((m, n) \in \mathbb{Z}^2\) with \(m > M\)
+(respectively \(m < -M\)) and \(n - a m\) arbitrarily close to \(t\),
+hence inside \(W\); the lattice point \((m, n)\) is then in \(A\) with
+\(|m|\) arbitrarily large.  Its gap sequence is therefore well defined
+via the increasing \(\mathbb{Z}\)-indexed enumeration of \(\tilde p(A)\).
 
 \begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
 Let \(a \in \mathbb{R}_{>0} \setminus \mathbb{Q}\) and \(\omega > 0\), and
@@ -1465,7 +1476,7 @@ Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (geometric)
 \caption{Correspondence between paper results and Lean~4 declarations
 in \texttt{Basic.lean}.  Line numbers refer to
 \texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Basic.lean}
-of the repository~\cite{Kunert2025} at commit \texttt{0b12c26}.}
+in the companion repository version submitted with the paper~\cite{Kunert2025}.}
 \label{tab:lean}
 \end{table}
 
@@ -1546,9 +1557,9 @@ strip-to-residue reduction of Layer~1 is standard cut-and-project
 mathematics; what is novel in the formalization is that Layer~2 closes
 the residual gap left by previous formalizations, in which the abstract
 typeclass \texttt{GeometricProjection} was instantiated only for the
-normalized residue map (\(u = 1\)).  After Phase~2 of the multiplier
-cleanup, the geometric projection is fully threaded through to the period
-theorems on both the multiset and set sides.
+normalized residue map (\(u = 1\)).  In the present formalization, the
+geometric projection is fully threaded through to the period theorems on
+both the multiset and set sides.
 
 % =====================================================================
 \section{Related Literature}\label{sec:literature}

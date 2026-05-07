@@ -10,6 +10,11 @@ pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
+# Silence cosmetic linter warnings whose fixes would shift line numbers
+# referenced by Table 1 of the companion paper.
+linter.style.longLine = false
+linter.style.maxHeartbeats = false
+linter.style.induction = false
 
 [[require]]
 name = "mathlib"

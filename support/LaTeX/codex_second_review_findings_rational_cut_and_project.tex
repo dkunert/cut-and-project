@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\title{Second Codex Review Findings for\\
+\texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Codex Review Notes}
+\date{May 7, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Executive Summary}
+
+I reviewed the current manuscript
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex}
+\]
+again after the revisions based on the previous findings.  The substantial
+issues from the first review appear to have been addressed.  In particular:
+
+\begin{itemize}[leftmargin=*]
+  \item the residue-bijection corollary now has a proof;
+  \item the bridge from gap-periodicity to residue-multiplicity invariance is
+        now explicit;
+  \item the CSV verification data now match both the multiset and set formulas;
+  \item the verification script now handles the current six-column CSV format;
+  \item the stale Lean build-log files have been removed;
+  \item the paper compiles cleanly with \texttt{latexmk};
+  \item the Lean project builds successfully.
+\end{itemize}
+
+I did not find a new mathematical objection to the rational main theorem or to
+the set-valued companion theorem.  The remaining points are presentation and
+reproducibility polish before arXiv submission.
+
+\section*{Remaining Findings}
+
+\begin{enumerate}[label=\textbf{F\arabic*.},leftmargin=*]
+
+\item \textbf{The Lean table has a stale commit reference.}
+
+In the Lean correspondence table caption, around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1465--1468},
+\]
+the manuscript says that the line numbers refer to commit
+\[
+\texttt{0b12c26}.
+\]
+The current repository head at the time of this review is
+\[
+\texttt{e8cb69b}.
+\]
+Moreover, at commit \texttt{0b12c26} the Lean directory was still named
+\[
+\texttt{LEAN/CutAndProject/...},
+\]
+whereas the manuscript now correctly refers to
+\[
+\texttt{Lean/CutAndProject/CutAndProject/Basic.lean}.
+\]
+
+\textbf{Recommendation.}  Either update the commit hash to the current
+publication commit, or remove the commit hash from the table caption and say
+that the line numbers refer to the companion repository version submitted
+with the paper.
+
+\item \textbf{Remove internal project language from the arXiv text.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1544--1551},
+\]
+the paper says:
+\[
+\text{``After Phase~2 of the multiplier cleanup, ...''}
+\]
+This reads like an internal development note rather than publication prose.
+
+\textbf{Recommendation.}  Replace it by a neutral formulation such as:
+\begin{quote}
+``In the present formalization, the geometric projection is fully threaded
+through to the period theorems on both the multiset and set sides.''
+\end{quote}
+
+\item \textbf{The irrational-case unboundedness argument could be sharpened.}
+
+The new paragraph around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1233--1246}
+\]
+now explicitly addresses unboundedness, which is a good improvement.  For
+maximum precision, it would be better to state why the accepted points are
+unbounded in both the positive and negative physical directions.
+
+One concise way to do this is to use the identity
+\[
+  \tilde p(x,y) = x + a y
+  = (1+a^2)x + a\,s(x,y),
+  \qquad s(x,y)=y-a x.
+\]
+Since \(s(x,y)\in W\) is bounded on accepted points, \(\tilde p(x,y)\) tends
+to \(+\infty\) or \(-\infty\) whenever accepted points exist with
+\(x\to+\infty\) or \(x\to-\infty\), respectively.  The needed existence
+follows from the density of the positive and negative tails of the irrational
+rotation modulo \(1\).
+
+This is not a flaw in the main rational proof, but it would make the
+complementary irrational proposition more robust.
+
+\item \textbf{The Lean build succeeds, but still emits style warnings.}
+
+Running
+\[
+\texttt{lake build}
+\]
+inside
+\[
+\texttt{Lean/CutAndProject}
+\]
+completed successfully.  The build still emits style warnings, mostly long
+lines and requests for comments explaining modified \texttt{maxHeartbeats}
+settings.
+
+These warnings do not affect correctness, but a warning-light or
+warning-free build would make the companion formalization feel more polished.
+
+\end{enumerate}
+
+\section*{Checks Performed}
+
+\begin{enumerate}[leftmargin=*]
+
+\item \textbf{Paper build.}
+
+The command
+\begin{quote}
+\texttt{latexmk -g -pdf -interaction=nonstopmode -halt-on-error}\\
+\texttt{rational\_cut\_and\_project\_gap\_periods.tex}
+\end{quote}
+completed successfully.  I did not see unresolved references, citation
+errors, overfull boxes, or remaining \texttt{hyperref} PDF-string warnings in
+the searched log output.
+
+\item \textbf{CSV verification.}
+
+Running
+\[
+\texttt{python3 src/python/verify\_paper.py}
+\]
+on the three cited CSV files reported:
+\[
+\begin{array}{rl}
+\text{total rows:} & 51{,}729,\\
+\text{multiset mismatches:} & 0,\\
+\text{set mismatches:} & 0,\\
+\text{negative set sentinels:} & 0.
+\end{array}
+\]
+Thus the empirical verification statement is now consistent with the
+repository data.
+
+\item \textbf{Lean build.}
+
+The command
+\[
+\texttt{lake build}
+\]
+inside \texttt{Lean/CutAndProject} completed successfully.  The current Lean
+file contains the headline theorems
+\[
+\texttt{main\_theorem\_geometric\_concrete}
+\quad\text{and}\quad
+\texttt{set\_main\_theorem\_geometric\_concrete},
+\]
+and no occurrences of \texttt{sorry}, \texttt{admit}, or \texttt{axiom} were
+found in the checked source.
+
+\end{enumerate}
+
+\section*{Overall Assessment}
+
+The rational core of the paper now looks mathematically solid to me.  The
+main reduction
+\[
+  (x,y)\mapsto (r,\tilde p),
+  \qquad
+  r=\alpha x-\beta y,\quad
+  \tilde p=\beta x+\alpha y,
+\]
+the residue formula
+\[
+  c_r \equiv -\alpha\beta^{-1}r \pmod D,
+\]
+and the period-minimality argument via the stabilizer of a proper cyclic
+interval fit together coherently.
+
+I would treat the remaining findings as arXiv polish rather than mathematical
+blockers.  The most important small cleanup is the stale commit reference in
+the Lean correspondence table, because it affects reproducibility.
+
+\end{document}
