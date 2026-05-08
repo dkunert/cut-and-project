@@ -153,12 +153,12 @@ theorem accepted_preimage_finite
           exact mul_le_mul_of_nonneg_right habs hω.le
         linarith
       have h2 : -(|a| * ω) - ω ≤ -(a * ω) := by linarith
-      have h3 : -Bs = -(|a| * ω) - ω := by simp [Bs]; ring
+      have h3 : -Bs = -(|a| * ω) - ω := by simp only [hBs_def]; ring
       linarith
     · -- y - a*x ≤ Bs
       have : ω ≤ Bs := by
         have : 0 ≤ |a| * ω := mul_nonneg (abs_nonneg a) hω.le
-        simp [Bs]; linarith
+        simp only [hBs_def]; linarith
       linarith
   -- Bound |p| by Bp.
   have habs_p : |(x : ℝ) + a * y| ≤ Bp := by
@@ -167,7 +167,7 @@ theorem accepted_preimage_finite
     · -- -Bp ≤ x + a*y
       have h1 : -|b₁| ≤ b₁ := neg_abs_le b₁
       have h2 : -|b₂| ≤ 0 := neg_nonpos_of_nonneg (abs_nonneg b₂)
-      have : -Bp = -|b₁| + -|b₂| := by simp [Bp]; ring
+      have : -Bp = -|b₁| + -|b₂| := by simp only [hBp_def]; ring
       linarith
     · -- x + a*y ≤ Bp
       have h1 : b₂ ≤ |b₂| := le_abs_self b₂
@@ -176,9 +176,9 @@ theorem accepted_preimage_finite
       linarith
   -- Identity: D * x = p - a * s, hence |x| ≤ (Bp + |a|*Bs)/D ≤ R.
   have hDx : D * (x : ℝ) = ((x : ℝ) + a * y) - a * ((y : ℝ) - a * x) := by
-    simp [D]; ring
+    simp only [hD_def]; ring
   have hDy : D * (y : ℝ) = a * ((x : ℝ) + a * y) + ((y : ℝ) - a * x) := by
-    simp [D]; ring
+    simp only [hD_def]; ring
   -- From these identities, real-value bound on |x| and |y|.
   have habs_Dx : |D * (x : ℝ)| ≤ Bp + |a| * Bs := by
     rw [hDx]
@@ -206,15 +206,14 @@ theorem accepted_preimage_finite
     linarith
   -- D ≥ 1 since a² ≥ 0
   have hD_ge_one : (1 : ℝ) ≤ D := by
-    have : 0 ≤ a ^ 2 := sq_nonneg a
-    simp [D]; linarith
+    change 1 ≤ 1 + a ^ 2; linarith [sq_nonneg a]
   -- Algebraic fact: both `Bp + |a|*Bs` and `|a|*Bp + Bs` are ≤ R = (1+|a|)*(Bp+Bs).
   have hbound_x : Bp + |a| * Bs ≤ R := by
     have h1 : 0 ≤ |a| * Bp := mul_nonneg (abs_nonneg _) hBp_nn
-    simp [R]; nlinarith
+    simp only [hR_def]; nlinarith
   have hbound_y : |a| * Bp + Bs ≤ R := by
     have h1 : 0 ≤ |a| * Bs := mul_nonneg (abs_nonneg _) hBs_nn
-    simp [R]; nlinarith
+    simp only [hR_def]; nlinarith
   -- |x| ≤ R, |y| ≤ R.
   have habs_x : |(x : ℝ)| ≤ R := by
     have hx1 : |D * (x : ℝ)| = D * |(x : ℝ)| := by
