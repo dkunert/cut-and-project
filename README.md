@@ -12,7 +12,7 @@ $$
 C = \lbrace (x, y) \in \mathbb{Z}^2 \mid y \in [\tfrac{\alpha}{\beta}(x-\omega),\,\tfrac{\alpha}{\beta}x+\omega] \rbrace.
 $$
 
-After projecting orthogonally onto $f(x) = (\alpha/\beta)\,x$ and
+After projecting orthogonally onto $f(x) = (\alpha/\beta)x$ and
 sorting, the resulting sequence of consecutive gaps
 $(d^{(i)})_{i \in \mathbb{Z}}$ has minimal period $\lambda$.
 
