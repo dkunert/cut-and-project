@@ -81,12 +81,12 @@ theorem dense_internal_image (ha : Irrational a) :
     constructor
     · rintro ⟨⟨m, n⟩, rfl⟩
       -- sInternal a (m, n) = n - a*m = m • (-a) + n • 1
-      exact ⟨m, n, by simp [sInternal, zsmul_eq_mul]; ring⟩
+      exact ⟨m, n, by simp only [sInternal, zsmul_eq_mul]; ring⟩
     · rintro ⟨m, n, hmn⟩
       -- m • (-a) + n • 1 = -m*a + n = n - a*m = sInternal a (m, n)
       exact ⟨⟨m, n⟩, by simp only [sInternal, zsmul_eq_mul] at hmn ⊢; linarith⟩
   -- Step 2: density of the closure follows from irrationality via Mathlib's theorem
   rw [hrange, dense_addSubgroupClosure_pair_iff]
-  simp [irrational_neg_iff, ha]
+  rw [div_one]; rwa [irrational_neg_iff]
 
 end CutAndProject.Irrational
