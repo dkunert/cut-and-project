@@ -38,4 +38,34 @@ def W : Set ℝ := Set.Icc (-(a * ω)) ω
 /-- Accepted lattice points: those whose internal coordinate lies in `W`. -/
 def acceptedSet : Set (ℤ × ℤ) := {z | sInternal a z ∈ W a ω}
 
+/-! ### Section B. Step 1: `tildeP` is injective on `ℤ²` -/
+
+theorem tildeP_injective (ha : Irrational a) :
+    Function.Injective (tildeP a) := by
+  rintro ⟨x₁, y₁⟩ ⟨x₂, y₂⟩ h
+  -- h : tildeP a (x₁, y₁) = tildeP a (x₂, y₂)
+  -- i.e. (x₁ : ℝ) + a * y₁ = (x₂ : ℝ) + a * y₂
+  simp only [tildeP] at h
+  by_cases hy : y₁ = y₂
+  · -- y₁ = y₂ forces x₁ = x₂
+    subst hy
+    have hx : (x₁ : ℝ) = (x₂ : ℝ) := by linarith
+    exact Prod.ext (by exact_mod_cast hx) rfl
+  · -- y₁ ≠ y₂ ⟹ a is rational, contradicting `Irrational a`
+    exfalso
+    -- Rearrange h to:  a * ((y₁ - y₂ : ℤ) : ℝ) = ((x₂ - x₁ : ℤ) : ℝ)
+    have hne : (y₁ : ℝ) - y₂ ≠ 0 := by
+      exact_mod_cast sub_ne_zero.mpr hy
+    -- a = (x₂ - x₁) / (y₁ - y₂)
+    have ha_eq : a = ((x₂ - x₁ : ℤ) : ℝ) / ((y₁ - y₂ : ℤ) : ℝ) := by
+      push_cast
+      field_simp
+      linarith
+    -- Express a as a rational number
+    apply ha
+    refine ⟨(x₂ - x₁ : ℤ) / (y₁ - y₂ : ℤ), ?_⟩
+    rw [ha_eq]
+    push_cast
+    rfl
+
 end CutAndProject.Irrational
