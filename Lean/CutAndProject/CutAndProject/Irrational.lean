@@ -59,10 +59,11 @@ theorem tildeP_injective (ha : Irrational a) :
     -- a = (x₂ - x₁) / (y₁ - y₂)
     have ha_eq : a = ((x₂ - x₁ : ℤ) : ℝ) / ((y₁ - y₂ : ℤ) : ℝ) := by
       push_cast
-      field_simp
+      field_simp [hne]
       linarith
     -- Express a as a rational number
     apply ha
+    -- division evaluated in ℚ after push_cast, not as truncated Int division
     refine ⟨(x₂ - x₁ : ℤ) / (y₁ - y₂ : ℤ), ?_⟩
     rw [ha_eq]
     push_cast
