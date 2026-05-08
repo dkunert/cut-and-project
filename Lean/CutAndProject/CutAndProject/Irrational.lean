@@ -21,4 +21,21 @@ open Set Function
 
 namespace CutAndProject.Irrational
 
+/-! ### Section A. Notation and accepted set -/
+
+variable (a ω : ℝ)
+
+/-- Physical (signed-position) projection used in the irrational
+case: `p̃(x,y) = x + a*y`. -/
+def tildeP : ℤ × ℤ → ℝ := fun z => (z.1 : ℝ) + a * (z.2 : ℝ)
+
+/-- Internal coordinate: `s(x,y) = y - a*x`. -/
+def sInternal : ℤ × ℤ → ℝ := fun z => (z.2 : ℝ) - a * (z.1 : ℝ)
+
+/-- Internal window `W = [-a*ω, ω]`. -/
+def W : Set ℝ := Set.Icc (-(a * ω)) ω
+
+/-- Accepted lattice points: those whose internal coordinate lies in `W`. -/
+def acceptedSet : Set (ℤ × ℤ) := {z | sInternal a z ∈ W a ω}
+
 end CutAndProject.Irrational
