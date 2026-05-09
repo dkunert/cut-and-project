@@ -70,7 +70,11 @@
       "Bash(pdflatex -interaction=nonstopmode qa_set_multiset_period.tex)",
       "Bash(pdflatex -interaction=nonstopmode studies.tex)",
       "Bash(xxd)",
-      "Bash(sort -t: -k2n -u)"
+      "Bash(sort -t: -k2n -u)",
+      "WebFetch(domain:leanprover-community.github.io)",
+      "Bash(cat lakefile.lean)",
+      "Bash(cat lakefile.toml)",
+      "Bash(latexmk -pdf -interaction=nonstopmode rational_cut_and_project_gap_periods.tex)"
     ]
   }
 }
