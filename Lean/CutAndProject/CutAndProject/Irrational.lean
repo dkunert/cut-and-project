@@ -871,4 +871,17 @@ theorem lattice_translation_must_be_zero
     field_simp
     linarith
 
+/-! ### Section J. Main theorem: aperiodicity for irrational slope -/
+
+/-- **Proposition 1 (paper, Section "The Irrational Case").**
+For `a ∈ ℝ_{>0} ∖ ℚ` and `ω > 0`, the projected gap sequence has
+no finite period. -/
+theorem prop_irrational
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) :
+    ¬ ∃ lam : ℕ, IsGapPeriod a ω ha ha_pos hω lam := by
+  rintro ⟨lam, hp⟩
+  obtain ⟨v, hv_ne, hv_pos, hv_inv⟩ :=
+    period_lifts_to_lattice_translation a ω ha ha_pos hω lam hp
+  exact hv_ne (lattice_translation_must_be_zero a ω ha ha_pos hω v hv_inv)
+
 end CutAndProject.Irrational
