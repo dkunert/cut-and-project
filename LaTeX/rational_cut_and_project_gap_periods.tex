@@ -1266,11 +1266,14 @@ positive since
 \((p_0, q_0)\) by \((-p_0, -q_0)\) if necessary, we may assume
 \(\tilde p(p_0, q_0) \ge c_0\).
 
-Now fix the target \(M\) and shrink \(\varepsilon\) (depending on
-\(M\)) so that the integer
-\(K := \lceil M / \tilde p(p_0, q_0) \rceil + 1\) satisfies
-\(K \cdot |s(p_0, q_0)| \le \min(a\omega, \omega)\).  Then
-\(s(K p_0, K q_0) = K \cdot s(p_0, q_0) \in W\), so
+Now fix the target \(M\).  Setting
+\(K := \lceil M / \tilde p(p_0, q_0) \rceil + 1\), the bound
+\(\tilde p(p_0, q_0) \ge c_0 > 0\) gives the explicit estimate
+\(K \le |M|/c_0 + 2\); choosing
+\(\varepsilon \le c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\)
+(still positive, depending on \(M\)) therefore ensures
+\(K \cdot |s(p_0, q_0)| < K \varepsilon \le \min(a\omega, \omega)\).
+Then \(s(K p_0, K q_0) = K \cdot s(p_0, q_0) \in W\), so
 \((K p_0, K q_0) \in A\), and
 \(\tilde p(K p_0, K q_0) = K \cdot \tilde p(p_0, q_0) > M\).  The
 negative direction is symmetric: apply the construction to \(-M\) and
