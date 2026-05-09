@@ -772,4 +772,110 @@ theorem period_lifts_to_lattice_translation
     rw [this]
     exact hz'_acc
 
+/-! ### Section I. Step 3: a non-trivial lattice translation cannot
+    preserve the accepted set -/
+
+/-- Linearity of `sInternal` under addition of lattice points. -/
+private lemma sInternal_add (z w : ℤ × ℤ) :
+    sInternal a (z + w) = sInternal a z + sInternal a w := by
+  rcases z with ⟨m, n⟩
+  rcases w with ⟨m', n'⟩
+  simp only [Prod.mk_add_mk, sInternal_apply]
+  push_cast
+  ring
+
+/-- Linearity of `sInternal` under subtraction of lattice points. -/
+private lemma sInternal_sub (z w : ℤ × ℤ) :
+    sInternal a (z - w) = sInternal a z - sInternal a w := by
+  rcases z with ⟨m, n⟩
+  rcases w with ⟨m', n'⟩
+  simp only [Prod.mk_sub_mk, sInternal_apply]
+  push_cast
+  ring
+
+/-- **Step 3 of Proposition 1.** If `v ∈ ℤ²` preserves `acceptedSet` under both
+addition and subtraction, then `v = 0`. -/
+theorem lattice_translation_must_be_zero
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (v : ℤ × ℤ)
+    (hv_inv : ∀ z ∈ acceptedSet a ω, z + v ∈ acceptedSet a ω)
+    (hv_inv_neg : ∀ z ∈ acceptedSet a ω, z - v ∈ acceptedSet a ω) :
+    v = 0 := by
+  obtain ⟨m, n⟩ := v
+  set τ : ℝ := sInternal a (m, n) with hτ_def
+  -- Density of `sInternal a` ranges in ℝ.
+  have hd : Dense (Set.range (sInternal a)) := dense_internal_image a ha
+  -- Step 3a: τ = 0.
+  have hτ_zero : τ = 0 := by
+    by_contra hτ_ne
+    rcases lt_or_gt_of_ne hτ_ne with hτ_neg | hτ_pos
+    · -- τ < 0 case: pick t ∈ (max(-(a*ω), ω + τ), ω) ∩ range sInternal.
+      -- Then t ∈ W and t - τ > ω, so (m', n') - (m, n) leaves W.
+      -- Actually we use hv_inv: t + τ < t ≤ ... hmm; let's reason carefully.
+      -- hv_inv: z ∈ acc ⟹ z + (m,n) ∈ acc, i.e. sInternal(z) + τ ∈ W.
+      -- So if t ∈ W ∩ range and t + τ ∉ W, contradiction.
+      -- For τ < 0, want t ∈ W with t + τ < -(a*ω), i.e. t < -(a*ω) - τ = -(a*ω) + (-τ).
+      -- Since -τ > 0, the interval (-(a*ω), -(a*ω) + (-τ)) is non-degenerate.
+      -- Also need t ≤ ω; pick interval (-(a*ω), min ω (-(a*ω) - τ)).
+      set ub : ℝ := min ω (-(a * ω) - τ) with hub_def
+      have hlb_lt_ub : -(a * ω) < ub := by
+        have h1 : -(a * ω) < ω := by
+          have hpos : 0 < a * ω := mul_pos ha_pos hω
+          linarith
+        have h2 : -(a * ω) < -(a * ω) - τ := by linarith
+        exact lt_min h1 h2
+      obtain ⟨t, ⟨z', hz'_eq⟩, ht_lo, ht_hi⟩ := hd.exists_between hlb_lt_ub
+      -- ht_lo : -(a*ω) < t
+      -- ht_hi : t < ub = min ω (-(a*ω) - τ)
+      have ht_lt_ω : t < ω := lt_of_lt_of_le ht_hi (min_le_left _ _)
+      have ht_lt_bd : t < -(a * ω) - τ := lt_of_lt_of_le ht_hi (min_le_right _ _)
+      -- z' ∈ acceptedSet (since sInternal z' = t ∈ [-(a*ω), ω]).
+      have hz'_acc : z' ∈ acceptedSet a ω := by
+        rw [mem_acceptedSet_iff, mem_W_iff, hz'_eq]
+        exact ⟨ht_lo.le, ht_lt_ω.le⟩
+      -- Apply hv_inv: z' + (m, n) ∈ acceptedSet.
+      have hsum_acc : z' + (m, n) ∈ acceptedSet a ω := hv_inv z' hz'_acc
+      rw [mem_acceptedSet_iff, mem_W_iff, sInternal_add, hz'_eq, ← hτ_def] at hsum_acc
+      -- hsum_acc.1 : -(a*ω) ≤ t + τ
+      -- but t + τ < -(a*ω) by ht_lt_bd
+      have : t + τ < -(a * ω) := by linarith
+      linarith [hsum_acc.1]
+    · -- τ > 0 case: pick t ∈ (max(-(a*ω), ω - τ), ω) ∩ range sInternal.
+      -- Then t ∈ W and t + τ > ω, contradicting hv_inv.
+      set lb : ℝ := max (-(a * ω)) (ω - τ) with hlb_def
+      have hlb_lt_ub : lb < ω := by
+        have h1 : -(a * ω) < ω := by
+          have hpos : 0 < a * ω := mul_pos ha_pos hω
+          linarith
+        have h2 : ω - τ < ω := by linarith
+        exact max_lt h1 h2
+      obtain ⟨t, ⟨z', hz'_eq⟩, ht_lo, ht_hi⟩ := hd.exists_between hlb_lt_ub
+      have ht_gt_neg_aω : -(a * ω) < t := lt_of_le_of_lt (le_max_left _ _) ht_lo
+      have ht_gt_ω_sub : ω - τ < t := lt_of_le_of_lt (le_max_right _ _) ht_lo
+      have hz'_acc : z' ∈ acceptedSet a ω := by
+        rw [mem_acceptedSet_iff, mem_W_iff, hz'_eq]
+        exact ⟨ht_gt_neg_aω.le, ht_hi.le⟩
+      have hsum_acc : z' + (m, n) ∈ acceptedSet a ω := hv_inv z' hz'_acc
+      rw [mem_acceptedSet_iff, mem_W_iff, sInternal_add, hz'_eq, ← hτ_def] at hsum_acc
+      -- hsum_acc.2 : t + τ ≤ ω
+      -- but t + τ > ω
+      have : ω < t + τ := by linarith
+      linarith [hsum_acc.2]
+  -- Step 3b: from τ = 0, derive m = n = 0.
+  have hn_eq : (n : ℝ) = a * (m : ℝ) := by
+    have h := hτ_zero
+    simp only [hτ_def, sInternal_apply] at h
+    linarith
+  by_cases hm : m = 0
+  · subst hm
+    have h0 : (n : ℝ) = 0 := by simpa using hn_eq
+    have hn : n = 0 := by exact_mod_cast h0
+    simp [hn]
+  · exfalso
+    apply ha
+    refine ⟨(n : ℚ) / (m : ℚ), ?_⟩
+    have hm_real : (m : ℝ) ≠ 0 := by exact_mod_cast hm
+    push_cast
+    field_simp
+    linarith
+
 end CutAndProject.Irrational
