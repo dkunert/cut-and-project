@@ -261,4 +261,253 @@ theorem accepted_preimage_finite
     have := abs_le.mp habs_y_int'
     exact this
 
+/-! ### Section E. Bi-infinite unboundedness -/
+
+/-- Auxiliary lemma: for any `ε > 0` (with `ε ≤ 1`), there exist integers `p, q`
+with `0 < |sInternal a (p,q)| < ε` and `0 < tildeP a (p,q)`.  Density of
+`Set.range (sInternal a)` (Section C) on `Ioo 0 ε` produces `(p, q)` with
+`s ∈ (0, ε)`; flipping sign of `(p, q)` if necessary forces `tildeP > 0`. -/
+private lemma exists_internal_pos_tildeP_pos
+    (ha : Irrational a) {ε : ℝ} (hε : 0 < ε) :
+    ∃ p q : ℤ, 0 < |sInternal a (p, q)| ∧ |sInternal a (p, q)| < ε ∧
+              0 < tildeP a (p, q) := by
+  have hd : Dense (Set.range (sInternal a)) := dense_internal_image a ha
+  have hopen : IsOpen (Set.Ioo (0 : ℝ) ε) := isOpen_Ioo
+  have hne : (Set.Ioo (0 : ℝ) ε).Nonempty := ⟨ε / 2, by constructor <;> linarith⟩
+  obtain ⟨t, ⟨pq, hpq⟩, ht_mem⟩ := hd.exists_mem_open hopen hne
+  rcases pq with ⟨p, q⟩
+  rcases ht_mem with ⟨ht_pos, ht_lt⟩
+  have hs_pos : 0 < sInternal a (p, q) := by rw [hpq]; exact ht_pos
+  have hs_lt : sInternal a (p, q) < ε := by rw [hpq]; exact ht_lt
+  have habs_s_pos : 0 < |sInternal a (p, q)| := by rw [abs_of_pos hs_pos]; exact hs_pos
+  have habs_s_lt : |sInternal a (p, q)| < ε := by rw [abs_of_pos hs_pos]; exact hs_lt
+  -- (p, q) ≠ (0, 0) because s(p, q) > 0.
+  have hnonzero : (p, q) ≠ (0, 0) := by
+    intro heq; apply (ne_of_lt habs_s_pos).symm; rw [heq]; simp [sInternal]
+  -- tildeP a (p, q) ≠ 0, else a is rational.
+  have hP_ne : tildeP a (p, q) ≠ 0 := by
+    intro hP0
+    simp only [tildeP] at hP0
+    by_cases hq : q = 0
+    · subst hq
+      have hp0 : (p : ℝ) = 0 := by simpa using hP0
+      have hpz : p = 0 := by exact_mod_cast hp0
+      exact hnonzero (by simp [hpz])
+    · have hq_real : (q : ℝ) ≠ 0 := by exact_mod_cast hq
+      apply ha
+      refine ⟨-p / q, ?_⟩
+      have ha_eq : a = -((p : ℝ) / q) := by field_simp at hP0 ⊢; linarith
+      rw [ha_eq]; push_cast; field_simp
+  rcases lt_or_gt_of_ne hP_ne with hP_neg | hP_pos
+  · refine ⟨-p, -q, ?_, ?_, ?_⟩
+    · have h1 : sInternal a (-p, -q) = -sInternal a (p, q) := by
+        simp only [sInternal]; push_cast; ring
+      rw [h1, abs_neg]; exact habs_s_pos
+    · have h1 : sInternal a (-p, -q) = -sInternal a (p, q) := by
+        simp only [sInternal]; push_cast; ring
+      rw [h1, abs_neg]; exact habs_s_lt
+    · have h1 : tildeP a (-p, -q) = -tildeP a (p, q) := by
+        simp only [tildeP]; push_cast; ring
+      rw [h1]; linarith
+  · exact ⟨p, q, habs_s_pos, habs_s_lt, hP_pos⟩
+
+/-- Auxiliary lemma packaging the algebraic core for both the unbounded-above
+and unbounded-below theorems.  Given any target `M : ℝ`, returns a positive
+integer `K` and a lattice point `(p₀, q₀)` such that `K * tildeP a (p₀, q₀) > M`
+and `K * |sInternal a (p₀, q₀)| ≤ min (a * ω) ω`. -/
+private lemma exists_scaled_witness
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (M : ℝ) :
+    ∃ (K : ℕ) (p₀ q₀ : ℤ), 0 < K ∧
+      M < (K : ℝ) * tildeP a (p₀, q₀) ∧
+      (K : ℝ) * |sInternal a (p₀, q₀)| ≤ min (a * ω) ω := by
+  set δ : ℝ := min (a * ω) ω with hδ_def
+  have hδ_pos : 0 < δ := lt_min (mul_pos ha_pos hω) hω
+  -- c₀ := 1 + a² - |a| > 0.
+  set c₀ : ℝ := 1 + a ^ 2 - |a| with hc₀_def
+  have hc₀_pos : 0 < c₀ := by
+    have h4 : c₀ = (|a| - 1/2) ^ 2 + 3/4 := by
+      have ha_sq : |a| ^ 2 = a ^ 2 := sq_abs a
+      simp only [hc₀_def]; rw [← ha_sq]; ring
+    rw [h4]; positivity
+  -- Choose ε small.
+  have hM_abs_nn : 0 ≤ |M| := abs_nonneg _
+  set ε : ℝ := min 1 (c₀ * δ / (|M| + 2 * c₀ + 1)) with hε_def
+  have hε_pos : 0 < ε := by
+    refine lt_min zero_lt_one (div_pos (mul_pos hc₀_pos hδ_pos) ?_)
+    positivity
+  have hε_le : ε ≤ 1 := min_le_left _ _
+  -- Apply density helper.
+  obtain ⟨p₀, q₀, h_s_pos, h_s_lt, h_P_pos⟩ :=
+    exists_internal_pos_tildeP_pos a ha hε_pos
+  set c : ℝ := tildeP a (p₀, q₀) with hc_def
+  set s₀ : ℝ := |sInternal a (p₀, q₀)| with hs₀_def
+  -- p₀ ≠ 0.
+  have hp_ne : p₀ ≠ 0 := by
+    intro hp_eq
+    have h_s_eq : sInternal a (p₀, q₀) = (q₀ : ℝ) := by simp [sInternal, hp_eq]
+    have hq_lt_one : |(q₀ : ℝ)| < 1 := by
+      calc |(q₀ : ℝ)| = s₀ := by rw [hs₀_def, h_s_eq]
+        _ < ε := h_s_lt
+        _ ≤ 1 := hε_le
+    have hq_zero : q₀ = 0 := by
+      have h_int : (|q₀| : ℝ) = |(q₀ : ℝ)| := by rfl
+      have h1 : (|q₀| : ℝ) < 1 := by rw [h_int]; exact hq_lt_one
+      have h2 : |q₀| < (1 : ℤ) := by exact_mod_cast h1
+      have habs_nn : 0 ≤ |q₀| := abs_nonneg _
+      have h3 : |q₀| = 0 := by linarith
+      exact abs_eq_zero.mp h3
+    have h_s_eq' : sInternal a (p₀, q₀) = 0 := by rw [h_s_eq, hq_zero]; simp
+    have : s₀ = 0 := by rw [hs₀_def, h_s_eq']; simp
+    linarith
+  -- Lower bound c ≥ c₀.
+  have hP_decomp : c = (1 + a ^ 2) * (p₀ : ℝ) + a * sInternal a (p₀, q₀) := by
+    simp only [hc_def, tildeP, sInternal]; ring
+  have habs_p_ge_one : (1 : ℝ) ≤ |(p₀ : ℝ)| := by
+    have h1 : (1 : ℤ) ≤ |p₀| := Int.one_le_abs hp_ne
+    have h_cast : (|p₀| : ℝ) = |(p₀ : ℝ)| := by rfl
+    have h2 : (1 : ℝ) ≤ (|p₀| : ℝ) := by exact_mod_cast h1
+    rw [h_cast] at h2; exact h2
+  have hc_ge : c₀ ≤ c := by
+    -- |c - a*s| = |(1+a²)*p₀| ≥ 1+a²; so c ≥ (1+a²) - |a*s| ≥ 1+a² - |a|.
+    have h1 : (1 + a ^ 2) * (p₀ : ℝ) = c - a * sInternal a (p₀, q₀) := by linarith [hP_decomp]
+    have h2 : |(1 + a ^ 2) * (p₀ : ℝ)| = (1 + a ^ 2) * |(p₀ : ℝ)| := by
+      rw [abs_mul, abs_of_pos]; linarith [sq_nonneg a]
+    have h3 : (1 + a ^ 2) ≤ |(1 + a ^ 2) * (p₀ : ℝ)| := by
+      rw [h2]
+      have h4 : (1 + a ^ 2) * 1 ≤ (1 + a ^ 2) * |(p₀ : ℝ)| :=
+        mul_le_mul_of_nonneg_left habs_p_ge_one (by linarith [sq_nonneg a])
+      linarith
+    have h4 : |c - a * sInternal a (p₀, q₀)| = |(1 + a ^ 2) * (p₀ : ℝ)| := by rw [h1]
+    have h5 : (1 + a ^ 2) ≤ |c - a * sInternal a (p₀, q₀)| := h4 ▸ h3
+    -- |c - a*s| ≤ |c| + |a|*|s|.
+    have h6 : |c - a * sInternal a (p₀, q₀)| ≤ |c| + |a| * s₀ := by
+      have h := abs_sub (c) (a * sInternal a (p₀, q₀))
+      have h7 : |a * sInternal a (p₀, q₀)| = |a| * s₀ := by rw [abs_mul, hs₀_def]
+      linarith [h7 ▸ h]
+    -- |a|*s₀ ≤ |a|*1.
+    have h7 : |a| * s₀ ≤ |a| := by
+      have := mul_le_mul_of_nonneg_left (h_s_lt.le.trans hε_le) (abs_nonneg a)
+      linarith
+    have h8 : |c| ≥ (1 + a ^ 2) - |a| * s₀ := by linarith
+    have h9 : |c| ≥ c₀ - (|a| - |a| * s₀) := by simp only [hc₀_def]; linarith
+    rw [abs_of_pos h_P_pos] at h8
+    linarith
+  -- Choose K.
+  set K : ℕ := (⌈M / c⌉.toNat) + 1 with hK_def
+  have hK_pos : 0 < K := Nat.succ_pos _
+  have hc_pos : 0 < c := h_P_pos
+  -- K * c > M.
+  have hK_c_gt : M < (K : ℝ) * c := by
+    have h_ceil : M / c ≤ ⌈M / c⌉ := Int.le_ceil _
+    have h_K_eq : (K : ℝ) = (⌈M / c⌉.toNat : ℝ) + 1 := by
+      rw [hK_def]; push_cast; ring
+    have h_toNat_ge : ((⌈M / c⌉.toNat : ℤ) : ℝ) ≥ ⌈M / c⌉ := by
+      by_cases h : 0 ≤ ⌈M / c⌉
+      · rw [Int.toNat_of_nonneg h]
+      · push Not at h
+        rw [Int.toNat_of_nonpos h.le]
+        push_cast
+        have hh : ((⌈M/c⌉ : ℤ) : ℝ) < 0 := by exact_mod_cast h
+        linarith
+    have h_K_real : (K : ℝ) > M / c := by
+      have hK_int : (K : ℝ) > (⌈M / c⌉ : ℝ) := by
+        rw [h_K_eq]
+        have : (⌈M / c⌉.toNat : ℝ) = ((⌈M / c⌉.toNat : ℤ) : ℝ) := by push_cast; rfl
+        rw [this]; linarith
+      linarith
+    rwa [gt_iff_lt, div_lt_iff₀ hc_pos] at h_K_real
+  -- K * s₀ ≤ δ.
+  have hK_s_le : (K : ℝ) * s₀ ≤ δ := by
+    -- K ≤ |M|/c₀ + 2 (since K = ⌈M/c⌉.toNat + 1 ≤ |M/c| + 2 ≤ |M|/c₀ + 2).
+    have hK_le_real : (K : ℝ) ≤ |M| / c₀ + 2 := by
+      rw [hK_def]; push_cast
+      have h_toNat_le : ((⌈M / c⌉.toNat : ℤ) : ℝ) ≤ |M / c| + 1 := by
+        by_cases h0 : 0 ≤ ⌈M / c⌉
+        · rw [Int.toNat_of_nonneg h0]
+          have h_ceil_lt : (⌈M / c⌉ : ℝ) < M / c + 1 := Int.ceil_lt_add_one _
+          have h_le_abs : M / c ≤ |M / c| := le_abs_self _
+          linarith
+        · push Not at h0
+          rw [Int.toNat_of_nonpos h0.le]
+          push_cast; linarith [abs_nonneg (M / c)]
+      have h_abs_div : |M / c| ≤ |M| / c₀ := by
+        rw [abs_div, abs_of_pos hc_pos]
+        exact div_le_div_of_nonneg_left (abs_nonneg _) hc₀_pos hc_ge
+      have h_step : ((⌈M / c⌉.toNat : ℤ) : ℝ) = (⌈M / c⌉.toNat : ℝ) := by push_cast; rfl
+      rw [← h_step]
+      linarith
+    -- s₀ ≤ c₀*δ/(|M|+2c₀+1).
+    have h_s₀_le : s₀ ≤ c₀ * δ / (|M| + 2 * c₀ + 1) :=
+      le_trans h_s_lt.le (min_le_right _ _)
+    -- Combine: K * s₀ ≤ (|M|/c₀ + 2) * (c₀*δ/(|M|+2c₀+1)) = (|M|+2c₀)*δ/(|M|+2c₀+1) ≤ δ.
+    have h_denom_pos : 0 < |M| + 2 * c₀ + 1 := by positivity
+    have h_K_nn : 0 ≤ (K : ℝ) := Nat.cast_nonneg _
+    have h_s₀_nn : 0 ≤ s₀ := h_s_pos.le
+    calc (K : ℝ) * s₀
+        ≤ (|M| / c₀ + 2) * s₀ := mul_le_mul_of_nonneg_right hK_le_real h_s₀_nn
+      _ ≤ (|M| / c₀ + 2) * (c₀ * δ / (|M| + 2 * c₀ + 1)) := by
+          apply mul_le_mul_of_nonneg_left h_s₀_le
+          have h1 : 0 ≤ |M| / c₀ := div_nonneg hM_abs_nn hc₀_pos.le
+          linarith
+      _ = (|M| + 2 * c₀) * δ / (|M| + 2 * c₀ + 1) := by
+          field_simp
+      _ ≤ δ := by
+          rw [div_le_iff₀ h_denom_pos]
+          nlinarith [hδ_pos.le, hM_abs_nn, hc₀_pos.le]
+  refine ⟨K, p₀, q₀, hK_pos, hK_c_gt, ?_⟩
+  -- Goal: (K : ℝ) * |sInternal a (p₀, q₀)| ≤ min (a*ω) ω.
+  -- Equivalently: (K : ℝ) * s₀ ≤ δ.
+  show (K : ℝ) * |sInternal a (p₀, q₀)| ≤ δ
+  rw [show |sInternal a (p₀, q₀)| = s₀ from rfl]
+  exact hK_s_le
+
+/-- The unboundedness-above main theorem. -/
+theorem tildeP_image_unbounded_above
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (M : ℝ) :
+    ∃ z ∈ acceptedSet a ω, M < tildeP a z := by
+  obtain ⟨K, p₀, q₀, _, hK_c_gt, h_K_s_abs⟩ :=
+    exists_scaled_witness a ω ha ha_pos hω M
+  refine ⟨((K : ℤ) * p₀, (K : ℤ) * q₀), ?_, ?_⟩
+  · -- Show sInternal a (K*p₀, K*q₀) ∈ W.
+    change sInternal a ((K : ℤ) * p₀, (K : ℤ) * q₀) ∈ W a ω
+    have h_s_eq : sInternal a ((K : ℤ) * p₀, (K : ℤ) * q₀)
+                = (K : ℝ) * sInternal a (p₀, q₀) := by
+      simp only [sInternal]; push_cast; ring
+    rw [h_s_eq]
+    have h_abs : |(K : ℝ) * sInternal a (p₀, q₀)| ≤ min (a * ω) ω := by
+      rw [abs_mul, abs_of_nonneg (Nat.cast_nonneg K)]
+      exact h_K_s_abs
+    refine ⟨?_, ?_⟩
+    · have := abs_le.mp (le_trans h_abs (min_le_left _ _)); exact this.1
+    · have := abs_le.mp (le_trans h_abs (min_le_right _ _)); exact this.2
+  · have h_P_eq : tildeP a ((K : ℤ) * p₀, (K : ℤ) * q₀)
+              = (K : ℝ) * tildeP a (p₀, q₀) := by
+      simp only [tildeP]; push_cast; ring
+    rw [h_P_eq]; exact hK_c_gt
+
+/-- The unboundedness-below main theorem. -/
+theorem tildeP_image_unbounded_below
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (M : ℝ) :
+    ∃ z ∈ acceptedSet a ω, tildeP a z < M := by
+  obtain ⟨K, p₀, q₀, _, hK_c_gt, h_K_s_abs⟩ :=
+    exists_scaled_witness a ω ha ha_pos hω (-M)
+  refine ⟨((-(K : ℤ)) * p₀, (-(K : ℤ)) * q₀), ?_, ?_⟩
+  · change sInternal a ((-(K : ℤ)) * p₀, (-(K : ℤ)) * q₀) ∈ W a ω
+    have h_s_eq : sInternal a ((-(K : ℤ)) * p₀, (-(K : ℤ)) * q₀)
+                = -((K : ℝ) * sInternal a (p₀, q₀)) := by
+      simp only [sInternal]; push_cast; ring
+    rw [h_s_eq]
+    have h_abs : |(K : ℝ) * sInternal a (p₀, q₀)| ≤ min (a * ω) ω := by
+      rw [abs_mul, abs_of_nonneg (Nat.cast_nonneg K)]
+      exact h_K_s_abs
+    have h_abs_neg : |-((K : ℝ) * sInternal a (p₀, q₀))| ≤ min (a * ω) ω := by
+      rw [abs_neg]; exact h_abs
+    refine ⟨?_, ?_⟩
+    · have := abs_le.mp (le_trans h_abs_neg (min_le_left _ _)); exact this.1
+    · have := abs_le.mp (le_trans h_abs_neg (min_le_right _ _)); exact this.2
+  · have h_P_eq : tildeP a ((-(K : ℤ)) * p₀, (-(K : ℤ)) * q₀)
+              = -((K : ℝ) * tildeP a (p₀, q₀)) := by
+      simp only [tildeP]; push_cast; ring
+    rw [h_P_eq]; linarith
+
 end CutAndProject.Irrational
