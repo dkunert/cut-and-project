@@ -1242,26 +1242,44 @@ an interval intersected with the strip is a bounded parallelogram in
 the projected set \(\tilde p(A)\) is locally finite.
 
 Unboundedness in both directions follows from a lattice-translate
-construction.  Density of
-\(s(\mathbb{Z}^2)=\{n - a m : m, n \in \mathbb{Z}\}\) in \(\mathbb{R}\)
-(see Step~3 of the proof of Proposition~\ref{prop:irrational} below)
-yields a pair \((p_0, q_0) \in \mathbb{Z}^2\) with \(0 < |s(p_0, q_0)|\)
-arbitrarily small.  Since \(\tilde p\) is injective on \(\mathbb{Z}^2\)
-(Step~1 below) and \((p_0, q_0)\ne(0,0)\), we have
-\(\tilde p(p_0, q_0) \ne 0\); replacing \((p_0, q_0)\) by
-\((-p_0, -q_0)\) if needed, we may assume \(\tilde p(p_0, q_0) > 0\).
-For any \(K \in \mathbb{Z}\),
+construction whose quantor structure is the natural one for a
+Diophantine-style argument: given any target \(M \in \mathbb{R}\), the
+base lattice vector \((p_0, q_0)\) and the scaling integer \(K\) are
+both chosen depending on~\(M\).
+
+By density of \(s(\mathbb{Z}^2)=\{n - a m : m, n \in \mathbb{Z}\}\) in
+\(\mathbb{R}\) (see Step~3 of the proof of
+Proposition~\ref{prop:irrational} below), for every \(\varepsilon > 0\)
+there exists \((p_0, q_0) \in \mathbb{Z}^2\) with
+\(0 < |s(p_0, q_0)| < \varepsilon\).  For \(\varepsilon < 1\), the
+relation \(s(p_0, q_0) = q_0 - a p_0\) with \(|s(p_0, q_0)| < 1\)
+forces \(p_0 \ne 0\) (else \(|q_0| < 1\) would give \(q_0 = 0\),
+contradicting \(|s(p_0, q_0)| > 0\)).  Hence \(|p_0| \ge 1\), and the
+identity
 \[
-    s(K p_0, K q_0) \;=\; K \cdot s(p_0, q_0),
-    \qquad
-    \tilde p(K p_0, K q_0) \;=\; K \cdot \tilde p(p_0, q_0),
+    \tilde p(p_0, q_0) \;=\; (1 + a^2)\, p_0 + a\, s(p_0, q_0)
 \]
-so by choosing \(|s(p_0, q_0)|\) small enough that
-\(|K \cdot s(p_0, q_0)| \le \min(a\omega, \omega)\) for the desired
-range of \(K\), the lattice point \((K p_0, K q_0)\) lies in \(A\), and
-\(\tilde p(K p_0, K q_0) \to \pm\infty\) as \(K \to \pm\infty\).  The
-gap sequence is therefore well defined via the increasing
-\(\mathbb{Z}\)-indexed enumeration of \(\tilde p(A)\).
+yields the uniform lower bound
+\(|\tilde p(p_0, q_0)| \ge c_0 := 1 + a^2 - |a|\), which is strictly
+positive since
+\(c_0 = (|a| - \tfrac12)^2 + \tfrac34 \ge \tfrac34\).  Replacing
+\((p_0, q_0)\) by \((-p_0, -q_0)\) if necessary, we may assume
+\(\tilde p(p_0, q_0) \ge c_0\).
+
+Now fix the target \(M\) and shrink \(\varepsilon\) (depending on
+\(M\)) so that the integer
+\(K := \lceil M / \tilde p(p_0, q_0) \rceil + 1\) satisfies
+\(K \cdot |s(p_0, q_0)| \le \min(a\omega, \omega)\).  Then
+\(s(K p_0, K q_0) = K \cdot s(p_0, q_0) \in W\), so
+\((K p_0, K q_0) \in A\), and
+\(\tilde p(K p_0, K q_0) = K \cdot \tilde p(p_0, q_0) > M\).  The
+negative direction is symmetric: apply the construction to \(-M\) and
+negate the resulting lattice point.  The gap sequence is therefore
+well defined via the increasing \(\mathbb{Z}\)-indexed enumeration of
+\(\tilde p(A)\).  (The same construction, with explicit constants, is
+used in the Lean formalisation to discharge \texttt{NoMaxOrder} and
+\texttt{NoMinOrder} on \(\tilde p(A)\); see
+\texttt{exists\_scaled\_witness} in \texttt{Irrational.lean}.)
 
 \begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
 Let \(a \in \mathbb{R}_{>0} \setminus \mathbb{Q}\) and \(\omega > 0\), and
