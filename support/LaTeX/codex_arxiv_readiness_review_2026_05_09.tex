@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+
+\emergencystretch=4em
+\sloppy
+
+\title{Codex-Review zur arXiv-Reife des Cut-and-Project-Papers}
+\author{}
+\date{9. Mai 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Gesamturteil}
+
+Nach erneutem Review des Papers und der Lean-Formalisierung ist mein Urteil:
+Die Hauptformeln wirken mathematisch konsistent, der Lean-Code baut sauber,
+und die empirischen Checks passen. Ich habe keine blockierende Luecke in den
+Haupttheoremen gefunden.
+
+Vor einer arXiv-Einreichung wuerde ich aber vier Punkte korrigieren bzw.
+schaerfen. Zwei davon sind meines Erachtens wichtig fuer mathematische
+Praezision, die anderen beiden verbessern Klarheit und Reproduzierbarkeit.
+
+\section*{Wichtige Findings}
+
+\begin{enumerate}
+    \item \textbf{Literaturabschnitt zu Sturmian-Folgen.}
+    In der Passage ueber Christoffel-Woerter und Sturmian-Sequenzen steht,
+    dass die mechanische Sturmian-Folge rationaler Steigung \(p/q\) Periode
+    \(p+q\) habe. In der ueblichen Codierung mit Steigung
+    \(p/q \in (0,1)\) ist die Periode typischerweise \(q\), waehrend
+    Christoffel-Woerter eine Blocklaenge \(p+q\) haben. Diese Stelle sollte
+    unbedingt umformuliert werden, etwa indem nur die Christoffel-Blocklaenge
+    \(p+q\) genannt wird oder die verwendete Steigungskonvention explizit
+    gemacht wird.
+
+    \item \textbf{Irrationaler Fall: Unbeschraenktheit genauer begruenden.}
+    Die handschriftliche Argumentation nutzt die Dichte von
+    \(s(\mathbb Z^2)\), um akzeptierte Punkte mit erster Koordinate
+    \(m\to\pm\infty\) zu erhalten. Reine Dichte der gesamten Menge impliziert
+    jedoch nicht automatisch Tail-Dichte mit vorgeschrieben grossem
+    Koordinatenanteil. Der Lean-Beweis ist robuster: Er konstruiert einen
+    kleinen internen Vektor mit positivem physischem Anteil und skaliert ihn.
+    Fuer das Paper sollte entweder explizit Tail-Dichte der irrationalen
+    Rotation zitiert werden oder die Lean-Idee kurz in den Text uebernommen
+    werden.
+
+    \item \textbf{Residuen \(c_r\): Repraesentanten fixieren.}
+    \(c_r\) wird zuerst als Restklasse modulo \(D\) definiert und danach in
+    Mengen der Form \(c_r+kD\) als ganzzahliger Repraesentant verwendet. Das
+    ist mathematisch klar, aber fuer maximale Praezision sollte im Text
+    explizit stehen: ``Waehle den Repraesentanten
+    \(c_r\in\{0,\ldots,D-1\}\).''
+
+    \item \textbf{Lean-README aktualisieren.}
+    Das Paper beschreibt die neue irrationale Formalisierung korrekt, aber
+    \texttt{Lean/CutAndProject/README.md} ist noch auf den frueheren Stand
+    des rationalen Kerns zugeschnitten. Es nennt nur \texttt{Basic.lean},
+    etwa 2.860 Zeilen, und sagt, der Entry point importiere nur
+    \texttt{Basic}; tatsaechlich importiert
+    \texttt{CutAndProject.lean} inzwischen auch \texttt{Irrational.lean}.
+    Das sollte vor Veroeffentlichung des Companion-Repositories angepasst
+    werden.
+\end{enumerate}
+
+\section*{Verifikationsstatus}
+
+\begin{itemize}
+    \item \texttt{lake build} in \texttt{Lean/CutAndProject} laeuft
+    erfolgreich durch.
+    \item Es wurden keine \texttt{sorry}, \texttt{admit} oder \texttt{axiom}
+    Deklarationen im Lean-Code gefunden.
+    \item \texttt{latexmk} meldet fuer das Paper keine Fehler; im Log stehen
+    nur zwei harmlose Underfull-Box-Warnungen.
+    \item \texttt{python3 src/python/verify\_paper.py} bestaetigt alle
+    51.729 CSV-Testfaelle mit null Multiset-Mismatches, null
+    Set-Mismatches und null negativen Sentinel-Werten.
+\end{itemize}
+
+\section*{Schlussfolgerung}
+
+Das Paper ist in der Sache nahe an arXiv-reif. Die rationalen Multiset- und
+Set-Formeln sind sauber durch die Residuenanalyse gedeckt; der geometrische
+Multiplikator \(c_r\equiv-\alpha\beta^{-1}r\pmod D\) ist in Lean bis zu den
+Headline-Theoremen durchgezogen. Der irrationale Fall ist inzwischen
+substantiell formalisiert, inklusive lokaler Endlichkeit, bi-infiniter
+Aufzaehlung und Periodenlift.
+
+Meine Empfehlung: Vor der Einreichung die vier Findings oben einarbeiten,
+insbesondere den Literaturvergleich zu Sturmian-Sequenzen und die
+Unbeschraenktheitsbegruendung im irrationalen Fall. Danach sehe ich aus
+diesem Review heraus keinen Grund, die arXiv-Einreichung weiter
+aufzuschieben.
+
+\end{document}
