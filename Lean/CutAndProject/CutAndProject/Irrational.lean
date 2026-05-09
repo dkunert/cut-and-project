@@ -616,4 +616,160 @@ lemma gap_pos (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (i : ℤ) :
   have hlt : i < i + 1 := by linarith
   linarith [ell_strictMono a ω ha ha_pos hω hlt]
 
+/-! ### Section H. Step 2: a finite period lifts to a lattice translation -/
+
+/-- The partial sum of `λ` consecutive gaps starting at `i` is independent of `i`. -/
+private lemma telescoping_sum
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (lam : ℕ)
+    (hp : IsGapPeriod a ω ha ha_pos hω lam) (i : ℤ) :
+    ell a ω ha ha_pos hω (i + lam) - ell a ω ha ha_pos hω i =
+      ell a ω ha ha_pos hω (0 + lam) - ell a ω ha ha_pos hω 0 := by
+  -- Define the abbreviation `F i := ell(i + lam) - ell i` (locally).
+  -- Equivalently, prove `F i = F 0` by induction on `i : ℤ`.
+  set F : ℤ → ℝ := fun j => ell a ω ha ha_pos hω (j + lam) - ell a ω ha ha_pos hω j with hF_def
+  change F i = F 0
+  -- Key step: `F (j + 1) = F j` for all `j : ℤ`, using `gap (j + lam) = gap j`.
+  have hstep : ∀ j : ℤ, F (j + 1) = F j := by
+    intro j
+    have hgap_eq : gap a ω ha ha_pos hω (j + lam) = gap a ω ha ha_pos hω j := hp.2 j
+    -- Unfold gap: gap k = ell (k+1) - ell k.
+    have h1 : ell a ω ha ha_pos hω (j + lam + 1) - ell a ω ha ha_pos hω (j + lam)
+            = ell a ω ha ha_pos hω (j + 1) - ell a ω ha ha_pos hω j := by
+      have := hgap_eq
+      simp only [gap] at this
+      exact this
+    -- Now compute F (j+1) - F j and show it is 0.
+    simp only [hF_def]
+    have hassoc : (j + 1 : ℤ) + (lam : ℤ) = (j + lam) + 1 := by ring
+    rw [hassoc]
+    linarith
+  -- Key step backward: `F (j - 1) = F j` (equivalently `F j = F (j+1)` applied at j-1).
+  have hstep' : ∀ j : ℤ, F (j - 1) = F j := by
+    intro j
+    have := hstep (j - 1)
+    have heq : (j - 1 : ℤ) + 1 = j := by ring
+    rw [heq] at this
+    linarith
+  -- Now induct on i.
+  induction i with
+  | zero => rfl
+  | succ n ih =>
+    have h := hstep ((n : ℤ))
+    -- h : F ((n : ℤ) + 1) = F ((n : ℤ))
+    change F ((n : ℤ) + 1) = F 0
+    rw [h]; exact ih
+  | pred n ih =>
+    have h := hstep' (-(n : ℤ))
+    -- h : F (-(n : ℤ) - 1) = F (-(n : ℤ))
+    change F (-(n : ℤ) - 1) = F 0
+    rw [h]; exact ih
+
+/-- Linearity of `tildeP` under addition of lattice points. -/
+private lemma tildeP_add (z w : ℤ × ℤ) :
+    tildeP a (z + w) = tildeP a z + tildeP a w := by
+  rcases z with ⟨m, n⟩
+  rcases w with ⟨m', n'⟩
+  simp only [Prod.mk_add_mk, tildeP_apply]
+  push_cast
+  ring
+
+/-- Linearity of `tildeP` under subtraction of lattice points. -/
+private lemma tildeP_sub (z w : ℤ × ℤ) :
+    tildeP a (z - w) = tildeP a z - tildeP a w := by
+  rcases z with ⟨m, n⟩
+  rcases w with ⟨m', n'⟩
+  simp only [Prod.mk_sub_mk, tildeP_apply]
+  push_cast
+  ring
+
+/-- The origin lies in the accepted set. -/
+private lemma origin_mem_acceptedSet (ha_pos : 0 < a) (hω : 0 < ω) :
+    ((0 : ℤ), (0 : ℤ)) ∈ acceptedSet a ω := by
+  rw [mem_acceptedSet_iff, mem_W_iff]
+  refine ⟨?_, ?_⟩
+  · have : 0 ≤ a * ω := mul_nonneg ha_pos.le hω.le
+    simp only [sInternal_apply, Int.cast_zero, mul_zero, sub_zero]
+    linarith
+  · simp only [sInternal_apply, Int.cast_zero, mul_zero, sub_zero]
+    linarith
+
+/-- `ell i` lies in the projected set. -/
+private lemma ell_mem_projectedSet
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (i : ℤ) :
+    ell a ω ha ha_pos hω i ∈ projectedSet a ω :=
+  ((enumerate a ω ha ha_pos hω) i).property
+
+/-- **Step 2 of Proposition 1.** If the gap sequence has finite period λ, there is a
+non-zero lattice translation `v` with `tildeP v > 0` that preserves `acceptedSet`. -/
+theorem period_lifts_to_lattice_translation
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω)
+    (lam : ℕ) (hp : IsGapPeriod a ω ha ha_pos hω lam) :
+    ∃ v : ℤ × ℤ, v ≠ 0 ∧
+      0 < tildeP a v ∧
+      ∀ z ∈ acceptedSet a ω, z + v ∈ acceptedSet a ω := by
+  -- Step 1: σ := ell (0 + lam) - ell 0 > 0.
+  set σ : ℝ := ell a ω ha ha_pos hω (0 + lam) - ell a ω ha ha_pos hω 0 with hσ_def
+  have hlam_pos : (0 : ℤ) < (lam : ℤ) := by exact_mod_cast hp.1
+  have hσ_pos : 0 < σ := by
+    have hlt : (0 : ℤ) < 0 + (lam : ℤ) := by linarith
+    have := ell_strictMono a ω ha ha_pos hω hlt
+    linarith
+  -- Step 2: Base point z₀ = (0, 0) ∈ acceptedSet.
+  set z₀ : ℤ × ℤ := (0, 0) with hz₀_def
+  have hz₀_acc : z₀ ∈ acceptedSet a ω := origin_mem_acceptedSet a ω ha_pos hω
+  -- Step 3: tildeP z₀ ∈ projectedSet, so it equals ell i₀ for some i₀ : ℤ.
+  have hP_z₀ : tildeP a z₀ ∈ projectedSet a ω := ⟨z₀, hz₀_acc, rfl⟩
+  set i₀ : ℤ := (enumerate a ω ha ha_pos hω).symm ⟨tildeP a z₀, hP_z₀⟩ with hi₀_def
+  have h_ell_i₀ : ell a ω ha ha_pos hω i₀ = tildeP a z₀ := by
+    -- ell i₀ = ((enumerate ...) i₀).val = ((enumerate ...) ((enumerate ...).symm _)).val
+    simp only [ell, hi₀_def, OrderIso.apply_symm_apply]
+  -- Step 4: ell (i₀ + lam) = ell i₀ + σ.
+  have h_ell_shift : ell a ω ha ha_pos hω (i₀ + lam) = ell a ω ha ha_pos hω i₀ + σ := by
+    have h := telescoping_sum a ω ha ha_pos hω lam hp i₀
+    linarith
+  -- Step 5: Get z₁ ∈ acceptedSet with tildeP z₁ = ell (i₀ + lam).
+  have h_in_proj : ell a ω ha ha_pos hω (i₀ + lam) ∈ projectedSet a ω :=
+    ell_mem_projectedSet a ω ha ha_pos hω (i₀ + lam)
+  obtain ⟨z₁, hz₁_acc, hz₁_eq⟩ := h_in_proj
+  -- hz₁_eq : tildeP a z₁ = ell (i₀ + lam)
+  -- Step 6: Set v := z₁ - z₀. Then tildeP v = σ.
+  set v : ℤ × ℤ := z₁ - z₀ with hv_def
+  have h_tildeP_v : tildeP a v = σ := by
+    rw [hv_def, tildeP_sub]
+    rw [hz₁_eq, h_ell_shift, h_ell_i₀]
+    ring
+  -- Step 7: The witness.
+  refine ⟨v, ?_, ?_, ?_⟩
+  · -- v ≠ 0: else tildeP v = 0, contradicting tildeP v = σ > 0.
+    intro hv0
+    have : tildeP a v = 0 := by rw [hv0]; simp [tildeP]
+    rw [h_tildeP_v] at this
+    linarith
+  · -- 0 < tildeP a v
+    rw [h_tildeP_v]; exact hσ_pos
+  · -- ∀ z ∈ acceptedSet, z + v ∈ acceptedSet.
+    intro z hz_acc
+    -- For any z ∈ acceptedSet, tildeP z ∈ projectedSet.
+    have hP_z : tildeP a z ∈ projectedSet a ω := ⟨z, hz_acc, rfl⟩
+    set i : ℤ := (enumerate a ω ha ha_pos hω).symm ⟨tildeP a z, hP_z⟩ with hi_def
+    have h_ell_i : ell a ω ha ha_pos hω i = tildeP a z := by
+      simp only [ell, hi_def, OrderIso.apply_symm_apply]
+    have h_ell_shift_i : ell a ω ha ha_pos hω (i + lam) = ell a ω ha ha_pos hω i + σ := by
+      have h := telescoping_sum a ω ha ha_pos hω lam hp i
+      linarith
+    -- ell (i + lam) ∈ projectedSet, so equals tildeP z' for some z' ∈ acceptedSet.
+    have h_in_proj_i : ell a ω ha ha_pos hω (i + lam) ∈ projectedSet a ω :=
+      ell_mem_projectedSet a ω ha ha_pos hω (i + lam)
+    obtain ⟨z', hz'_acc, hz'_eq⟩ := h_in_proj_i
+    -- tildeP z' = tildeP z + σ.
+    have h_P_z' : tildeP a z' = tildeP a z + σ := by
+      rw [hz'_eq, h_ell_shift_i, h_ell_i]
+    -- tildeP (z + v) = tildeP z + tildeP v = tildeP z + σ = tildeP z'.
+    have h_eq : tildeP a (z + v) = tildeP a z' := by
+      rw [tildeP_add, h_tildeP_v, h_P_z']
+    -- By injectivity, z + v = z', so z + v ∈ acceptedSet.
+    have : z + v = z' := tildeP_injective a ha h_eq
+    rw [this]
+    exact hz'_acc
+
 end CutAndProject.Irrational
