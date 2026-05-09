@@ -1267,9 +1267,17 @@ positive since
 \(\tilde p(p_0, q_0) \ge c_0\).
 
 Now fix the target \(M\).  Setting
-\(K := \lceil M / \tilde p(p_0, q_0) \rceil + 1\), the bound
-\(\tilde p(p_0, q_0) \ge c_0 > 0\) gives the explicit estimate
-\(K \le |M|/c_0 + 2\); choosing
+\[
+    K \;:=\; \max\!\bigl(1,\;\lceil M / \tilde p(p_0, q_0) \rceil + 1\bigr)
+    \;\in\;\mathbb{Z}_{>0},
+\]
+the lower bound \(\tilde p(p_0, q_0) \ge c_0 > 0\) gives the explicit
+estimate \(K \le |M|/c_0 + 2\) (the \(\max\) prevents \(K\) from going
+negative when \(M\) is large negative, while the inequality
+\(K \cdot \tilde p(p_0, q_0) > M\) still holds in both branches: the
+branch \(K = 1\) is used precisely when \(\lceil M/\tilde p(p_0,q_0)\rceil
+\le 0\), i.e.\ when \(M \le 0\), so \(K \tilde p(p_0,q_0) = \tilde
+p(p_0,q_0) \ge c_0 > 0 \ge M\)).  Choosing
 \(\varepsilon \le c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\)
 (still positive, depending on \(M\)) therefore ensures
 \(K \cdot |s(p_0, q_0)| < K \varepsilon \le \min(a\omega, \omega)\).
