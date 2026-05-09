@@ -793,12 +793,11 @@ private lemma sInternal_sub (z w : ℤ × ℤ) :
   push_cast
   ring
 
-/-- **Step 3 of Proposition 1.** If `v ∈ ℤ²` preserves `acceptedSet` under both
-addition and subtraction, then `v = 0`. -/
+/-- **Step 3 of Proposition 1.** If `v ∈ ℤ²` preserves `acceptedSet` under
+addition, then `v = 0`. -/
 theorem lattice_translation_must_be_zero
     (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (v : ℤ × ℤ)
-    (hv_inv : ∀ z ∈ acceptedSet a ω, z + v ∈ acceptedSet a ω)
-    (hv_inv_neg : ∀ z ∈ acceptedSet a ω, z - v ∈ acceptedSet a ω) :
+    (hv_inv : ∀ z ∈ acceptedSet a ω, z + v ∈ acceptedSet a ω) :
     v = 0 := by
   obtain ⟨m, n⟩ := v
   set τ : ℝ := sInternal a (m, n) with hτ_def
@@ -808,14 +807,8 @@ theorem lattice_translation_must_be_zero
   have hτ_zero : τ = 0 := by
     by_contra hτ_ne
     rcases lt_or_gt_of_ne hτ_ne with hτ_neg | hτ_pos
-    · -- τ < 0 case: pick t ∈ (max(-(a*ω), ω + τ), ω) ∩ range sInternal.
-      -- Then t ∈ W and t - τ > ω, so (m', n') - (m, n) leaves W.
-      -- Actually we use hv_inv: t + τ < t ≤ ... hmm; let's reason carefully.
-      -- hv_inv: z ∈ acc ⟹ z + (m,n) ∈ acc, i.e. sInternal(z) + τ ∈ W.
-      -- So if t ∈ W ∩ range and t + τ ∉ W, contradiction.
-      -- For τ < 0, want t ∈ W with t + τ < -(a*ω), i.e. t < -(a*ω) - τ = -(a*ω) + (-τ).
-      -- Since -τ > 0, the interval (-(a*ω), -(a*ω) + (-τ)) is non-degenerate.
-      -- Also need t ≤ ω; pick interval (-(a*ω), min ω (-(a*ω) - τ)).
+    · -- τ < 0 case: pick t ∈ (-(a*ω), min ω (-(a*ω) - τ)) ∩ range sInternal.
+      -- Then t ∈ W but t + τ < -(a*ω), contradicting hv_inv.
       set ub : ℝ := min ω (-(a * ω) - τ) with hub_def
       have hlb_lt_ub : -(a * ω) < ub := by
         have h1 : -(a * ω) < ω := by
