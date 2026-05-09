@@ -588,4 +588,32 @@ noncomputable def enumerate
   -- Final assembly
   exact (orderIsoIntOfLinearSuccPredArch).symm
 
+/-! ### Section G. Gap sequence and periodicity -/
+
+/-- The i-th projected point (= ℓ_i in the paper). -/
+noncomputable def ell (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (i : ℤ) : ℝ :=
+  ((enumerate a ω ha ha_pos hω) i).val
+
+/-- The i-th gap g_i := ℓ_{i+1} - ℓ_i. -/
+noncomputable def gap (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (i : ℤ) : ℝ :=
+  ell a ω ha ha_pos hω (i + 1) - ell a ω ha ha_pos hω i
+
+/-- The gap sequence has period λ. -/
+def IsGapPeriod (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (lam : ℕ) : Prop :=
+  0 < lam ∧ ∀ i : ℤ, gap a ω ha ha_pos hω (i + lam) = gap a ω ha ha_pos hω i
+
+/-- The enumeration is strictly monotone, so ℓ is strictly increasing. -/
+lemma ell_strictMono (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) :
+    StrictMono (ell a ω ha ha_pos hω) := by
+  intro i j hij
+  have := (enumerate a ω ha ha_pos hω).strictMono hij
+  exact this
+
+/-- Each gap is strictly positive. -/
+lemma gap_pos (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) (i : ℤ) :
+    0 < gap a ω ha ha_pos hω i := by
+  unfold gap
+  have hlt : i < i + 1 := by linarith
+  linarith [ell_strictMono a ω ha ha_pos hω hlt]
+
 end CutAndProject.Irrational
