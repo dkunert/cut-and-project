@@ -510,4 +510,82 @@ theorem tildeP_image_unbounded_below
       simp only [tildeP]; push_cast; ring
     rw [h_P_eq]; linarith
 
+/-! ### Section F. ℤ-enumeration of the projected accepted set -/
+
+/-! API lemmas for unfolding the Section A definitions. -/
+
+@[simp]
+lemma tildeP_apply (m n : ℤ) :
+    tildeP a (m, n) = (m : ℝ) + a * (n : ℝ) := rfl
+
+@[simp]
+lemma sInternal_apply (m n : ℤ) :
+    sInternal a (m, n) = (n : ℝ) - a * (m : ℝ) := rfl
+
+@[simp]
+lemma mem_W_iff (x : ℝ) :
+    x ∈ W a ω ↔ -(a * ω) ≤ x ∧ x ≤ ω := by
+  simp [W, Set.mem_Icc]
+
+@[simp]
+lemma mem_acceptedSet_iff (z : ℤ × ℤ) :
+    z ∈ acceptedSet a ω ↔ sInternal a z ∈ W a ω := Iff.rfl
+
+/-- The image of the accepted set under the projection. -/
+def projectedSet : Set ℝ := tildeP a '' acceptedSet a ω
+
+/-- Bi-infinite enumeration of the projected accepted set.
+    The forward map `enumerate i` is the i-th projected lattice point. -/
+noncomputable def enumerate
+    (ha : Irrational a) (ha_pos : 0 < a) (hω : 0 < ω) :
+    ℤ ≃o (projectedSet a ω) := by
+  -- LocallyFiniteOrder via the Task-5 finiteness theorem
+  letI : LocallyFiniteOrder (projectedSet a ω) :=
+    LocallyFiniteOrder.ofFiniteIcc (fun (u v : projectedSet a ω) => by
+      -- Show finiteness of `Set.Icc u v` on the subtype.
+      -- Step 1: the subtype Icc is finite iff its image under `Subtype.val` is finite,
+      -- because `Subtype.val` is injective.
+      apply Set.Finite.of_finite_image (f := Subtype.val)
+        (hi := Subtype.val_injective.injOn)
+      -- Step 2: bound the image by a finite set.
+      -- Each `p` in the image equals `tildeP a z` for some `z ∈ acceptedSet`,
+      -- with `p ∈ Set.Icc u.val v.val`. Use `accepted_preimage_finite`.
+      refine Set.Finite.subset
+        ((accepted_preimage_finite a ω hω u.val v.val).image (tildeP a)) ?_
+      rintro p ⟨q, hq_mem, rfl⟩
+      -- q : projectedSet a ω, hq_mem : q ∈ Set.Icc u v
+      -- q.val ∈ projectedSet a ω = tildeP a '' acceptedSet a ω
+      obtain ⟨z, hz_acc, hz_eq⟩ := q.property
+      refine ⟨z, ⟨hz_acc, ?_⟩, hz_eq⟩
+      -- Need: tildeP a z ∈ Set.Icc u.val v.val.
+      rw [hz_eq]
+      exact ⟨hq_mem.1, hq_mem.2⟩)
+  letI : SuccOrder (projectedSet a ω) :=
+    LinearLocallyFiniteOrder.succOrder _
+  letI : PredOrder (projectedSet a ω) :=
+    LinearLocallyFiniteOrder.predOrder _
+  -- NoMaxOrder via Section E
+  haveI : NoMaxOrder (projectedSet a ω) := ⟨fun u => by
+    obtain ⟨z, hz, hp⟩ := tildeP_image_unbounded_above a ω ha ha_pos hω u.val
+    refine ⟨⟨tildeP a z, ⟨z, hz, rfl⟩⟩, ?_⟩
+    exact hp⟩
+  -- NoMinOrder via Section E
+  haveI : NoMinOrder (projectedSet a ω) := ⟨fun u => by
+    obtain ⟨z, hz, hp⟩ := tildeP_image_unbounded_below a ω ha ha_pos hω u.val
+    refine ⟨⟨tildeP a z, ⟨z, hz, rfl⟩⟩, ?_⟩
+    exact hp⟩
+  -- Nonempty: (0, 0) is accepted because sInternal (0,0) = 0 ∈ W
+  haveI : Nonempty (projectedSet a ω) := by
+    refine ⟨⟨tildeP a (0, 0), ⟨(0, 0), ?_, rfl⟩⟩⟩
+    -- Show (0, 0) ∈ acceptedSet a ω, i.e. 0 ∈ W a ω = [-a*ω, ω]
+    rw [mem_acceptedSet_iff, mem_W_iff]
+    refine ⟨?_, ?_⟩
+    · have : 0 ≤ a * ω := mul_nonneg ha_pos.le hω.le
+      simp only [sInternal_apply, Int.cast_zero, mul_zero, sub_zero]
+      linarith
+    · simp only [sInternal_apply, Int.cast_zero, mul_zero, sub_zero]
+      linarith
+  -- Final assembly
+  exact (orderIsoIntOfLinearSuccPredArch).symm
+
 end CutAndProject.Irrational
