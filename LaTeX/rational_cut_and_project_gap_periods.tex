@@ -1358,15 +1358,18 @@ aperiodic side is the classical setting of model sets and aperiodic order
 \section{Machine-Checked Formalization}\label{sec:lean}
 % =====================================================================
 
-Both period theorems have been formalized in
-Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020},
-including the geometric residue map \(c_r \equiv -\alpha\beta^{-1}r
-\pmod{D}\) (the multiplier is threaded through to the headline theorems
+All period theorems of this paper have been formalized in
+Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
+The rational case (Theorems~\ref{thm:main} and~\ref{thm:setperiod})
+is formalized in \texttt{Basic.lean}, including the geometric residue
+map \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) (the multiplier is
+threaded through to the headline theorems
 \texttt{main\_\allowbreak theorem\_\allowbreak geometric\_\allowbreak concrete}
 and \texttt{set\_\allowbreak main\_\allowbreak theorem\_\allowbreak geometric\_\allowbreak concrete}).
-The formalization
-comprises approximately 2{,}850 lines of verified code with no
-\texttt{sorry} axioms, and is available in the companion
+The irrational case (Proposition~\ref{prop:irrational}) is formalized
+separately in \texttt{Irrational.lean}.  The two files together
+comprise approximately 3{,}750 lines of verified code with no
+\texttt{sorry} axioms, and are available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
 \subsection{Architecture}\label{subsec:lean_arch}
@@ -1397,11 +1400,33 @@ Each axiom is discharged by a separate lemma
 \texttt{period\_degenerate\_concrete},
 \texttt{sigma\_of\_period\_concrete}).
 
+\paragraph{Irrational case.}
+The irrational case (Proposition~\ref{prop:irrational}) is formalized
+separately in \texttt{Irrational.lean} (896 lines).  In addition to
+the proof of Proposition~\ref{prop:irrational}, the file establishes
+the supporting infrastructure used implicitly in
+Section~\ref{sec:irrational}: local finiteness of \(\tilde p(A)\),
+bi-infinite unboundedness, and the resulting \(\mathbb{Z}\)-indexed
+enumeration of accepted projected points (assembled via Mathlib's
+\texttt{orderIsoIntOfLinearSuccPredArch}).  Kronecker density of
+\(\mathbb{Z}+a\mathbb{Z}\subset\mathbb{R}\) is reduced to
+Mathlib's classification of additive subgroups of~\(\mathbb{R}\)
+(\texttt{dense\_addSubgroupClosure\_pair\_iff}).  The Lean proof
+simplifies the paper's argument at Step~3: instead of assuming both
+forward and backward invariance \(A + v = A\), the Lean step
+\texttt{lattice\_translation\_must\_be\_zero} requires only the
+forward inclusion \(A + v \subseteq A\) -- the contradiction near
+either endpoint of the window \(W\) is derivable from the forward
+direction alone.  Correspondingly, Step~2 in
+\texttt{period\_lifts\_to\_lattice\_translation} produces only forward
+invariance.
+
 \subsection{Correspondence with the paper}\label{subsec:lean_corr}
 
 Table~\ref{tab:lean} gives the correspondence between the main
-results of this paper and the Lean~4 declarations in
-\texttt{Basic.lean}.
+results of this paper and the Lean~4 declarations.  The rational
+case lives in \texttt{Basic.lean}; the irrational case
+(Section~\ref{sec:irrational}) lives in \texttt{Irrational.lean}.
 
 \begin{table}[ht]
 \centering
@@ -1472,11 +1497,36 @@ Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (abstract)
 Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (geometric)
   & \texttt{set\_main\_theorem\_geometric\_concrete} & 2849 \\
 \hline
+\multicolumn{3}{l}{\textit{Irrational case (Section~\ref{sec:irrational}, file \texttt{Irrational.lean})}} \\
+\hline
+Step~1 (\(\tilde p\) injective on \(\mathbb{Z}^2\))
+  & \texttt{tildeP\_injective} & 43 \\
+Kronecker density of \(\mathbb{Z}+a\mathbb{Z}\)
+  & \texttt{dense\_internal\_image} & 75 \\
+Local finiteness of \(\tilde p(A)\)
+  & \texttt{accepted\_preimage\_finite} & 102 \\
+Unboundedness of \(\tilde p(A)\) above
+  & \texttt{tildeP\_image\_unbounded\_above} & 465 \\
+Unboundedness of \(\tilde p(A)\) below
+  & \texttt{tildeP\_image\_unbounded\_below} & 489 \\
+\(\mathbb{Z}\)-indexed enumeration of \(\tilde p(A)\)
+  & \texttt{enumerate} & 539 \\
+Step~2 (period \(\Rightarrow\) lattice translation)
+  & \texttt{period\_lifts\_to\_lattice\_translation} & 704 \\
+Step~3 (translation must be zero)
+  & \texttt{lattice\_translation\_must\_be\_zero} & 798 \\
+Proposition~\ref{prop:irrational} (no finite period)
+  & \texttt{prop\_irrational} & 879 \\
+Proposition~\ref{prop:irrational} (multiset \(=\) set)
+  & \texttt{tildeP\_injOn\_acceptedSet} & 892 \\
+\hline
 \end{tabular}
-\caption{Correspondence between paper results and Lean~4 declarations
-in \texttt{Basic.lean}.  Line numbers refer to
-\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Basic.lean}
-in the companion repository version submitted with the paper~\cite{Kunert2025}.}
+\caption{Correspondence between paper results and Lean~4 declarations.
+Line numbers in the upper part of the table refer to
+\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Basic.lean};
+those in the lower part refer to
+\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Irrational.lean}
+(both files in the companion repository version submitted with the paper~\cite{Kunert2025}).}
 \label{tab:lean}
 \end{table}
 

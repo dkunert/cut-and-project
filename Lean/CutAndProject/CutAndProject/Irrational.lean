@@ -884,4 +884,13 @@ theorem prop_irrational
     period_lifts_to_lattice_translation a ω ha ha_pos hω lam hp
   exact hv_ne (lattice_translation_must_be_zero a ω ha ha_pos hω v hv_inv)
 
+/-- **Second claim of Proposition~1.**  Because `tildeP` is injective on
+`ℤ²` (Step 1, `tildeP_injective`), it is in particular injective when
+restricted to `acceptedSet`.  This formalizes the paper's remark that
+"the multiset and set conventions coincide" in the irrational case:
+the projected accepted points have no duplicates. -/
+theorem tildeP_injOn_acceptedSet (ha : Irrational a) :
+    Set.InjOn (tildeP a) (acceptedSet a ω) :=
+  (tildeP_injective a ha).injOn
+
 end CutAndProject.Irrational
