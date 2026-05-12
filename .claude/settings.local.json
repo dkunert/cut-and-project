@@ -74,7 +74,8 @@
       "WebFetch(domain:leanprover-community.github.io)",
       "Bash(cat lakefile.lean)",
       "Bash(cat lakefile.toml)",
-      "Bash(latexmk -pdf -interaction=nonstopmode rational_cut_and_project_gap_periods.tex)"
+      "Bash(latexmk -pdf -interaction=nonstopmode rational_cut_and_project_gap_periods.tex)",
+      "Bash(pdflatex -interaction=nonstopmode -halt-on-error reduktion_geometrie_zu_restklassen.tex)"
     ]
   }
 }
