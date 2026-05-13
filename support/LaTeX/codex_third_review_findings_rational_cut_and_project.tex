@@ -1,0 +1,215 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\emergencystretch=4em
+\sloppy
+
+\title{Third Codex Review Findings for\\
+\texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Codex Review Notes}
+\date{May 13, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Executive Summary}
+
+I reviewed the current manuscript
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex}
+\]
+together with the current Lean code:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{Lean/CutAndProject/CutAndProject/Basic.lean}
+  \item \texttt{Lean/CutAndProject/CutAndProject/Irrational.lean}
+\end{itemize}
+
+The rational main theorem and the set-valued companion theorem look
+mathematically solid.  I did not find a blocking issue in the residue
+reduction, the multiset period formula, the set-valued period formula, or the
+Lean formalisation of the residue-combinatorial core.  The remaining findings
+are precision and presentation issues, concentrated mainly in the irrational
+section and in the description of the Lean scope.
+
+\section*{Findings}
+
+\begin{enumerate}[label=\textbf{F\arabic*.},leftmargin=*]
+
+\item \textbf{Irrational unboundedness paragraph: make the \(\varepsilon<1\)
+condition explicit.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1255--1284},
+\]
+the argument first uses \(\varepsilon<1\) to force \(p_0\ne 0\) and obtain
+the lower bound
+\[
+|\tilde p(p_0,q_0)| \ge c_0 := 1+a^2-|a|.
+\]
+Later the chosen smallness condition is written only as
+\[
+\varepsilon \le
+ \frac{c_0\min(a\omega,\omega)}{|M|+2c_0+1}.
+\]
+
+\textbf{Recommendation.}  Choose explicitly
+\[
+\varepsilon \le
+\min\!\left(1,\,
+ \frac{c_0\min(a\omega,\omega)}{|M|+2c_0+1}\right).
+\]
+This matches the Lean proof, where the auxiliary parameter is defined using
+\(\min 1(\cdots)\) in \texttt{exists\_scaled\_witness}
+(\texttt{Irrational.lean:334}).
+
+\item \textbf{Lean scope: keep the wording slightly more conservative.}
+
+The Lean code itself correctly states that the geometric construction is not
+formalised from first principles:
+\[
+\texttt{Basic.lean:505--510}.
+\]
+The paper is mostly aligned with this, especially in the ``Scope of the
+formalization'' subsection.  However, phrases such as ``actual geometric
+enumeration'' around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1639}
+\]
+could still be read too strongly.
+
+\textbf{Recommendation.}  Use consistently:
+\begin{quote}
+``the residue-combinatorial core with the geometric multiplier threaded
+through to the final theorems''
+\end{quote}
+rather than wording suggesting that the full real-geometric
+strip-to-residue construction itself is machine-checked.
+
+\item \textbf{Irrational period lift: avoid speaking of a period
+\(-\sigma\).}
+
+In the proof of the irrational aperiodicity proposition, around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1350--1355},
+\]
+the text says:
+\begin{quote}
+``Applying the same argument to the period \(-\sigma\) yields the reverse
+inclusion.''
+\end{quote}
+Strictly speaking, \(-\sigma\) is not a period length of the gap sequence.
+It is a translation length in the projected set.
+
+The Lean proof is cleaner: it only produces the forward inclusion
+\[
+A+v\subseteq A
+\]
+in
+\[
+\texttt{period\_lifts\_to\_lattice\_translation}
+\quad(\texttt{Irrational.lean:704--709}),
+\]
+and
+\[
+\texttt{lattice\_translation\_must\_be\_zero}
+\quad(\texttt{Irrational.lean:798--801})
+\]
+proves that this forward inclusion alone
+forces \(v=0\).
+
+\textbf{Recommendation.}  Align the paper proof with Lean: claim only
+\(A+v\subseteq A\), and in Step~3 derive the contradiction from this forward
+inclusion by choosing an internal point near the appropriate endpoint of the
+window.
+
+\item \textbf{Define \(A\) before using it in the irrational preamble.}
+
+The notation \(A\) is used in the explanatory paragraph before
+the irrational aperiodicity proposition, for example in \(\tilde p(A)\) and
+\((Kp_0,Kq_0)\in A\), before it is formally defined inside the proposition's
+proof.
+
+\textbf{Recommendation.}  Either define \(A\) and \(W\) before that paragraph,
+or avoid the notation \(A\) until the proof begins.
+
+\item \textbf{Small wording issue in the period-divisibility lemma.}
+
+In the ``Minimal period divides every period'' lemma, around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:687--690},
+\]
+the proof calls \(M-q\lambda\) a ``nonnegative integer combination'' of
+periods.  It is really a difference of periods.  The conclusion is correct
+for a bi-infinite sequence, but the wording is a little loose.
+
+\textbf{Recommendation.}  Say instead that because \(M\) and \(\lambda\) are
+periods, so is \(M-q\lambda\) (using negative shifts if needed), and then
+apply minimality.
+
+\end{enumerate}
+
+\section*{Checks Performed}
+
+\begin{enumerate}[leftmargin=*]
+
+\item \textbf{Lean build.}
+
+The command
+\[
+\texttt{lake build}
+\]
+inside \(\texttt{Lean/CutAndProject}\) completed successfully:
+\[
+\texttt{Build completed successfully (8251 jobs).}
+\]
+No occurrences of \texttt{sorry}, \texttt{admit}, or \texttt{axiom} were
+found in the checked Lean source files.
+
+\item \textbf{CSV verification.}
+
+Running
+\[
+\texttt{python3 src/python/verify\_paper.py}
+\]
+on the three cited CSV files reported:
+\[
+\begin{array}{rl}
+\text{total rows:} & 51{,}729,\\
+\text{multiset mismatches:} & 0,\\
+\text{set mismatches:} & 0,\\
+\text{negative set sentinels:} & 0.
+\end{array}
+\]
+
+\item \textbf{Paper build.}
+
+Two runs of \texttt{pdflatex} completed successfully.  After the second run
+there were no undefined references, no citation warnings, and no overfull
+boxes in the searched log output.  The remaining warnings were only underfull
+box warnings in the Lean/table area.
+
+\end{enumerate}
+
+\section*{Overall Assessment}
+
+The paper is close to arXiv-ready.  The rational core is coherent:
+\[
+r=\alpha x-\beta y,\qquad
+\tilde p=\beta x+\alpha y,\qquad
+c_r\equiv -\alpha\beta^{-1}r \pmod D
+\]
+lead cleanly to the residue distribution argument, and the minimality proof
+via the stabilizer of a proper cyclic interval is convincing.  The set-valued
+period theorem also follows cleanly from the same residue distribution.
+
+Before submission, I would make the small precision edits above, especially in
+the irrational section and in the Lean-scope wording.  I do not see a
+mathematical blocker in the rational multiset or set-valued results.
+
+\end{document}

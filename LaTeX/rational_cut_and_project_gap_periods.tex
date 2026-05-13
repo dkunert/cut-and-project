@@ -684,11 +684,13 @@ positive period~\(\lambda\).  If \(M > 0\) is also a period, then
 \end{lemma}
 
 \begin{proof}
-Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  Since both
-\(M\) and \(\lambda\) are periods, their nonnegative integer
-combination \(M - q\lambda = r\) is also a period.  By minimality of
-\(\lambda\), the only possibility is \(r = 0\); hence
-\(\lambda \mid M\).
+Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  Both \(M\) and
+\(\lambda\) are periods of the bi-infinite sequence; since the set of
+periods is closed under both addition and subtraction (using negative
+shifts where needed), the difference
+\(M - q\lambda = r\) is itself a period of the sequence.  As
+\(0 \le r < \lambda\) and \(\lambda\) is the \emph{minimal} positive
+period, the only possibility is \(r = 0\); hence \(\lambda \mid M\).
 \end{proof}
 
 \begin{lemma}[Trivial stabilizer of a cyclic interval]
@@ -1233,14 +1235,33 @@ With \(a=\alpha/\beta\), the irrational form is the rational form divided
 by the positive constant~\(\beta\), so the two definitions induce the same
 ordering of projected points.}
 
-For irrational \(a\) and \(\omega > 0\), the strip has bounded
-internal-coordinate width \(W=[-a\omega,\omega]\); since the internal
-projection \(s\) is injective on \(\mathbb{Z}^2\) (by the same irrationality
-argument used for \(\tilde p\) below) and \(\tilde p\) restricted to the
-strip has finite fibres over any bounded interval --- the preimage of such
-an interval intersected with the strip is a bounded parallelogram in
-\(\mathbb{R}^2\) and hence contains only finitely many lattice points ---
-the projected set \(\tilde p(A)\) is locally finite.
+Throughout this section we use the following notation.  For irrational
+\(a\) and \(\omega > 0\), define the physical and internal coordinates
+\[
+    \tilde p(x, y) \;:=\; x + a y,
+    \qquad
+    s(x, y) \;:=\; y - a x,
+\]
+the internal window
+\[
+    W \;:=\; [-a\omega,\, \omega],
+\]
+and the set of accepted lattice points
+\[
+    A \;:=\; \bigl\{(x, y) \in \mathbb{Z}^2 : s(x, y) \in W\bigr\}.
+\]
+The strip condition \(a(x-\omega)\le y \le ax+\omega\) is equivalent to
+\(s(x, y) \in W\), so \(A\) is precisely the set of points accepted by
+the irrational strip projection.
+
+The strip has bounded internal-coordinate width given by \(W\); since
+the internal projection \(s\) is injective on \(\mathbb{Z}^2\) (by the
+same irrationality argument used for \(\tilde p\) in Step~1 of the proof
+of Proposition~\ref{prop:irrational} below) and \(\tilde p\) restricted
+to the strip has finite fibres over any bounded interval --- the
+preimage of such an interval intersected with the strip is a bounded
+parallelogram in \(\mathbb{R}^2\) and hence contains only finitely many
+lattice points --- the projected set \(\tilde p(A)\) is locally finite.
 
 Unboundedness in both directions follows from a lattice-translate
 construction whose quantor structure is the natural one for a
@@ -1252,8 +1273,9 @@ By density of \(s(\mathbb{Z}^2)=\{n - a m : m, n \in \mathbb{Z}\}\) in
 \(\mathbb{R}\) (see Step~3 of the proof of
 Proposition~\ref{prop:irrational} below), for every \(\varepsilon > 0\)
 there exists \((p_0, q_0) \in \mathbb{Z}^2\) with
-\(0 < |s(p_0, q_0)| < \varepsilon\).  For \(\varepsilon < 1\), the
-relation \(s(p_0, q_0) = q_0 - a p_0\) with \(|s(p_0, q_0)| < 1\)
+\(0 < |s(p_0, q_0)| < \varepsilon\).  Assuming \(\varepsilon \le 1\)
+(which we ensure in the final choice below), the relation
+\(s(p_0, q_0) = q_0 - a p_0\) with \(|s(p_0, q_0)| < \varepsilon \le 1\)
 forces \(p_0 \ne 0\) (else \(|q_0| < 1\) would give \(q_0 = 0\),
 contradicting \(|s(p_0, q_0)| > 0\)).  Hence \(|p_0| \ge 1\), and the
 identity
@@ -1279,9 +1301,13 @@ negative when \(M\) is large negative, while the inequality
 branch \(K = 1\) is used precisely when \(\lceil M/\tilde p(p_0,q_0)\rceil
 \le 0\), i.e.\ when \(M \le 0\), so \(K \tilde p(p_0,q_0) = \tilde
 p(p_0,q_0) \ge c_0 > 0 \ge M\)).  Choosing
-\(\varepsilon \le c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\)
-(still positive, depending on \(M\)) therefore ensures
+\(\varepsilon \le
+ \min\!\bigl(1,\, c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\bigr)\)
+(still positive, depending on \(M\)) therefore satisfies both
+\(\varepsilon \le 1\) (needed above to force \(p_0 \ne 0\)) and ensures
 \(K \cdot |s(p_0, q_0)| < K \varepsilon \le \min(a\omega, \omega)\).
+This matches the auxiliary parameter built with \(\min 1(\cdots)\) in
+\texttt{exists\_scaled\_witness} (\texttt{Irrational.lean}).
 Then \(s(K p_0, K q_0) = K \cdot s(p_0, q_0) \in W\), so
 \((K p_0, K q_0) \in A\), and
 \(\tilde p(K p_0, K q_0) = K \cdot \tilde p(p_0, q_0) > M\).  The
@@ -1303,25 +1329,14 @@ conventions coincide in this case.
 \end{proposition}
 
 \begin{proof}
-Define the physical and internal coordinates
-\[
-    \tilde p(x, y) \;:=\; x + a y,
-    \qquad
-    s(x, y) \;:=\; y - a x.
-\]
+Recall from the preamble of this section the coordinates
+\(\tilde p(x, y) = x + a y\), \(s(x, y) = y - a x\), the window
+\(W = [-a\omega,\omega]\), and the accepted set
+\(A = \{(x, y) \in \mathbb{Z}^2 : s(x, y) \in W\}\).
 The orthogonal projection of \((x, y)\) onto the line \(y = a x\) has
 signed position \(\tilde p(x, y)/\sqrt{1 + a^2}\); hence \(\tilde p\)
 determines the order of projected points up to the positive constant
-\(1/\sqrt{1 + a^2}\).  The strip condition is equivalent to
-\[
-    -a\omega \;\le\; s(x, y) \;\le\; \omega,
-\]
-so the accepted lattice points are
-\[
-    A \;:=\; \bigl\{(x, y) \in \mathbb{Z}^2 : s(x, y) \in W\bigr\},
-    \qquad
-    W \;:=\; [-a\omega,\, \omega].
-\]
+\(1/\sqrt{1 + a^2}\).
 
 \emph{Step 1: \(\tilde p\) is injective on \(\mathbb{Z}^2\).}\quad
 If \(\tilde p(x_1, y_1) = \tilde p(x_2, y_2)\), then
@@ -1604,8 +1619,8 @@ geometric multiplier as a first-class object}.  Specifically:
           \texttt{V\_\allowbreak unit},
           \texttt{sorted\_\allowbreak multiset\_\allowbreak unit},
           \texttt{difference\_\allowbreak sequence\_\allowbreak unit}).
-    \item Theorem~\ref{thm:main} is established for the geometric
-          enumeration in the headline statement
+    \item Theorem~\ref{thm:main} is established for the unit-aware
+          residue enumeration in the headline statement
           \[
               \texttt{main\_theorem\_geometric\_concrete}
           \]
@@ -1636,8 +1651,9 @@ multiplicity function.  The unit-aware analogue
 \texttt{set\_difference\_sequence\_unit} mirrors this construction with
 \texttt{count\_hits\_unit} in place of \texttt{count\_hits}, and
 \texttt{set\_main\_theorem\_geometric\_concrete} establishes
-Theorem~\ref{thm:setperiod} for the actual geometric enumeration with
-the multiplier \(u = -\alpha\beta^{-1}\) threaded through.
+Theorem~\ref{thm:setperiod} for the residue-combinatorial core with
+the geometric multiplier \(u = -\alpha\beta^{-1}\) threaded through to
+the final theorem.
 
 \paragraph{Boundary between the two layers.} The hand-verified
 strip-to-residue reduction of Layer~1 is standard cut-and-project
@@ -1645,7 +1661,7 @@ mathematics; what is novel in the formalization is that Layer~2 closes
 the residual gap left by previous formalizations, in which the abstract
 typeclass \texttt{GeometricProjection} was instantiated only for the
 normalized residue map (\(u = 1\)).  In the present formalization, the
-geometric projection is fully threaded through to the period theorems on
+geometric multiplier is fully threaded through to the period theorems on
 both the multiset and set sides.
 
 % =====================================================================
