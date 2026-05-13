@@ -215,6 +215,9 @@ support/LaTeX/*.snm
 support/LaTeX/*.vrb
 support/LaTeX/*.pdf
 
+# Local utility scripts (kept locally, not tracked)
+cleanup.sh
+
 # Untracked drafts and AI-generated source files
 support/haynes_email.html
 support/LaTeX/period_formulas_rational_cut_and_project_revised_chatGPT.tex
