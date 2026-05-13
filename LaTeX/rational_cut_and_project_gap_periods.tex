@@ -1366,8 +1366,19 @@ We claim \(A + v = A\).  For any \(z \in A\),
 \(\tilde p(z) + \sigma \in \Lambda\), so there is \(z' \in A\) with
 \(\tilde p(z') = \tilde p(z) + \sigma = \tilde p(z + v)\); injectivity of
 \(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives \(z' = z + v\), hence
-\(z + v \in A\).  Applying the same argument to the period \(-\sigma\)
-yields the reverse inclusion, so \(A + v = A\).
+\(z + v \in A\), hence \(A + v \subseteq A\).  For the reverse
+inclusion, note that \(\Lambda + \sigma = \Lambda\) is equivalent to
+\(\Lambda - \sigma = \Lambda\) (adding \(-\sigma\) to both sides of the
+former yields the latter).  For any \(z \in A\), we have
+\(\tilde p(z) - \sigma \in \Lambda - \sigma = \Lambda\), so there exists
+\(z'' \in A\) with
+\[
+    \tilde p(z'') \;=\; \tilde p(z) - \sigma \;=\; \tilde p(z) - \tilde p(v)
+    \;=\; \tilde p(z - v);
+\]
+injectivity of \(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives
+\(z'' = z - v\), hence \(z - v \in A\), i.e., \(A - v \subseteq A\).
+Together these inclusions give \(A + v = A\).
 
 \emph{Step 3: Internal density forces \(v = 0\).}\quad
 Write \(v = (m, n)\) and let \(\tau := s(v) = n - a m\).  The invariance

@@ -1,0 +1,166 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\emergencystretch=4em
+\sloppy
+
+\title{Follow-up Review on Finding F3 for\\
+\texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Codex Review Notes}
+\date{May 13, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Executive Summary}
+
+I reviewed the partial implementation of Finding~F3 in the irrational
+aperiodicity proof, focusing on the passage where a finite projected gap
+period is lifted to a lattice translation of the accepted set.
+
+The main mathematical concern behind F3 has been addressed: the text no
+longer speaks of \(-\sigma\) as a ``period''.  It now correctly describes
+\(-\sigma\) as a translation of the projected set, derived from
+\(\Lambda+\sigma=\Lambda\).  This removes the potentially misleading
+formulation from the earlier version.
+
+The remaining question is mostly stylistic and about alignment with the Lean
+proof: the paper still proves the stronger statement \(A+v=A\), whereas the
+Lean formalisation only needs and proves the forward inclusion
+\[
+  A+v\subseteq A.
+\]
+This is not a correctness blocker, but the proof can still be simplified if
+desired.
+
+\section*{Current State}
+
+The relevant paper passage is now around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1359--1375}.
+\]
+It argues:
+\[
+  \ell_{i+\lambda}=\ell_i+\sigma
+  \quad\Longrightarrow\quad
+  \Lambda+\sigma=\Lambda,
+\]
+then chooses \(v\in\mathbb Z^2\) with \(\tilde p(v)=\sigma\), proves
+\[
+  A+v\subseteq A,
+\]
+and then derives the reverse direction by using
+\[
+  \Lambda-\sigma=\Lambda.
+\]
+The text now says explicitly that \(\Lambda+\sigma=\Lambda\) is equivalent
+to \(\Lambda-\sigma=\Lambda\).  This is mathematically fine.
+
+The Lean proof, by contrast, has the sharper shape:
+\[
+\texttt{period\_lifts\_to\_lattice\_translation}
+\quad\Rightarrow\quad
+\forall z\in A,\ z+v\in A,
+\]
+see \texttt{Irrational.lean:704--709}.  Then
+\texttt{lattice\_translation\_must\_be\_zero} uses only that forward
+inclusion, see \texttt{Irrational.lean:798--801}.
+
+\section*{Remaining Points}
+
+\begin{enumerate}[label=\textbf{R\arabic*.},leftmargin=*]
+
+\item \textbf{Optional: align the paper proof with the Lean proof.}
+
+The paper still states
+\[
+  A+v=A
+\]
+and Step~3 uses this equality as ``invariance''.  This is stronger than
+necessary.  The Lean proof shows that forward invariance alone gives the
+contradiction: if \(s(v)=\tau>0\), choose an internal point \(t\) near the
+upper endpoint of \(W\), so \(t+\tau\notin W\); if \(\tau<0\), choose \(t\)
+near the lower endpoint.
+
+\textbf{Importance: low to medium.}  This is not a mathematical flaw.  The
+current paper proof is valid as written, assuming the short reverse-translation
+argument is accepted.  Aligning with Lean would make the paper shorter, closer
+to the formalisation, and less likely to invite questions about the reverse
+translation step.
+
+\item \textbf{Optional: make the reverse-translation argument fully explicit
+if keeping \(A+v=A\).}
+
+The current wording says that applying the same argument with translation
+\(-\sigma\) gives \(z-v\in A\).  This is now much better than the old
+``period \(-\sigma\)'' wording.  For maximum referee-proof clarity, one could
+spell out the one-line calculation:
+\[
+  \tilde p(z-v)=\tilde p(z)-\sigma.
+\]
+Since \(\Lambda-\sigma=\Lambda\), the value \(\tilde p(z)-\sigma\) is
+attained by some accepted point; injectivity of \(\tilde p\) then forces that
+point to be \(z-v\).
+
+\textbf{Importance: low.}  The present argument is understandable.  This
+would only remove one small ``same argument'' compression.
+
+\item \textbf{Optional: update Step~3 wording if the proof is simplified.}
+
+If the paper is changed to use only \(A+v\subseteq A\), then Step~3 should no
+longer say that \(A+v=A\) translates to
+\[
+  (W\cap s(\mathbb Z^2))+\tau
+  =
+  W\cap s(\mathbb Z^2).
+\]
+It should instead use the forward implication
+\[
+  t\in W\cap s(\mathbb Z^2)
+  \quad\Longrightarrow\quad
+  t+\tau\in W.
+\]
+This is exactly the form used by Lean.
+
+\textbf{Importance: conditional.}  If the paper keeps the current
+\(A+v=A\) proof, no change is needed here.  If the paper is aligned with Lean,
+this wording must be adjusted.
+
+\end{enumerate}
+
+\section*{Assessment}
+
+Finding~F3 should now be considered \emph{mostly resolved}.  The original
+problematic phrase has been removed, and the current proof is mathematically
+sound.  The only remaining work is optional polish:
+\begin{itemize}[leftmargin=*]
+  \item either keep \(A+v=A\) and expand the reverse-translation argument by
+        one explicit sentence;
+  \item or simplify the paper to match Lean by proving only
+        \(A+v\subseteq A\) and using the endpoint contradiction directly.
+\end{itemize}
+
+For arXiv submission, I would not treat the remaining F3 items as blockers.
+If there is time, I slightly prefer the Lean-aligned forward-inclusion version,
+because it is shorter and conceptually cleaner.  But the current version is
+acceptable from a mathematical correctness standpoint.
+
+\section*{Checks Performed}
+
+\begin{itemize}[leftmargin=*]
+  \item I inspected the updated irrational proof around
+        lines 1359--1395 of the main paper.
+  \item I compared it with the Lean declarations
+        \texttt{period\_lifts\_to\_lattice\_translation} and
+        \texttt{lattice\_translation\_must\_be\_zero} in
+        \texttt{Irrational.lean}.
+  \item I searched the paper for the old problematic wording; no occurrence
+        of ``period \(-\sigma\)'' remains.
+\end{itemize}
+
+\end{document}
