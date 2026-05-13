@@ -1254,42 +1254,46 @@ The strip condition \(a(x-\omega)\le y \le ax+\omega\) is equivalent to
 \(s(x, y) \in W\), so \(A\) is precisely the set of points accepted by
 the irrational strip projection.
 
-The strip has bounded internal-coordinate width given by \(W\); since
-the internal projection \(s\) is injective on \(\mathbb{Z}^2\) (by the
-same irrationality argument used for \(\tilde p\) in Step~1 of the proof
-of Proposition~\ref{prop:irrational} below) and \(\tilde p\) restricted
-to the strip has finite fibres over any bounded interval --- the
-preimage of such an interval intersected with the strip is a bounded
-parallelogram in \(\mathbb{R}^2\) and hence contains only finitely many
-lattice points --- the projected set \(\tilde p(A)\) is locally finite.
+The strip has bounded internal-coordinate width given by \(W\), and
+\(\tilde p\) and \(s\) are linearly independent forms on \(\mathbb{R}^2\).
+Consequently, the intersection of the strip with the preimage of any
+bounded \(\tilde p\)-interval is a bounded parallelogram in
+\(\mathbb{R}^2\) and hence contains only finitely many lattice points;
+the projected set \(\tilde p(A)\) is therefore locally finite.
 
 Unboundedness in both directions follows from a lattice-translate
-construction whose quantor structure is the natural one for a
+construction whose quantifier structure is the natural one for a
 Diophantine-style argument: given any target \(M \in \mathbb{R}\), the
 base lattice vector \((p_0, q_0)\) and the scaling integer \(K\) are
 both chosen depending on~\(M\).
 
-By density of \(s(\mathbb{Z}^2)=\{n - a m : m, n \in \mathbb{Z}\}\) in
+Fix the target \(M \in \mathbb{R}\), set
+\(c_0 := 1 + a^2 - |a|\) (strictly positive since
+\(c_0 = (|a| - \tfrac12)^2 + \tfrac34 \ge \tfrac34\)),
+and choose%
+\footnote{This matches the auxiliary parameter built with
+\(\min 1(\cdots)\) in \texttt{exists\_scaled\_witness}
+(\texttt{Irrational.lean}).}
+\[
+    0 \;<\; \varepsilon \;\le\;
+    \min\!\bigl(1,\;
+      c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\bigr).
+\]
+
+By density of \(s(\mathbb{Z}^2) = \{n - a m : m, n \in \mathbb{Z}\}\) in
 \(\mathbb{R}\) (see Step~3 of the proof of
-Proposition~\ref{prop:irrational} below), for every \(\varepsilon > 0\)
-there exists \((p_0, q_0) \in \mathbb{Z}^2\) with
-\(0 < |s(p_0, q_0)| < \varepsilon\).  Assuming \(\varepsilon \le 1\)
-(which we ensure in the final choice below), the relation
-\(s(p_0, q_0) = q_0 - a p_0\) with \(|s(p_0, q_0)| < \varepsilon \le 1\)
-forces \(p_0 \ne 0\) (else \(|q_0| < 1\) would give \(q_0 = 0\),
-contradicting \(|s(p_0, q_0)| > 0\)).  Hence \(|p_0| \ge 1\), and the
-identity
+Proposition~\ref{prop:irrational} below), there exists
+\((p_0, q_0) \in \mathbb{Z}^2\) with
+\(0 < |s(p_0, q_0)| < \varepsilon\).  Since \(\varepsilon \le 1\), the
+relation \(s(p_0, q_0) = q_0 - a p_0\) with \(|s(p_0, q_0)| < 1\) forces
+\(p_0 \ne 0\) (else \(|q_0| < 1\) would give \(q_0 = 0\), contradicting
+\(|s(p_0, q_0)| > 0\)).  Hence \(|p_0| \ge 1\), and the identity
 \[
     \tilde p(p_0, q_0) \;=\; (1 + a^2)\, p_0 + a\, s(p_0, q_0)
 \]
-yields the uniform lower bound
-\(|\tilde p(p_0, q_0)| \ge c_0 := 1 + a^2 - |a|\), which is strictly
-positive since
-\(c_0 = (|a| - \tfrac12)^2 + \tfrac34 \ge \tfrac34\).  Replacing
-\((p_0, q_0)\) by \((-p_0, -q_0)\) if necessary, we may assume
-\(\tilde p(p_0, q_0) \ge c_0\).
-
-Now fix the target \(M\).  Setting
+yields the uniform lower bound \(|\tilde p(p_0, q_0)| \ge c_0\).
+Replacing \((p_0, q_0)\) by \((-p_0, -q_0)\) if necessary, we may assume
+\(\tilde p(p_0, q_0) \ge c_0\).  Setting
 \[
     K \;:=\; \max\!\bigl(1,\;\lceil M / \tilde p(p_0, q_0) \rceil + 1\bigr)
     \;\in\;\mathbb{Z}_{>0},
@@ -1300,22 +1304,23 @@ negative when \(M\) is large negative, while the inequality
 \(K \cdot \tilde p(p_0, q_0) > M\) still holds in both branches: the
 branch \(K = 1\) is used precisely when \(\lceil M/\tilde p(p_0,q_0)\rceil
 \le 0\), i.e.\ when \(M \le 0\), so \(K \tilde p(p_0,q_0) = \tilde
-p(p_0,q_0) \ge c_0 > 0 \ge M\)).  Choosing
-\(\varepsilon \le
- \min\!\bigl(1,\, c_0 \min(a\omega, \omega) / (|M| + 2 c_0 + 1)\bigr)\)
-(still positive, depending on \(M\)) therefore satisfies both
-\(\varepsilon \le 1\) (needed above to force \(p_0 \ne 0\)) and ensures
-\(K \cdot |s(p_0, q_0)| < K \varepsilon \le \min(a\omega, \omega)\).
-This matches the auxiliary parameter built with \(\min 1(\cdots)\) in
-\texttt{exists\_scaled\_witness} (\texttt{Irrational.lean}).
-Then \(s(K p_0, K q_0) = K \cdot s(p_0, q_0) \in W\), so
-\((K p_0, K q_0) \in A\), and
+p(p_0,q_0) \ge c_0 > 0 \ge M\)).  The bound on \(\varepsilon\) then
+ensures
+\(|s(K p_0, K q_0)| = K \cdot |s(p_0, q_0)| < K \varepsilon
+  \le \min(a\omega, \omega)\),
+hence \(s(K p_0, K q_0) \in W\) and \((K p_0, K q_0) \in A\);
+meanwhile
 \(\tilde p(K p_0, K q_0) = K \cdot \tilde p(p_0, q_0) > M\).  The
-negative direction is symmetric: apply the construction to \(-M\) and
-negate the resulting lattice point.  The gap sequence is therefore
+negative direction is symmetric: the bound on \(|s(K p_0, K q_0)|\) is
+symmetric in sign, so the negated point \((-K p_0, -K q_0)\) also
+satisfies \(|s(-K p_0, -K q_0)| < \min(a\omega, \omega)\) and therefore
+lies in \(A\) (even though \(W\) itself is asymmetric when \(a\ne 1\)).
+Applying the construction to \(-M\) in place of \(M\) and negating the
+resulting lattice point thus produces a member of \(A\) with
+\(\tilde p\)-value below \(M\).  The gap sequence is therefore
 well defined via the increasing \(\mathbb{Z}\)-indexed enumeration of
 \(\tilde p(A)\).  (The same construction, with explicit constants, is
-used in the Lean formalisation to discharge \texttt{NoMaxOrder} and
+used in the Lean formalization to discharge \texttt{NoMaxOrder} and
 \texttt{NoMinOrder} on \(\tilde p(A)\); see
 \texttt{exists\_scaled\_witness} in \texttt{Irrational.lean}.)
 
@@ -1362,30 +1367,19 @@ there exists \(z_1 \in A\) with
 \(\tilde p(z_1) = \tilde p(z_0) + \sigma\).  Set
 \(v := z_1 - z_0 \in \mathbb{Z}^2\), so \(\tilde p(v) = \sigma\).
 
-We claim \(A + v = A\).  For any \(z \in A\),
+We claim \(A + v \subseteq A\).  For any \(z \in A\),
 \(\tilde p(z) + \sigma \in \Lambda\), so there is \(z' \in A\) with
 \(\tilde p(z') = \tilde p(z) + \sigma = \tilde p(z + v)\); injectivity of
 \(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives \(z' = z + v\), hence
-\(z + v \in A\), hence \(A + v \subseteq A\).  For the reverse
-inclusion, note that \(\Lambda + \sigma = \Lambda\) is equivalent to
-\(\Lambda - \sigma = \Lambda\) (adding \(-\sigma\) to both sides of the
-former yields the latter).  For any \(z \in A\), we have
-\(\tilde p(z) - \sigma \in \Lambda - \sigma = \Lambda\), so there exists
-\(z'' \in A\) with
-\[
-    \tilde p(z'') \;=\; \tilde p(z) - \sigma \;=\; \tilde p(z) - \tilde p(v)
-    \;=\; \tilde p(z - v);
-\]
-injectivity of \(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives
-\(z'' = z - v\), hence \(z - v \in A\), i.e., \(A - v \subseteq A\).
-Together these inclusions give \(A + v = A\).
+\(z + v \in A\).  This forward inclusion is all that Step~3 will use.
 
 \emph{Step 3: Internal density forces \(v = 0\).}\quad
-Write \(v = (m, n)\) and let \(\tau := s(v) = n - a m\).  The invariance
-\(A + v = A\) translates, in internal coordinates, into
+Write \(v = (m, n)\) and let \(\tau := s(v) = n - a m\).  The forward
+inclusion \(A + v \subseteq A\) translates, in internal coordinates,
+into
 \[
     \bigl(W \cap s(\mathbb{Z}^2)\bigr) + \tau
-    \;=\;
+    \;\subseteq\;
     W \cap s(\mathbb{Z}^2).
 \]
 Since \(a\) is irrational,
@@ -1394,9 +1388,9 @@ Since \(a\) is irrational,
 \(\{-a m \bmod 1 : m \in \mathbb{Z}\}\) is dense in \([0,1)\), and
 adding integers yields density in \(\mathbb{R}\)).  If \(\tau > 0\), pick
 \(t \in s(\mathbb{Z}^2) \cap W\) with \(t > \omega - \tau\); then
-\(t + \tau > \omega\), contradicting the invariance.  If \(\tau < 0\),
-an analogous choice near the lower endpoint \(-a\omega\) yields the same
-contradiction.  Hence \(\tau = 0\), i.e.\ \(n = a m\).  Since \(a\) is
+\(t + \tau > \omega\), contradicting the forward inclusion.  If
+\(\tau < 0\), an analogous choice near the lower endpoint \(-a\omega\)
+yields the same contradiction.  Hence \(\tau = 0\), i.e.\ \(n = a m\).  Since \(a\) is
 irrational and \(m, n \in \mathbb{Z}\), this forces \(m = n = 0\), so
 \(v = 0\) and \(\sigma = \tilde p(v) = 0\), contradicting \(\sigma > 0\).
 \end{proof}
@@ -1475,14 +1469,12 @@ enumeration of accepted projected points (assembled via Mathlib's
 \(\mathbb{Z}+a\mathbb{Z}\subset\mathbb{R}\) is reduced to
 Mathlib's classification of additive subgroups of~\(\mathbb{R}\)
 (\texttt{dense\_addSubgroupClosure\_pair\_iff}).  The Lean proof
-simplifies the paper's argument at Step~3: instead of assuming both
-forward and backward invariance \(A + v = A\), the Lean step
-\texttt{lattice\_translation\_must\_be\_zero} requires only the
-forward inclusion \(A + v \subseteq A\) -- the contradiction near
-either endpoint of the window \(W\) is derivable from the forward
-direction alone.  Correspondingly, Step~2 in
-\texttt{period\_lifts\_to\_lattice\_translation} produces only forward
-invariance.
+mirrors the paper's Step~2--3 structure verbatim:
+\texttt{period\_lifts\_to\_lattice\_translation} produces the forward
+inclusion \(A + v \subseteq A\), and
+\texttt{lattice\_translation\_must\_be\_zero} derives the contradiction
+from this forward inclusion alone via a near-endpoint argument in the
+window \(W\).
 
 \subsection{Correspondence with the paper}\label{subsec:lean_corr}
 

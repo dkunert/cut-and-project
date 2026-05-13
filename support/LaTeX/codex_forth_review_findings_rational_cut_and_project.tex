@@ -1,0 +1,181 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\emergencystretch=4em
+\sloppy
+
+\title{Fourth Codex Review: Remaining Minor Findings for\\
+\texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{Codex Review Notes}
+\date{May 13, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Executive Summary}
+
+I reviewed the current final version of
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex}
+\]
+after the previous findings had been implemented.  I do not see a remaining
+mathematical blocker.  The rational multiset theorem, the set-valued theorem,
+the generic minimality argument, the degenerate case, and the irrational
+aperiodicity proof are coherent in the current manuscript.
+
+The previous F3/R2 concern is resolved in the strongest useful way: the paper
+now lifts a projected period only to the forward inclusion
+\[
+  A+v\subseteq A,
+\]
+and Step~3 derives the contradiction from this forward inclusion alone, in
+agreement with the Lean proof.
+
+The points below are therefore only low-importance precision or presentation
+items.  They are not blockers for arXiv submission.
+
+\section*{Remaining Points}
+
+\begin{enumerate}[label=\textbf{R\arabic*.},leftmargin=*]
+
+\item \textbf{Replace ``quantor structure'' by ``quantifier structure''.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1267},
+\]
+the text says:
+\begin{quote}
+``construction whose quantor structure is the natural one''
+\end{quote}
+The word ``quantor'' is a Germanism.  In English mathematical prose, the
+idiomatic term is ``quantifier''.
+
+\textbf{Recommended wording.}
+\begin{quote}
+``construction whose quantifier structure is the natural one''
+\end{quote}
+
+\textbf{Importance: very low.}  This is purely linguistic.
+
+\item \textbf{Slightly sharpen the local-finiteness wording.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1261},
+\]
+the phrase
+\begin{quote}
+``\(\tilde p\) restricted to the strip has finite fibres over any bounded
+interval''
+\end{quote}
+is understandable, but a little nonstandard.  A fibre is usually over a
+single value, not over an interval.
+
+\textbf{Recommended wording.}
+\begin{quote}
+``the preimage of every bounded \(\tilde p\)-interval inside the strip is
+finite''
+\end{quote}
+or equivalently
+\begin{quote}
+``the intersection of the strip with the preimage of a bounded
+\(\tilde p\)-interval is a bounded parallelogram, hence contains only
+finitely many lattice points.''
+\end{quote}
+
+\textbf{Importance: low.}  The argument is correct as written; this would
+only remove a small terminology imprecision.
+
+\item \textbf{Optionally reorder the \(\varepsilon\)-choice paragraph.}
+
+The unboundedness argument around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1272--1308}
+\]
+is mathematically correct.  The only possible reader stumble is that the text
+first discusses a density witness \((p_0,q_0)\) for an arbitrary
+\(\varepsilon\), then later chooses \(\varepsilon\) small depending on the
+target \(M\).
+
+\textbf{Recommended logical order.}
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+  \item Fix \(M\).
+  \item Choose
+  \[
+    0<\varepsilon\le
+    \min\!\left(1,\,
+      \frac{c_0\min(a\omega,\omega)}{|M|+2c_0+1}\right).
+  \]
+  \item Use density to choose \((p_0,q_0)\) with
+  \(0<|s(p_0,q_0)|<\varepsilon\).
+  \item Define
+  \[
+    K=\max\!\bigl(1,\lceil M/\tilde p(p_0,q_0)\rceil+1\bigr).
+  \]
+\end{enumerate}
+
+\textbf{Importance: low.}  This is not a flaw in the proof; it is only a
+possible readability improvement for a referee checking the quantifiers.
+
+\item \textbf{Use either ``formalization'' or ``formalisation'' consistently.}
+
+Around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1318},
+\]
+the text uses ``formalisation'', while most of the paper uses the American
+spelling ``formalization''.
+
+\textbf{Importance: very low.}  This is only copy-editing consistency.
+
+\item \textbf{Optional typography: two harmless underfull box warnings.}
+
+A fresh \texttt{pdflatex} build reports no errors, no undefined references,
+no overfull boxes, and only two underfull box warnings in the Lean/table
+area:
+\[
+\texttt{lines 1456--1473}
+\qquad\text{and}\qquad
+\texttt{line 1579}.
+\]
+
+\textbf{Importance: very low.}  Underfull boxes are usually harmless.  They
+need not be fixed unless the final PDF visually looks awkward at those spots.
+
+\end{enumerate}
+
+\section*{Checks Performed}
+
+\begin{itemize}[leftmargin=*]
+  \item \texttt{pdflatex} on the current paper completed successfully.
+        The searched log showed no undefined references, no citation
+        warnings, no errors, and no overfull boxes.
+  \item \texttt{lake build} in \texttt{Lean/CutAndProject} completed
+        successfully:
+        \[
+          \texttt{Build completed successfully (8251 jobs).}
+        \]
+  \item A search of the Lean source found no occurrences of
+        \texttt{sorry}, \texttt{admit}, or \texttt{axiom}.
+  \item Running
+        \[
+          \texttt{python3 src/python/verify\_paper.py}
+        \]
+        reported zero multiset mismatches, zero set mismatches, and zero
+        negative set sentinels over all \(51{,}729\) CSV rows.
+\end{itemize}
+
+\section*{Overall Assessment}
+
+The manuscript looks arXiv-ready from the mathematical side.  The remaining
+items above are polish: they improve English idiom, terminology, and
+quantifier readability, but they do not affect the correctness of the main
+results.
+
+\end{document}
