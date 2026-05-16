@@ -56,8 +56,8 @@ projected multiset (values counted with multiplicity), the minimal period is
 \[
 \lambda_{\mathrm{multiset}} =
 \begin{cases}
-N, & D\nmid N,\\
-N/D, & D\mid N,
+N   & \text{if } D \nmid N, \\
+N/D & \text{if } D \mid N,
 \end{cases}
 \]
 where
@@ -70,8 +70,8 @@ For the projected set (multiplicities discarded), the minimal period is
 \[
 \lambda_{\mathrm{set}} =
 \begin{cases}
-N, & N < D,\\
-1, & N \ge D,
+N & \text{if } N < D, \\
+1 & \text{if } N \ge D,
 \end{cases}
 \]
 and \(\lambda_{\mathrm{set}} \mid \lambda_{\mathrm{multiset}}\) in every
@@ -117,16 +117,16 @@ We prove that the multiset gap sequence has minimal period
 \[
     \lambda_{\mathrm{multiset}} =
     \begin{cases}
-        N, & D\nmid N,\\[3pt]
-        N/D, & D\mid N,
+        N   & \text{if } D \nmid N, \\
+        N/D & \text{if } D \mid N,
     \end{cases}
 \]
 and that the set-valued gap sequence has minimal period
 \[
     \lambda_{\mathrm{set}} =
     \begin{cases}
-        N, & N < D,\\[3pt]
-        1, & N \ge D,
+        N & \text{if } N < D, \\
+        1 & \text{if } N \ge D,
     \end{cases}
 \]
 where
@@ -394,8 +394,8 @@ Then the period length of the gap sequence~\eqref{eq:delta} is
 \begin{equation}\label{eq:formula}
     \lambda_{\mathrm{multiset}} \;=\;
     \begin{cases}
-        N & \text{if } D \nmid N, \\[3pt]
-        N / D & \text{if } D \mid N.
+        N   & \text{if } D \nmid N, \\
+        N/D & \text{if } D \mid N.
     \end{cases}
 \end{equation}
 \end{theorem}
@@ -981,7 +981,7 @@ has minimal period
 \begin{equation}\label{eq:setformula}
     \lambda_{\mathrm{set}} \;=\;
     \begin{cases}
-        N & \text{if } N < D, \\[3pt]
+        N & \text{if } N < D, \\
         1 & \text{if } N \ge D.
     \end{cases}
 \end{equation}
