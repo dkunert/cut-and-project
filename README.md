@@ -56,11 +56,17 @@ with equality if and only if $N \le D$.
 
 ## Lean 4 formalization
 
-Both period theorems are formalized in
-`Lean/CutAndProject/CutAndProject/Basic.lean` (~2,862 lines; no
-`sorry`, `admit`, or `axiom`), using Lean 4 and Mathlib.
+The mathematical core is formalized in
+`Lean/CutAndProject/CutAndProject/` across two files, totaling
+~3,760 lines with no `sorry`, `admit`, or `axiom`:
 
-The headline theorems for the actual geometric enumeration are:
+- `Basic.lean` (~2,862 lines) — both period theorems for the
+  rational case (multiset and set conventions).
+- `Irrational.lean` (~896 lines) — Proposition 1 of the paper:
+  for positive irrational slope and strip half-width $\omega > 0$,
+  the projected gap sequence has no finite period.
+
+The headline theorems for the rational, geometric enumeration are:
 
 - `main_theorem_geometric_concrete` — multiset period.
 - `set_main_theorem_geometric_concrete` — set period.
