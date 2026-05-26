@@ -152,9 +152,9 @@ points decompose into parallel tracks indexed by the admissible values of
 common difference \(D\), and the relevant residues modulo \(D\) are
 obtained from \(N\) consecutive integers by multiplication with a unit
 modulo \(D\).  If \(D\nmid N\), the residue classes with larger multiplicity
-form a proper cyclic interval in the natural residue parametrization; its
-only translational symmetry is the identity, which rules out any smaller
-period.  If \(D\mid N\), the residues are uniformly distributed and the gap
+form a proper cyclic interval after passing to the \(m\)-stepping
+parametrization; its only translational symmetry is the identity, which
+rules out any smaller period.  If \(D\mid N\), the residues are uniformly distributed and the gap
 sequence collapses to a simple pattern of period \(N/D\).  The set-valued
 formula then follows from the same residue-distribution analysis: under
 \(N < D\) the multiplicity function takes values in \(\{0, 1\}\), so set
@@ -338,44 +338,45 @@ line, and we treat both in this paper.
 
   % --- TOP PANEL: multiset ---
   \begin{scope}[yshift=2.6cm]
-    \draw[->] (-0.3,0) -- (7.0,0) node[right,axislabel]{\(\tilde p\)};
-    \foreach \x in {0,1,2,3,4,5,6} \draw (\x,-0.08) -- (\x,0.08);
+    \draw[->] (-0.3,0) -- (6.0,0) node[right,axislabel]{\(\tilde p\)};
+    \foreach \x in {0,1,2,3,4,5} \draw (\x,-0.08) -- (\x,0.08);
     \node[below=4pt,axislabel] at (0,-0.08) {\(0\)};
-    \node[below=4pt,axislabel] at (6,-0.08) {\(D\)};
-    \foreach \x/\m in {0/1, 1/1, 2/2, 3/2, 4/1, 5/1} {
+    \node[below=4pt,axislabel] at (5,-0.08) {\(D\)};
+    \foreach \x/\m in {0/1, 1/2, 2/2, 3/1, 4/1} {
       \foreach \k in {1,...,\m} {
         \pgfmathsetmacro{\y}{\dy*\k}
         \node[pt] at (\x,\y) {};
       }
     }
+    \node[zerolabel] at (1,1.25) {\(\delta=0\)};
     \node[zerolabel] at (2,1.25) {\(\delta=0\)};
-    \node[zerolabel] at (3,1.25) {\(\delta=0\)};
+    \draw[red!70!black,thin,->,>=stealth]
+         (1,1.10) -- (1,\dy*2+0.10);
     \draw[red!70!black,thin,->,>=stealth]
          (2,1.10) -- (2,\dy*2+0.10);
-    \draw[red!70!black,thin,->,>=stealth]
-         (3,1.10) -- (3,\dy*2+0.10);
-    \node[axislabel,anchor=west] at (7.1,0.45)
+    \node[axislabel,anchor=west] at (6.1,0.45)
          {multiset convention};
   \end{scope}
 
   % --- BOTTOM PANEL: set ---
   \begin{scope}
-    \draw[->] (-0.3,0) -- (7.0,0) node[right,axislabel]{\(\tilde p\)};
-    \foreach \x in {0,1,2,3,4,5,6} \draw (\x,-0.08) -- (\x,0.08);
+    \draw[->] (-0.3,0) -- (6.0,0) node[right,axislabel]{\(\tilde p\)};
+    \foreach \x in {0,1,2,3,4,5} \draw (\x,-0.08) -- (\x,0.08);
     \node[below=4pt,axislabel] at (0,-0.08) {\(0\)};
-    \node[below=4pt,axislabel] at (6,-0.08) {\(D\)};
-    \foreach \x in {0,1,2,3,4,5} \node[pt] at (\x,\dy) {};
-    \foreach \x in {0,1,2,3,4} {
+    \node[below=4pt,axislabel] at (5,-0.08) {\(D\)};
+    \foreach \x in {0,1,2,3,4} \node[pt] at (\x,\dy) {};
+    \foreach \x in {0,1,2,3} {
       \node[gaplabel] at (\x+0.5,\dy+0.30) {\(1\)};
     }
-    \node[axislabel,anchor=west] at (7.1,0.45)
+    \node[axislabel,anchor=west] at (6.1,0.45)
          {set convention};
   \end{scope}
 
 \end{tikzpicture}
 \caption{Multiset versus set convention on one length-\(D\) window of
-the \(\tilde p\)-axis (here \(D=6\), with multiplicities
-\((1,1,2,2,1,1)\), so \(N=8\)).
+the \(\tilde p\)-axis (here \(D=5\), with multiplicities
+\((1,2,2,1,1)\), so \(N=7\); realizable for
+\((\alpha,\beta)=(1,2)\) with \(\omega\in[2,5/2)\)).
 Top: every accepted lattice point contributes a separate entry, so
 coincident projected values produce \emph{zero gaps} (marked).
 Bottom: identifying coincident values yields one entry per residue
@@ -880,29 +881,30 @@ classes in the \(m\)-stepping order.
   \def\rtwr{0.55}
 
   \foreach \i/\style in {%
-      0/light, 1/light, 2/heavy, 3/heavy, 4/heavy, 5/heavy,
-      6/light, 7/light, 8/light, 9/light, 10/light, 11/light} {
-    \pgfmathsetmacro{\ang}{90 - 360*\i/12}
+      0/light, 1/light, 2/heavy, 3/heavy, 4/heavy,
+      5/light, 6/light, 7/light, 8/light, 9/light,
+      10/light, 11/light, 12/light} {
+    \pgfmathsetmacro{\ang}{90 - 360*\i/13}
     \node[\style] (n\i) at (\ang:\R) {\i};
   }
 
-  \foreach \i in {0,1,...,11} {
-    \pgfmathsetmacro{\ang}{90 - 360*\i/12}
+  \foreach \i in {0,1,...,12} {
+    \pgfmathsetmacro{\ang}{90 - 360*\i/13}
     \pgfmathsetmacro{\rA}{\R+\rtwr}
     \pgfmathsetmacro{\rB}{\R+\rtwr+0.22}
     \node[dot] at (\ang:\rA) {};
     \node[dot] at (\ang:\rB) {};
   }
 
-  \foreach \i in {2,3,4,5} {
-    \pgfmathsetmacro{\ang}{90 - 360*\i/12}
+  \foreach \i in {2,3,4} {
+    \pgfmathsetmacro{\ang}{90 - 360*\i/13}
     \pgfmathsetmacro{\rC}{\R+\rtwr+0.44}
     \node[dot,fill=blue!70!black] at (\ang:\rC) {};
   }
 
-  \node[blue!60!black,font=\small] at (90-360*3.5/12:\R+2.6)
+  \node[blue!60!black,font=\small] at (90-360*3/13:\R+2.9)
        {\(H\): heavy, \(\mu=q+1\)};
-  \node[gray!50!black,font=\small] at (90-360*9/12:\R+1.9)
+  \node[gray!50!black,font=\small] at (90-360*9/13:\R+1.9)
        {light, \(\mu=q\)};
 
   \node at (0,0) {\(\mathbb{Z}/D\mathbb{Z}\)};
@@ -910,10 +912,11 @@ classes in the \(m\)-stepping order.
 \end{tikzpicture}
 \caption{Heavy set \(H\subset\mathbb{Z}/D\mathbb{Z}\) in the
 \(m\)-stepping parametrization
-(here \(D=12,\ q=2,\ s=4,\ N=qD+s=28\)).
+(here \(D=13,\ q=2,\ s=3,\ N=qD+s=29\); realizable for
+\((\alpha,\beta,\omega)=(2,3,17/3)\)).
 Next to each residue class, the multiplicity \(\mu\) is shown as a
 small outward stack of dots: \(q=2\) for light classes, \(q+1=3\) for heavy
-classes.  The heavy set \(H=\{2,3,4,5\}\) is a contiguous cyclic
+classes.  The heavy set \(H=\{2,3,4\}\) is a contiguous cyclic
 interval of length \(s\).}
 \label{fig:heavy-set}
 \end{figure}
@@ -1548,7 +1551,8 @@ repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
 \subsection{Architecture}\label{subsec:lean_arch}
 
-The proof is structured in two layers.  The first layer proves
+The proof is structured in two parts, an abstract Lean layer and a
+concrete Lean layer.  The abstract Lean layer proves
 Theorem~\ref{thm:main} from four abstract axioms collected in a
 typeclass \texttt{GeometricProjection}:
 \begin{enumerate}
@@ -1567,7 +1571,7 @@ Section~\ref{subsec:step5}) and the case dispatch
 (\texttt{main\_theorem}, corresponding to Theorem~\ref{thm:main})
 are proved purely algebraically.
 
-The second layer constructs a concrete instance of this typeclass
+The concrete Lean layer constructs a concrete instance of this typeclass
 by defining the sorted multiset and gap sequence explicitly.
 Each axiom is discharged by a separate lemma
 (\texttt{N\_pos\_concrete}, \texttt{period\_N\_concrete},
@@ -1852,8 +1856,8 @@ The key structural distinction is whether the \(N\) tracks, viewed as
 arithmetic progressions modulo~\(D\), distribute uniformly or not:
 \begin{itemize}
     \item When \(D \nmid N\), the tracks distribute nonuniformly among the
-          \(D\) residue classes.  The heavy residue classes form a proper
-          cyclic interval in the natural residue parametrization, whose only
+          \(D\) residue classes.  In the \(m\)-stepping parametrization, the
+          heavy residue classes form a proper cyclic interval whose only
           translational symmetry is the identity.  This gives
           \(\lambda = N\).
     \item When \(D \mid N\), each residue class is hit exactly \(N/D\) times.
