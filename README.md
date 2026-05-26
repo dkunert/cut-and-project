@@ -1,7 +1,8 @@
 # cut-and-project
 
-Period formulas for one-dimensional cut-and-project sequences with
-rational slope, formalized in Lean 4.
+Period formulas for one-dimensional cut-and-project gap sequences, with
+explicit rational-slope formulas and the complementary irrational
+aperiodicity statement formalized in Lean 4.
 
 ## Setup
 
@@ -49,10 +50,15 @@ $$
 In every case $\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}$,
 with equality if and only if $N \le D$.
 
+For positive irrational slope and strip half-width $\omega > 0$, the
+projected set has no coincident projected values, and its gap sequence has
+no finite period.
+
 ## Paper
 
 - `LaTeX/rational_cut_and_project_gap_periods.tex` — main paper
-  (statements, proofs, Lean correspondence in Table 1).
+  (statements, proofs, related-literature discussion, and Lean
+  correspondence in Table 1).
 
 ## Lean 4 formalization
 

@@ -1,0 +1,42 @@
+Addressee: haynes@math.uh.edu
+
+Subject: Question on rational cut and project gap periods
+
+Dear Professor Haynes,
+
+I am an independent researcher and have recently completed a manuscript on explicit period formulas for one-dimensional rational cut and project strip projections. Your 2016 paper "Gaps problems and frequencies of patches in cut and project sets" (with Koivusalo, Sadun, and Walton) is the closest published work I know, and I would be very grateful for your opinion on whether the formulas below are already in the literature.
+
+The setting is a strip projection with rational slope α/β (gcd(α, β) = 1) and window parameter ω ≥ 0. With
+
+    N = ⌊ωα⌋ + ⌊ωβ⌋ + 1,    D = α² + β²,
+
+the manuscript proves the following minimal period formulas.
+
+Multiset period (projected values counted with multiplicity):
+
+    λ_multiset = N      if D ∤ N,
+    λ_multiset = N / D  if D | N.
+
+Set period (multiplicities discarded):
+
+    λ_set = N    if N < D,
+    λ_set = 1    if N ≥ D.
+
+In particular λ_set | λ_multiset, with equality if and only if N ≤ D. The proof reduces the problem to the distribution of N consecutive residue classes modulo D. A complementary result establishes that irrational slopes yield aperiodic gap sequences, so the rational/irrational dichotomy is closed.
+
+To make the result readily checkable, the proof has also been formalized in Lean 4 (3,758 lines across two files, no `sorry`, no `axiom`, no `admit`). The manuscript is attached as a PDF, and the Lean source (tagged version v1.2-arxiv, corresponding to the line numbers in Table 1 of the paper) is available at https://github.com/dkunert/cut-and-project/tree/v1.2-arxiv.
+
+I would be grateful for any brief indication of whether this exact formula appears somewhere I have missed.
+
+Separately, I am hoping to submit the note to arXiv; as an independent researcher I need an endorsement. If, after a brief look, you feel comfortable endorsing the submission, that would be very helpful.
+
+I completely understand if you do not have time to respond.
+
+Best regards,
+Dirk Kunert
+
+—
+Dirk Kunert
+Independent Researcher
+dirk.kunert@gmail.com
+https://github.com/dkunert
