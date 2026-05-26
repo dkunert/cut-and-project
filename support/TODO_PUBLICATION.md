@@ -5,7 +5,7 @@ Tracking the path from the current arXiv-ready state to a published paper.
 Status snapshot (2026-05-16):
 - Paper: 17 pp., 0 errors, 4 external review rounds closed
 - Lean: 3,760 lines across `Basic.lean` + `Irrational.lean`, 0 `sorry`, 0 warnings
-- Bibliography pinned to git tag `v1.2-arxiv`
+- Bibliography pinned to git tag `v1.3-arxiv`
 
 ---
 
@@ -25,7 +25,7 @@ Status snapshot (2026-05-16):
 - [ ] Choose license (CC BY 4.0 vs. arXiv non-exclusive)
 - [ ] Prepare submission bundle: `.tex` source + `.bbl` (not raw `.bib`) + any figures
 - [ ] Decide whether to attach Lean source as ancillary files or link to a GitHub release
-- [ ] Tag the submission commit (e.g. `v1.2-arxiv-submitted`) and push the tag
+- [ ] Tag the submission commit (e.g. `v1.3-arxiv-submitted`) and push the tag
 - [ ] Upload, preview rendered PDF, fix any arXiv-side complaints
 - [ ] Submit; record the resulting arXiv ID and date here
 
