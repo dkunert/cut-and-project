@@ -8,10 +8,10 @@
 \emergencystretch=4em
 \sloppy
 
-\title{Fourth Codex Review: Remaining Minor Findings for\\
+\title{Fourth Codex Review Findings for\\
 \texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
 \author{Codex Review Notes}
-\date{May 13, 2026}
+\date{May 26, 2026}
 
 \begin{document}
 
@@ -19,163 +19,171 @@
 
 \section*{Executive Summary}
 
-I reviewed the current final version of
+I reviewed the current manuscript
 \[
 \texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex}
 \]
-after the previous findings had been implemented.  I do not see a remaining
-mathematical blocker.  The rational multiset theorem, the set-valued theorem,
-the generic minimality argument, the degenerate case, and the irrational
-aperiodicity proof are coherent in the current manuscript.
-
-The previous F3/R2 concern is resolved in the strongest useful way: the paper
-now lifts a projected period only to the forward inclusion
+again, including the newly inserted explanatory figures.  I did not find a
+mathematical blocker in the rational multiset theorem, the set-valued theorem,
+the generic minimality proof, or the degenerate case.  The residue argument
+remains coherent:
 \[
-  A+v\subseteq A,
+r=\alpha x-\beta y,\qquad
+\tilde p=\beta x+\alpha y,\qquad
+c_r\equiv -\alpha\beta^{-1}r \pmod D.
 \]
-and Step~3 derives the contradiction from this forward inclusion alone, in
-agreement with the Lean proof.
 
-The points below are therefore only low-importance precision or presentation
-items.  They are not blockers for arXiv submission.
+The most important remaining issue is expository rather than structural:
+two new schematic figures use values of \(D\) that cannot occur as
+\(D=\alpha^2+\beta^2\) for coprime positive integers \(\alpha,\beta\).
+A strict referee may notice this.  The figures should therefore either be
+explicitly marked as schematic illustrations, or replaced by examples with
+realizable \(D\)-values.
 
-\section*{Remaining Points}
+\section*{Findings}
 
-\begin{enumerate}[label=\textbf{R\arabic*.},leftmargin=*]
+\begin{enumerate}[label=\textbf{F\arabic*.},leftmargin=*]
 
-\item \textbf{Replace ``quantor structure'' by ``quantifier structure''.}
+\item \textbf{The new figures use non-realizable \(D\)-values.}
 
-Around
+The figure around
 \[
-\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1267},
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:376}
 \]
-the text says:
+uses \(D=6\), and the heavy-set figure around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:911}
+\]
+uses \(D=12\).  In the actual model, however,
+\[
+D=\alpha^2+\beta^2
+\]
+with \(\alpha,\beta\in\mathbb N\) coprime.  Neither \(6\) nor \(12\) is
+representable in that form.
+
+\textbf{Recommendation.}  Either mark both figures explicitly as schematic,
+for example ``schematic residue picture, not tied to a particular
+\((\alpha,\beta)\)'', or replace the examples by realizable values of \(D\).
+This is the strongest issue in the current draft because it is easy for a
+careful reader to check.
+
+\item \textbf{The helpful \(j\)-clarification is missing again.}
+
+In the block enumeration around
+\[
+\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:799--809},
+\]
+the text writes
+\[
+i=kN+j,\qquad 0\le j<N,
+\]
+and then
+\[
+\tilde p_s^{(i)}=kD+v_j.
+\]
+This is correct, but the local-index point is subtle enough that a reader may
+wonder why the residue list is indexed by \(j\) rather than by \(i\).
+
+\textbf{Recommendation.}  Restore the short clarification:
 \begin{quote}
-``construction whose quantor structure is the natural one''
-\end{quote}
-The word ``quantor'' is a Germanism.  In English mathematical prose, the
-idiomatic term is ``quantifier''.
-
-\textbf{Recommended wording.}
-\begin{quote}
-``construction whose quantifier structure is the natural one''
+Here \(j\), not \(i\), indexes the residue list
+\(v_0,\ldots,v_{N-1}\), since \(j\) is the position of \(i\) within one
+block of \(N\) consecutive entries.
 \end{quote}
 
-\textbf{Importance: very low.}  This is purely linguistic.
+\item \textbf{Use ``\(m\)-stepping parametrization'' in the summary language.}
 
-\item \textbf{Slightly sharpen the local-finiteness wording.}
-
-Around
+The abstract and introduction say that the heavy residue classes form a
+proper cyclic interval in the ``natural residue parametrization''.  In the
+proof, the precise statement is that they form such an interval after passing
+to the \(m\)-stepping parametrization
 \[
-\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1261},
-\]
-the phrase
-\begin{quote}
-``\(\tilde p\) restricted to the strip has finite fibres over any bounded
-interval''
-\end{quote}
-is understandable, but a little nonstandard.  A fibre is usually over a
-single value, not over an interval.
-
-\textbf{Recommended wording.}
-\begin{quote}
-``the preimage of every bounded \(\tilde p\)-interval inside the strip is
-finite''
-\end{quote}
-or equivalently
-\begin{quote}
-``the intersection of the strip with the preimage of a bounded
-\(\tilde p\)-interval is a bounded parallelogram, hence contains only
-finitely many lattice points.''
-\end{quote}
-
-\textbf{Importance: low.}  The argument is correct as written; this would
-only remove a small terminology imprecision.
-
-\item \textbf{Optionally reorder the \(\varepsilon\)-choice paragraph.}
-
-The unboundedness argument around
-\[
-\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1272--1308}
-\]
-is mathematically correct.  The only possible reader stumble is that the text
-first discusses a density witness \((p_0,q_0)\) for an arbitrary
-\(\varepsilon\), then later chooses \(\varepsilon\) small depending on the
-target \(M\).
-
-\textbf{Recommended logical order.}
-\begin{enumerate}[label=(\roman*),leftmargin=*]
-  \item Fix \(M\).
-  \item Choose
-  \[
-    0<\varepsilon\le
-    \min\!\left(1,\,
-      \frac{c_0\min(a\omega,\omega)}{|M|+2c_0+1}\right).
-  \]
-  \item Use density to choose \((p_0,q_0)\) with
-  \(0<|s(p_0,q_0)|<\varepsilon\).
-  \item Define
-  \[
-    K=\max\!\bigl(1,\lceil M/\tilde p(p_0,q_0)\rceil+1\bigr).
-  \]
-\end{enumerate}
-
-\textbf{Importance: low.}  This is not a flaw in the proof; it is only a
-possible readability improvement for a referee checking the quantifiers.
-
-\item \textbf{Use either ``formalization'' or ``formalisation'' consistently.}
-
-Around
-\[
-\texttt{LaTeX/rational\_cut\_and\_project\_gap\_periods.tex:1318},
-\]
-the text uses ``formalisation'', while most of the paper uses the American
-spelling ``formalization''.
-
-\textbf{Importance: very low.}  This is only copy-editing consistency.
-
-\item \textbf{Optional typography: two harmless underfull box warnings.}
-
-A fresh \texttt{pdflatex} build reports no errors, no undefined references,
-no overfull boxes, and only two underfull box warnings in the Lean/table
-area:
-\[
-\texttt{lines 1456--1473}
-\qquad\text{and}\qquad
-\texttt{line 1579}.
+f(x)=\mu(mx).
 \]
 
-\textbf{Importance: very low.}  Underfull boxes are usually harmless.  They
-need not be fixed unless the final PDF visually looks awkward at those spots.
+\textbf{Recommendation.}  Replace the summary phrase by
+``in the \(m\)-stepping parametrization'' or
+``after relabeling by the \(m\)-stepping parametrization''.  This avoids the
+impression that the heavy set is necessarily contiguous in the ordinary
+numeric order modulo \(D\).
+
+\item \textbf{The Lean section uses ``two layers'' in two different senses.}
+
+In the architecture subsection, the ``first layer'' refers to the abstract
+Lean typeclass argument, while the ``second layer'' is the concrete Lean
+instance.  Later, in the scope subsection, ``Layer~1'' refers to the
+hand-verified strip-to-residue geometry, and ``Layer~2'' refers to the
+machine-checked residue model.
+
+\textbf{Recommendation.}  Rename one of these decompositions.  For example:
+\begin{itemize}[leftmargin=*]
+  \item use ``abstract Lean layer'' and ``concrete Lean layer'' in the
+  architecture subsection;
+  \item reserve ``Layer~1'' and ``Layer~2'' for the scope distinction between
+  hand-verified geometry and machine-checked residue combinatorics.
+\end{itemize}
+
+\item \textbf{The irrational section uses density before proving it.}
+
+In the irrational preamble, density of
+\[
+s(\mathbb Z^2)=\{n-am:m,n\in\mathbb Z\}
+\]
+is used in the unboundedness construction before it is justified later in
+Step~3 of the irrational aperiodicity proposition.
+
+\textbf{Recommendation.}  This is not a mathematical error, but it would read
+more cleanly if density were stated as a small lemma before the unboundedness
+paragraph.  Then both the unboundedness construction and Step~3 could refer
+back to that lemma.
+
+\item \textbf{The multiset-versus-set figure should say whether it is
+schematic or concrete.}
+
+The first new figure is pedagogically useful: it shows zero gaps in the
+multiset convention and their disappearance in the set convention.  However,
+because the caption currently says ``here \(D=6\)'', it reads like a concrete
+instance of the paper's \((\alpha,\beta,\omega)\)-model.
+
+\textbf{Recommendation.}  If the figure remains schematic, say so explicitly
+in the caption.  If it is meant to be a concrete example, choose a realizable
+\(D=\alpha^2+\beta^2\).
 
 \end{enumerate}
 
 \section*{Checks Performed}
 
 \begin{itemize}[leftmargin=*]
-  \item \texttt{pdflatex} on the current paper completed successfully.
-        The searched log showed no undefined references, no citation
-        warnings, no errors, and no overfull boxes.
-  \item \texttt{lake build} in \texttt{Lean/CutAndProject} completed
-        successfully:
-        \[
-          \texttt{Build completed successfully (8251 jobs).}
-        \]
-  \item A search of the Lean source found no occurrences of
-        \texttt{sorry}, \texttt{admit}, or \texttt{axiom}.
+  \item The paper was compiled with \texttt{latexmk}; the build completed
+  successfully.
+  \item The searched LaTeX log showed no undefined references, no multiply
+  defined labels, no citation warnings, and no overfull boxes.  The remaining
+  warnings were harmless underfull boxes in the Lean/table area.
   \item Running
-        \[
-          \texttt{python3 src/python/verify\_paper.py}
-        \]
-        reported zero multiset mismatches, zero set mismatches, and zero
-        negative set sentinels over all \(51{,}729\) CSV rows.
+  \[
+  \texttt{python3 src/python/verify\_paper.py}
+  \]
+  reported zero multiset mismatches, zero set mismatches, and zero negative
+  set sentinels over all \(51{,}729\) CSV rows.
+  \item The Lean source files
+  \[
+  \texttt{Basic.lean},\qquad \texttt{Irrational.lean}
+  \]
+  contain \(3758\) lines in total.  A source search found no occurrences of
+  \texttt{sorry}, \texttt{admit}, or actual \texttt{axiom} declarations in
+  those Lean files.  I did not rerun \texttt{lake build} in this pass.
 \end{itemize}
 
 \section*{Overall Assessment}
 
-The manuscript looks arXiv-ready from the mathematical side.  The remaining
-items above are polish: they improve English idiom, terminology, and
-quantifier readability, but they do not affect the correctness of the main
-results.
+The paper remains mathematically strong.  The rational proof is especially
+clean: the projected multiset is reduced to repeated residue blocks modulo
+\(D\), and the minimality proof via the trivial stabilizer of a proper cyclic
+interval is convincing.
+
+Before submission, I would fix the schematic-figure issue and restore the
+\(j\)-index clarification.  The other points are mostly wording and
+organization improvements, but they would make the manuscript harder for a
+strict reader to misread.
 
 \end{document}
