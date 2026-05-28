@@ -420,9 +420,15 @@ Strip selbst.
 Die dritte Runde adressiert gezielt die in Runde~2 identifizierte
 Lücke: die Tradition der arithmetischen diskreten Geraden nach
 Reveilles (Thèse Strasbourg, 1991). Die Strip-Bedingung des Papers
-\(-\beta\omega \le \alpha x-\beta y \le \alpha\omega\) ist wörtlich
-eine arithmetische diskrete Gerade
-\(D(\alpha,\beta,\mu,\omega) = \{(x,y) : \mu \le \alpha x-\beta y < \mu+\omega\}\).
+\(-\beta\omega \le \alpha x-\beta y \le \alpha\omega\) hat dieselbe
+Form wie eine arithmetische diskrete Gerade
+\[
+  D(\alpha,\beta,\mu,W)
+  = \{(x,y) : \mu \le \alpha x-\beta y < \mu+W\},
+\]
+mit \(\mu=-\beta\omega\) und arithmetischer Dicke
+\(W=(\alpha+\beta)\omega\), bis auf die übliche Wahl der
+Randkonvention.
 Ca.~22 Suchanfragen über arXiv, Google Scholar, HAL, DGCI/DGMM-Bände,
 DGtal-Doku, AMS CRM-Reihe.
 
@@ -438,14 +444,15 @@ Geprüfte Kandidaten (alle als \emph{nicht direkter Treffer} eingestuft):
   \item \textbf{Coeurjolly et al., Discrete Circles} (HAL hal-00580556) ---
         $p^2+q^2$ erscheint als Krümmungsgröße (Radius$^2$),
         nicht als Periodenmodulus.
-  \item \textbf{Debled-Rennesson, Thèse 1995 + Lachaud-Said, DAM 2013}
-        (\texttt{doi:10.1016/j.dam.2012.07.013}) ---
-        Chaincode-Periode $q$ via Stern-Brocot;
-        bezieht sich auf das Freeman-Wort, nicht auf sortierte Distanzen.
+  \item \textbf{Debled-Rennesson et al.}
+        Thèse 1995 sowie Lachaud--Said, DAM 2013, behandeln die
+        Chaincode-Periode $q$ via Stern-Brocot; das bezieht sich auf
+        das Freeman-Wort, nicht auf sortierte Distanzen.
+        DOI: \url{https://doi.org/10.1016/j.dam.2012.07.013}.
   \item \textbf{Berstel/Berthé/Lauve/Reutenauer/Saliola,
         Combinatorics on Words: Christoffel Words} (AMS CRM-27) ---
         Christoffel-Wortlänge $p+q$; Three-Gap-Theorem; keine
-        ω-parametrisierte sortierte Gap-Periode.
+        \(\omega\)-parametrisierte sortierte Gap-Periode.
   \item \textbf{Lachaud/Said/Feschet, Patterns} (DGtal-Doku, DAM 2013) ---
         Pattern-Periode $p+q$; selbe Lücke wie Debled-Rennesson.
   \item \textbf{Uscka-Wehlou, PhD Uppsala 2009} ---
@@ -459,8 +466,8 @@ Die digitale-Geometrie-Literatur enthält zwei nahe, aber strukturell
 verschiedene Periodenaussagen:
 \begin{enumerate}[leftmargin=2em]
   \item \textbf{Translationsperiodizität} der arithmetischen diskreten
-        Geraden $D(\alpha,\beta,\mu,\omega)$ unter Verschiebung um den
-        Bezout-Vektor $(\beta,\alpha)$ --- Reveilles 1991, kanonisch.
+        Geraden \(D(\alpha,\beta,\mu,W)\) unter Verschiebung um den
+        Richtungsvektor $(\beta,\alpha)$ --- Reveilles 1991, kanonisch.
   \item \textbf{Chaincode-/Christoffel-Wort-Periode $q$}
         (bzw.\ Wortlänge $p+q$) der Naiv-Linie ---
         Berstel / Debled-Rennesson / Lachaud, kanonisch.
@@ -479,9 +486,9 @@ Drei strukturelle Unterschiede zu den Paper-Theoremen:
         Multiset-Konvention hat keinen Vorläufer.
 \end{itemize}
 
-Der Modulus $p^2+q^2$ erscheint in der DG-Literatur ausschließlich als
+In den geprüften DG-Quellen erscheint der Modulus $p^2+q^2$ als
 Krümmungsgröße bei diskreten Kreisen oder als $\|v\|^2$ in
-Konnektivitätsabschätzungen --- niemals als Periodenmodulus einer
+Konnektivitätsabschätzungen, aber nicht als Periodenmodulus einer
 Distanzfolge.
 
 \subsection*{Verbleibende Lücken nach drei Runden (ehrlich)}
@@ -516,7 +523,7 @@ formulieren, der die digitale Geometrie korrekt einordnet:
 Die Streifenbedingung $|\alpha x - \beta y| \le \text{const}$ definiert
 die in der digitalen Geometrie ausgiebig studierte arithmetische
 diskrete Gerade nach Reveilles (1991). Klassische Resultate dieses
-Felds --- die Translationsperiodizität entlang des Bezout-Vektors
+Felds --- die Translationsperiodizität entlang des Richtungsvektors
 $(\beta,\alpha)$ sowie die Chaincode-Periode $q$ nach
 Debled-Rennesson und Lachaud --- sind zu den hier bewiesenen Theoremen
 orthogonal: Wir betrachten die nach Projektion sortierte Lückenfolge
