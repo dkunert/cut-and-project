@@ -415,44 +415,131 @@ den irrationalen, aperiodischen Fall; die digitale Geometrie liefert
 voraussichtlich die engste Vergleichsliteratur für den rationalen
 Strip selbst.
 
-\subsection*{Verbleibende Lücken (ehrlich)}
+\subsection*{Runde 3: Digitale Geometrie / Reveilles-Schule}
 
+Die dritte Runde adressiert gezielt die in Runde~2 identifizierte
+Lücke: die Tradition der arithmetischen diskreten Geraden nach
+Reveilles (Thèse Strasbourg, 1991). Die Strip-Bedingung des Papers
+\(-\beta\omega \le \alpha x-\beta y \le \alpha\omega\) ist wörtlich
+eine arithmetische diskrete Gerade
+\(D(\alpha,\beta,\mu,\omega) = \{(x,y) : \mu \le \alpha x-\beta y < \mu+\omega\}\).
+Ca.~22 Suchanfragen über arXiv, Google Scholar, HAL, DGCI/DGMM-Bände,
+DGtal-Doku, AMS CRM-Reihe.
+
+Geprüfte Kandidaten (alle als \emph{nicht direkter Treffer} eingestuft):
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Reveilles, Thèse 1991} (HAL tel-01279525) ---
+        Ur-Definition $D(a,b,\mu,\omega)$; Konnektivitätssätze;
+        Translationsperiode entlang $(b,a)$.
+        Kein $a^2+b^2$-Modulus, keine sortierte Gap-Periode,
+        keine Multiset/Set-Distinktion.
+        (Volltext durch Anubis blockiert; Inhalt aus zitierenden Folgepapern rekonstruiert.)
+  \item \textbf{Coeurjolly et al., Discrete Circles} (HAL hal-00580556) ---
+        $p^2+q^2$ erscheint als Krümmungsgröße (Radius$^2$),
+        nicht als Periodenmodulus.
+  \item \textbf{Debled-Rennesson, Thèse 1995 + Lachaud-Said, DAM 2013}
+        (\texttt{doi:10.1016/j.dam.2012.07.013}) ---
+        Chaincode-Periode $q$ via Stern-Brocot;
+        bezieht sich auf das Freeman-Wort, nicht auf sortierte Distanzen.
+  \item \textbf{Berstel/Berthé/Lauve/Reutenauer/Saliola,
+        Combinatorics on Words: Christoffel Words} (AMS CRM-27) ---
+        Christoffel-Wortlänge $p+q$; Three-Gap-Theorem; keine
+        ω-parametrisierte sortierte Gap-Periode.
+  \item \textbf{Lachaud/Said/Feschet, Patterns} (DGtal-Doku, DAM 2013) ---
+        Pattern-Periode $p+q$; selbe Lücke wie Debled-Rennesson.
+  \item \textbf{Uscka-Wehlou, PhD Uppsala 2009} ---
+        Run-hierarchische Beschreibung; Chaincode-Periode $q$;
+        komplett orthogonal.
+\end{itemize}
+
+\subsection*{Hauptbefund nach Runde 3}
+
+Die digitale-Geometrie-Literatur enthält zwei nahe, aber strukturell
+verschiedene Periodenaussagen:
 \begin{enumerate}[leftmargin=2em]
-  \item \textbf{Digitale Geometrie.}
-        Literatur zu arithmetischen/digitalen Geraden
-        (Reveilles, Debled-Rennesson, Klette, Rosenfeld, Dorst, Wu,
-        Brons; ggf.\ Berthé/Vuillon) hat höchste Priorität, weil die
-        Strip-Bedingung dort nahezu wörtlich als
-        \(\mu \le ax-by < \mu+W\) erscheint.  Zu unterscheiden ist
-        unbedingt zwischen bloßer Translationsperiodizität der diskreten
-        Gerade und der minimalen Periode der projizierten Gap-Folge.
-  \item \textbf{Baake-Grimm \emph{Aperiodic Order} Bd.~1+2} ---
-        Standardwerk; Index-Stichworte ``rational window'' / ``periodic
-        case'' gezielt prüfen.
-  \item \textbf{Senechal \emph{Quasicrystals and Geometry}} ---
-        verwandt, könnte verstreute Lemmas enthalten.
-  \item \textbf{Vor-2000-Physik.}
-        Schlecht web-indizierte Literatur in Acta Cryst. und Phys. Rev. B
-        sowie Arbeiten aus den Schulen um Korepin, Niizeki und Tokihiro.
-  \item \textbf{Festschriften / Sammelbände} (Pleasants ``Designer
-        quasicrystals'', AMS 2000) --- nicht auf arXiv.
+  \item \textbf{Translationsperiodizität} der arithmetischen diskreten
+        Geraden $D(\alpha,\beta,\mu,\omega)$ unter Verschiebung um den
+        Bezout-Vektor $(\beta,\alpha)$ --- Reveilles 1991, kanonisch.
+  \item \textbf{Chaincode-/Christoffel-Wort-Periode $q$}
+        (bzw.\ Wortlänge $p+q$) der Naiv-Linie ---
+        Berstel / Debled-Rennesson / Lachaud, kanonisch.
 \end{enumerate}
 
-Diese Lücken sind genau das, was die nachstehende zbMATH-Suche
-schließen soll.
+Drei strukturelle Unterschiede zu den Paper-Theoremen:
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Kombinatorisches Objekt:} DG-Literatur betrachtet das
+        Chaincode-Wort in geometrischer Reihenfolge entlang $x$.
+        Das Paper betrachtet die nach Projektion auf $\tilde p$
+        \emph{sortierte} Distanzfolge.
+  \item \textbf{$\omega$-Abhängigkeit:} DG-Periode hängt nur von der
+        Steigung ab. Die Paper-Periode $N$ hängt zentral von $\omega$ ab.
+  \item \textbf{Multiset/Set-Distinktion fehlt komplett} in der
+        DG-Literatur: diskrete Geraden sind dort Punktmengen; eine
+        Multiset-Konvention hat keinen Vorläufer.
+\end{itemize}
+
+Der Modulus $p^2+q^2$ erscheint in der DG-Literatur ausschließlich als
+Krümmungsgröße bei diskreten Kreisen oder als $\|v\|^2$ in
+Konnektivitätsabschätzungen --- niemals als Periodenmodulus einer
+Distanzfolge.
+
+\subsection*{Verbleibende Lücken nach drei Runden (ehrlich)}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Reveilles-Thèse-Volltext} (HAL tel-01279525) --- durch
+        Anubis blockiert. Bibliographische Indizien aus Folgepapern
+        zeigen klare Kapitelstruktur (Konnektivität, Algorithmik,
+        Hyperebenen) ohne ein Kapitel zu sortierten Distanzperioden.
+        Restrisiko niedrig, aber nicht null.
+  \item \textbf{DGCI/DGMM-Tagungsbände 1991--2024} (40+ Bände,
+        Springer LNCS) --- nur stichprobenartig durchgesehen.
+  \item \textbf{Klette/Rosenfeld, Digital Geometry} (2004),
+        Kapitel~9 --- nicht im Volltext zugänglich.
+  \item \textbf{Baake-Grimm \emph{Aperiodic Order} Bd.~1+2} und
+        \textbf{Senechal \emph{Quasicrystals and Geometry}} ---
+        Index-Stichworte ``rational window'' / ``periodic case''
+        gezielt prüfen.
+  \item \textbf{Vor-2000-Physik} (Acta Cryst., Phys. Rev. B; Korepin,
+        Niizeki, Tokihiro) --- schlecht web-indiziert.
+  \item \textbf{Festschriften} (Pleasants ``Designer quasicrystals'',
+        AMS 2000) --- nicht auf arXiv.
+\end{enumerate}
+
+\subsection*{Empfehlung für den Related-Work-Abschnitt}
+
+Auf Basis der dritten Runde lässt sich ein präziser Abgrenzungsabsatz
+formulieren, der die digitale Geometrie korrekt einordnet:
+
+\begin{quote}
+\itshape
+Die Streifenbedingung $|\alpha x - \beta y| \le \text{const}$ definiert
+die in der digitalen Geometrie ausgiebig studierte arithmetische
+diskrete Gerade nach Reveilles (1991). Klassische Resultate dieses
+Felds --- die Translationsperiodizität entlang des Bezout-Vektors
+$(\beta,\alpha)$ sowie die Chaincode-Periode $q$ nach
+Debled-Rennesson und Lachaud --- sind zu den hier bewiesenen Theoremen
+orthogonal: Wir betrachten die nach Projektion sortierte Lückenfolge
+mit Streifendicke $\omega$ und Multiset-vs.-Set-Konvention; in der
+digitalen Geometrie ist weder die sortierte Distanzfolge noch die
+Multiset-Konvention etabliert.
+\end{quote}
 
 \subsection*{Gesamteinschätzung}
 
-Nach insgesamt ca.~45 systematischen Suchanfragen über arXiv und Web
-ist die vorsichtige Bilanz: \textbf{Es wurde kein direkter Beleg gefunden,
-dass die kombinierte Form der beiden Theoreme --- Multiset-vs.-Set,
-\(\omega\)-Parameter, \(p^2+q^2\)-Dichotomie nach Projektion und Sortierung
---- bereits publiziert ist.}  Der Professor hat recht mit seiner
-methodischen Vorsicht: Vor einer erneuten Endorsement-Anfrage sollte die
-digitale-Geometrie-Literatur gezielt nachverfolgt und die Recherche in
-zbMATH/MathSciNet reproduzierbar protokolliert werden.  Danach lässt sich
-deutlich präziser sagen: bekannte Grundlage ist die Periodizität
-arithmetischer diskreter Geraden; als offenbar nicht explizit gefundener
-Beitrag bleibt die minimale projizierte Multiset-/Set-Gap-Periode.
+Nach insgesamt ca.~67 systematischen Suchanfragen über arXiv, Web, HAL
+und die DG-Literatur ist die vorsichtige Bilanz: \textbf{Es wurde kein
+direkter Beleg gefunden, dass die kombinierte Form der beiden Theoreme
+--- Multiset-vs.-Set, $\omega$-Parameter, $p^2+q^2$-Dichotomie nach
+Projektion und Sortierung --- bereits publiziert ist.} Die in Runde~2
+identifizierte Hauptverdachtsachse (digitale Geometrie) wurde geprüft
+und liefert verwandte, aber strukturell verschiedene Aussagen. Bekannte
+Grundlagen sind die Translationsperiodizität arithmetischer diskreter
+Geraden und die Chaincode-Periode $q$; als offenbar nicht explizit
+gefundener Beitrag bleibt die minimale projizierte
+Multiset-/Set-Gap-Periode mit $\omega$-Parameter und
+$p^2+q^2$-Modulus. Vor einer erneuten Endorsement-Anfrage sollte
+zusätzlich eine zbMATH/MathSciNet-Recherche mit Schwerpunkt auf den
+oben genannten Restlücken reproduzierbar protokolliert werden.
 
 \end{document}

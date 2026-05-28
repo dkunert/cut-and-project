@@ -84,7 +84,11 @@
       "Bash(pdflatex -interaction=nonstopmode -halt-on-error cases_varianten.tex)",
       "WebFetch(domain:zbmath.org)",
       "Bash(curl *)",
-      "WebFetch(domain:api.zbmath.org)"
+      "WebFetch(domain:api.zbmath.org)",
+      "WebFetch(domain:univ-smb.hal.science)",
+      "WebFetch(domain:www.dgtal.org)",
+      "WebFetch(domain:www.mscand.dk)",
+      "WebFetch(domain:hal.science)"
     ]
   }
 }
