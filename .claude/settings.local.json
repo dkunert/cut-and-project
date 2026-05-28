@@ -81,7 +81,10 @@
       "Bash(chmod +x /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/cleanup.sh)",
       "Bash(/Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/cleanup.sh)",
       "WebFetch(domain:www.erdosproblems.com)",
-      "Bash(pdflatex -interaction=nonstopmode -halt-on-error cases_varianten.tex)"
+      "Bash(pdflatex -interaction=nonstopmode -halt-on-error cases_varianten.tex)",
+      "WebFetch(domain:zbmath.org)",
+      "Bash(curl *)",
+      "WebFetch(domain:api.zbmath.org)"
     ]
   }
 }

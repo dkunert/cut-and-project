@@ -1,0 +1,339 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.5cm}
+
+\title{zbMATH-Rechercheanleitung\\
+\large Prior-Art-Suche zu den Periodenformeln\\
+\textit{Period Formulas for Rational Cut-and-Project Strip Projections}}
+\author{Erstellt von Claude (Opus 4.7) für Dirk Kunert}
+\date{28. Mai 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Hintergrund}
+
+Ein Mathematik-Professor möchte das Paper nicht ohne gründlichere
+Literaturrecherche endorsen, weil er vermutet, das Resultat sei
+wahrscheinlich bereits bekannt --- möglicherweise als Lemma in einem
+Paper zu einem anderen Thema versteckt. Eine erste arXiv-Recherche
+(ca.~20 Suchanfragen) ergab keinen direkten Treffer. Da arXiv die
+Vor-2000-Literatur in Number Theory und Combinatorics-on-Words
+unzureichend abdeckt, ist eine \textbf{zbMATH Open}-Recherche der
+empfohlene nächste Schritt.
+
+zbMATH Open (\url{https://zbmath.org}) ist seit 2021 kostenfrei und
+enthält ca.~4 Millionen mathematische Publikationen seit 1940, jeweils
+mit kurzem Review (1--3 Absätze, von einem Mathematiker geschrieben).
+Die Reviews sind volltextsuchbar --- das ist das entscheidende
+Hilfsmittel, um schnell durch viele Kandidaten zu scannen.
+
+\section*{Die gesuchten Theoreme}
+
+Setup: $\alpha,\beta\in\mathbb{N}$ koprim, $\omega\ge0$. Mit
+\[
+  N \;=\; \lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
+  \qquad
+  D \;=\; \alpha^2+\beta^2.
+\]
+
+\paragraph{Theorem 1 (Multiset-Periode):}
+\[
+  \lambda_{\mathrm{multiset}} \;=\;
+  \begin{cases} N & D\nmid N,\\ N/D & D\mid N. \end{cases}
+\]
+
+\paragraph{Theorem 2 (Set-Periode):}
+\[
+  \lambda_{\mathrm{set}} \;=\;
+  \begin{cases} N & N<D,\\ 1 & N\ge D. \end{cases}
+\]
+
+Außerdem: $\lambda_{\mathrm{set}}\mid\lambda_{\mathrm{multiset}}$
+mit Gleichheit gdw.\ $N\le D$.
+
+\section*{Suchsyntax von zbMATH}
+
+\begin{itemize}[leftmargin=2em]
+  \item \texttt{cc:CODE} --- Mathematics Subject Classification (MSC) Code
+  \item \texttt{au:Name} --- Autor
+  \item \texttt{ti:Wort} --- Titel-Stichwort
+  \item \texttt{ut:Wort} --- Stichwort (User-Keyword)
+  \item \texttt{py:JJJJ} --- Erscheinungsjahr
+  \item \texttt{"Phrase"} --- Wortgruppensuche
+\end{itemize}
+
+\section{Direkte Treffer-Versuche (hohe Priorität)}
+
+\begin{verbatim}
+"cut-and-project" rational period
+"cut and project" rational slope period gap
+"strip projection" lattice period
+projected lattice gap sequence period rational
+"a^2+b^2" period lattice
+"alpha^2+beta^2" period
+\end{verbatim}
+
+\section{MSC-Code-basierte Suchen}
+
+Relevante MSC-Codes:
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{52C23} --- Quasicrystals, aperiodic tilings
+  \item \textbf{11B85} --- Automata sequences (Sturmian, balanced words)
+  \item \textbf{11J71} --- Distribution modulo one (Three-Distance Theorem)
+  \item \textbf{37B10} --- Symbolic dynamics
+  \item \textbf{68R15} --- Combinatorics on words
+  \item \textbf{11H06} --- Lattices and convex bodies (geometry of numbers)
+\end{itemize}
+
+\begin{verbatim}
+cc:52C23 period gap
+cc:52C23 rational projection
+cc:52C23 one-dimensional period formula
+cc:11B85 rational slope period
+cc:11B85 balanced word period multiplicity
+cc:11J71 rational gap period
+cc:37B10 cut-and-project rational period
+cc:68R15 Sturmian rational period gap
+\end{verbatim}
+
+\section{Verwandte Konzepte und Verkleidungen}
+
+\begin{verbatim}
+Beatty sequence rational period gap
+Christoffel word period rational slope formula
+"three distance" rational multiplicity period
+"three gap" rational period multiset
+mechanical sequence rational slope period
+Fraenkel sequence period gap
+"discrete line" gap period rational
+"visible lattice points" line gap rational
+"projected multiset" period
+"projected set" rational lattice period
+\end{verbatim}
+
+\section{Autoren-zentrierte Suchen}
+
+Diese Autoren arbeiten/arbeiteten im engsten Umfeld; ihre
+Publikationsliste lohnt einen Blick:
+
+\begin{verbatim}
+au:Haynes A. ti:cut-and-project
+au:Koivusalo H. ti:gap
+au:Pleasants P. ti:quasicrystal
+au:Baake M. ti:rational period
+au:Grimm U. ti:rational projection
+au:Marklof J. ti:gap rational
+au:Strömbergsson A. ti:gap
+au:Berthé V. ti:Sturmian rational
+au:Berstel J. ti:Christoffel period
+au:Boshernitzan M. ti:gap period
+au:Fraenkel A. ti:Beatty period
+au:Lagarias J. ti:lattice projection
+au:Akiyama S. ti:quasicrystal rational
+au:Solomyak B. ti:cut-and-project
+au:Lee J.-Y. ti:rational model set
+\end{verbatim}
+
+\section{Spezifische Stichwort-Kombinationen}
+
+\begin{verbatim}
+"period length" lattice strip rational projection
+"minimal period" gap sequence projection
+"period formula" cut-and-project
+"residue class" period gap lattice rational
+"sum of two squares" period lattice
+"Gaussian integers" period lattice projection rational
+\end{verbatim}
+
+\section{Festschriften und Sammelbände}
+
+Diese gedruckten Bände sind nicht auf arXiv und besonders verdächtig
+für versteckte Lemmas:
+
+\begin{verbatim}
+ti:"Directions in Mathematical Quasicrystals"
+ti:"Aperiodic Order" Baake Grimm
+au:Pleasants "designer quasicrystal"
+ti:"Quasicrystals and Discrete Geometry"
+ti:"Mathematics of Aperiodic Order"
+\end{verbatim}
+
+\section{Physik-Literatur}
+
+Diese Literatur enthält oft Periodenformeln für rationale Approximanten
+quasikristalliner Strukturen:
+
+\begin{verbatim}
+"rational approximant" Fibonacci period formula
+au:Niizeki rational approximant period
+au:Sutô quasicrystal rational
+au:Tokihiro quasicrystal rational period
+"periodic approximant" quasicrystal period formula
+\end{verbatim}
+
+\section*{Vorgehen beim Durchscannen}
+
+Bei jedem Treffer sollten folgende Schritte erfolgen:
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Review lesen} (1--2 Absätze, von einem anderen
+        Mathematiker geschrieben) --- meist genug, um zu entscheiden,
+        ob das Paper relevant ist.
+  \item \textbf{Bei Unklarheit:} Klick auf ``References'' /
+        ``Citations'' --- wer zitiert das Paper, wen zitiert es selbst.
+  \item \textbf{Bei verdächtigem Treffer:} zbMATH-ID notieren
+        (z.\,B.\ \texttt{Zbl 1234.56789}) und arXiv-ID falls vorhanden.
+\end{enumerate}
+
+\section*{Erwartungshorizont}
+
+Basierend auf der bisherigen arXiv-Recherche:
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Viele Treffer} bei Abschnitten 1--3, aber fast alle
+        handeln entweder von irrationalen Slopes (Three-Gap, Sturmian)
+        oder von qualitativer Periodizität (ohne explizite Formel).
+  \item \textbf{Vermutlich keinen Treffer} mit $\alpha^2+\beta^2$ als
+        Periodenmodulus. Dieser Term entspringt der euklidischen
+        Geometrie und ist in der rein symbolisch-kombinatorischen C\&P-
+        und Sturmian-Literatur strukturell abwesend.
+  \item \textbf{Möglicherweise einen Pleasants- oder Baake-
+        Festschriftbeitrag}, der das implizit enthält. Das ist die
+        wahrscheinlichste Lücke der arXiv-Suche.
+\end{itemize}
+
+\section*{Zeitaufwand}
+
+Geplant: 60--90 Minuten für eine gründliche Durchsicht.
+
+\section*{Bisheriger Stand der arXiv-Recherche}
+
+Zwei systematische Suchrunden über arXiv und Web wurden durchgeführt
+(insgesamt ca.~45 Suchanfragen). \textbf{In beiden Runden: kein Paper
+gefunden, das eines der beiden Theoreme beweist} --- weder als
+Hauptresultat noch als verstecktes Lemma.
+
+\subsection*{Runde 1: Notations- und Themen-orientierte Suche}
+
+Geprüfte arXiv-Kandidaten (alle als \emph{nicht direkter Treffer}
+eingestuft):
+
+\begin{itemize}[leftmargin=2em]
+  \item arXiv:1411.0578 (Haynes-Kelly-Koivusalo) --- Gap-Frequenzen,
+        nicht Periode
+  \item arXiv:2409.10920 (Sturmian Hamiltonians) --- Periode $q$, nicht
+        $\alpha+\beta+1$
+  \item arXiv:2012.14744 (Fibonacci-Quasikristall) --- Physik-Sicht,
+        keine Herleitung
+  \item arXiv:2401.01803 (Sharp density discrepancy) --- methodisch
+        nahe, keine Periodenaussage
+  \item arXiv:2103.13619, 2602.12801 (Balanced words) --- Zählformeln,
+        nicht Periode
+  \item arXiv:1408.3724 (Gap sequence cutting sequence) --- irrationale
+        Steigung
+  \item arXiv:1004.3072 (Projecting cubic lattice) --- anderes Thema
+  \item arXiv:math-ph/0601026 (Nested quasicrystalline discretisations)
+        --- Self-Similarity
+  \item arXiv:1704.06463 (Gap structure 1D C\&P Hamiltonians) ---
+        Spektrallücken, nicht Gap-Folge
+  \item arXiv:1905.06138 (Abelian periods Sturmian) --- andere
+        Periodendefinition
+  \item arXiv:1210.2343 (Ostrowski numeration) --- Local Period
+  \item arXiv:1612.04906, 2208.01680 (Three Gap Theorem Varianten)
+  \item arXiv:1402.2125 (Bounded remainder sets)
+  \item arXiv:1503.04091 (Linear repetitivity)
+  \item arXiv:1311.7277 (Codimension-one C\&P nets)
+  \item arXiv:1606.08831 (Pure point diffraction)
+  \item arXiv:2106.07422 (Ammann-Beenker gap asymptotics)
+  \item arXiv:2409.19514 (Large gaps planar quasicrystals)
+\end{itemize}
+
+\subsection*{Runde 2: Notations-unabhängige Suche nach mathematischer Substanz}
+
+Die zweite Runde verzichtete bewusst auf die Symbolnamen
+``$\alpha$/$\beta$'' und suchte stattdessen nach der mathematischen
+Bedeutung (zwei koprime natürliche Zahlen $p,q$; Quadratsumme $p^2+q^2$;
+Floor-Zählformel; Multiset-vs.-Set-Konventionen). Sieben Kategorien mit
+ca.~28 Suchanfragen.
+
+Geprüfte neue arXiv-Kandidaten (alle als \emph{nicht relevant}
+eingestuft):
+
+\begin{itemize}[leftmargin=2em]
+  \item arXiv:2012.14019 (Čopar, Gaps in $\sqrt{n}$) ---
+        $\sqrt{n}$-Statistik, keine Periodenformel
+  \item arXiv:2406.09107 (Square roots and lattices) ---
+        $\sqrt{n}$-Statistik via Gitterrichtungen
+  \item arXiv:1809.07298 (Periodic Functions, Lattices, Projections)
+        --- Kristallographische Periodengitter, keine $\lambda$-Formel
+  \item arXiv:1110.5467 (Laurent-Nogueira) ---
+        Diophantische Approximation mit koprimen $p,q$, aber keine
+        Folgenperiode
+  \item arXiv:2603.11311 (C\&P in Poincaré disc) --- Hyperbolisches
+        Setting, völlig anders
+  \item arXiv:1404.4269 (Gap Sequence of Fibonacci Factors) ---
+        Fibonacci/irrational, nicht $p^2+q^2$
+\end{itemize}
+
+\subsection*{Hauptbefund nach beiden Runden}
+
+\textbf{Der Modulus $p^2+q^2$ taucht in keiner der durchsuchten Quellen
+als Periode/Modulus einer projektzionsbasierten Folge auf.} Das ist
+auffällig: Die Konstante ist mathematisch sehr natürlich (Norm in
+$\mathbb{Z}[i]$, Determinante der Drehmatrix nach Skalierung), aber sie
+erscheint in der durchsuchten Literatur nur in den klassischen
+Kontexten:
+\begin{itemize}[leftmargin=2em]
+  \item Summe-zweier-Quadrate-Sätze (Fermat/Euler)
+  \item Gauß'sche Ganzzahl-Normen
+  \item Pythagoreische Tripel via Stern-Brocot
+\end{itemize}
+Keiner dieser Kontexte verbindet $p^2+q^2$ mit einer Periodenlänge.
+
+Die naheliegende Sturmian-/Christoffel-Theorie liefert konsequent
+Periode $p+q$ (Wortlänge der charakteristischen Sturmian-Folge), nicht
+$p^2+q^2$. Das Three-Gap-Theorem liefert qualitative Lückenanzahl
+($\le3$), nicht Periodenlänge. Die C\&P-Literatur konzentriert sich auf
+den irrationalen, aperiodischen Fall.
+
+\subsection*{Verbleibende Lücken (ehrlich)}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Baake-Grimm \emph{Aperiodic Order} Bd.~1+2} ---
+        Standardwerk; Index-Stichworte ``rational window'' / ``periodic
+        case'' gezielt prüfen.
+  \item \textbf{Senechal \emph{Quasicrystals and Geometry}} ---
+        verwandt, könnte verstreute Lemmas enthalten.
+  \item \textbf{Vor-2000 Physik-Literatur} (Acta Cryst., Phys. Rev. B,
+        russische Schulen Korepin/Niizeki/Tokihiro) --- schlecht
+        web-indiziert.
+  \item \textbf{Diskrete-Geometrie-Literatur} zu digitalen Geraden mit
+        Gewichtungen (Khalimsky, Klette, Rosenfeld) --- Multiplizitäts-/
+        Gewichtungsvarianten könnten $p^2+q^2$ produzieren.
+  \item \textbf{Festschriften / Sammelbände} (Pleasants ``Designer
+        quasicrystals'', AMS 2000) --- nicht auf arXiv.
+\end{enumerate}
+
+Diese Lücken sind genau das, was die nachstehende zbMATH-Suche
+schließen soll.
+
+\subsection*{Gesamteinschätzung}
+
+Nach insgesamt ca.~45 systematischen Suchanfragen über arXiv und Web
+ist die ehrliche Bilanz: \textbf{Die kombinierte Form der beiden
+Theoreme --- Multiset-vs.-Set, $\omega$-Parameter, $p^2+q^2$-Dichotomie
+--- ist mit hoher Wahrscheinlichkeit neu.} Der Professor hat recht mit
+seiner methodischen Vorsicht; die zwei wahrscheinlichsten Quellen für
+eine Vorpublikation (arXiv und Volltextsuche im Web) wurden jedoch
+gründlich durchforstet, ohne Treffer. Eine zbMATH-Recherche (insbesondere
+für Vor-2000-Literatur und Festschriften) ist der empfohlene
+abschließende Schritt vor der erneuten Endorsement-Anfrage.
+
+\end{document}

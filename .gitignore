@@ -214,6 +214,21 @@ support/LaTeX/*.nav
 support/LaTeX/*.snm
 support/LaTeX/*.vrb
 support/LaTeX/*.pdf
+support/*.aux
+support/*.log
+support/*.out
+support/*.toc
+support/*.lof
+support/*.lot
+support/*.bbl
+support/*.blg
+support/*.fls
+support/*.fdb_latexmk
+support/*.synctex.gz
+support/*.nav
+support/*.snm
+support/*.vrb
+support/*.pdf
 
 # Local utility scripts (kept locally, not tracked)
 cleanup.sh
