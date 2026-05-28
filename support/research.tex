@@ -58,6 +58,38 @@ Setup: $\alpha,\beta\in\mathbb{N}$ koprim, $\omega\ge0$. Mit
 Außerdem: $\lambda_{\mathrm{set}}\mid\lambda_{\mathrm{multiset}}$
 mit Gleichheit gdw.\ $N\le D$.
 
+\section*{Mathematische Übersetzung für versteckte Treffer}
+
+Der wahrscheinlichste Ort für ein verstecktes Lemma ist nicht unbedingt die
+Cut-and-Project-Literatur selbst, sondern die \textbf{digitale Geometrie}
+zu arithmetischen bzw.\ digitalen Geraden.  Der Grund ist die direkte
+Übersetzung der Strip-Bedingung:
+\[
+  -\beta\omega \le \alpha x-\beta y \le \alpha\omega.
+\]
+In der digitalen Geometrie erscheinen sehr ähnliche Objekte typischerweise
+als arithmetische diskrete Geraden
+\[
+  \mu \le ax-by < \mu+W,
+\]
+wobei \(W\) die arithmetische Dicke, \(ax-by\) der Rest bzw.\ das Level,
+und \((b,a)\) der Haupt- oder Periodizitätsvektor ist.  In unserem Modell
+ist \(N\) die Anzahl der zulässigen Level \(r=\alpha x-\beta y\), und
+\(D=\alpha^2+\beta^2\) entsteht erst nach der orthogonalen Projektion und
+Sortierung über
+\[
+  \tilde p=\beta x+\alpha y,\qquad
+  \tilde p \equiv -\alpha\beta^{-1}r \pmod D.
+\]
+
+\textbf{Konsequenz für die Recherche:} Bekannte Aussagen zur
+Translationsperiodizität diskreter Geraden sind erwartbar und sollten
+aktiv zitiert werden.  Gesucht ist spezifischer: eine minimale Periode der
+nach \(\tilde p\) sortierten projizierten Gap-Folge, getrennt nach
+Multiset- und Set-Konvention.  Diese Formulierung ist viel enger als die
+bloße Periodizität der diskreten Gerade unter Translation durch
+\((\beta,\alpha)\).
+
 \section*{Suchsyntax von zbMATH}
 
 \begin{itemize}[leftmargin=2em]
@@ -69,7 +101,46 @@ mit Gleichheit gdw.\ $N\le D$.
   \item \texttt{"Phrase"} --- Wortgruppensuche
 \end{itemize}
 
-\section{Direkte Treffer-Versuche (hohe Priorität)}
+\section{Digitale Geometrie / arithmetische diskrete Geraden (höchste Priorität)}
+
+Diese Suchachse adressiert die Professorenvermutung am direktesten:
+Das Resultat könnte dort als Periodizitäts- oder Restklassenlemma zu
+thick/discrete/arithmetic lines auftreten, ohne Cut-and-Project im Titel
+oder Abstract zu nennen.
+
+\begin{verbatim}
+"arithmetical discrete line" period
+"arithmetic discrete line" period
+"arithmetical discrete line" translation periodicity
+"arithmetic discrete line" translation periodicity
+"discrete line" "invariant" "translation" "(b,a)"
+"discrete line" "main vector" period
+"arithmetical thickness" "discrete line" period
+"Bezoutian lines" "arithmetical thickness"
+"naive line" "standard line" "thick line" periodicity
+"D(a,b,mu,omega)" period
+"Freeman code" rational slope period digital line
+"digital straightness" rational periodic
+"digital straight line" rational slope period
+"droite discrète arithmétique" périodicité
+"épaisseur arithmétique" "droite discrète"
+\end{verbatim}
+
+Besonders relevante Namen und Referenzen für diese Achse:
+\begin{verbatim}
+au:Reveilles discrete line
+au:Debled-Rennesson discrete line period
+au:Klette digital straightness period
+au:Rosenfeld digital straightness period
+au:Dorst spirograph digitized straight lines
+au:Wu rational digital ray basic segment
+au:Brons rational digital rays periodic
+au:Berstel Christoffel digital line
+au:Berthé discrete line arithmetic
+au:Vuillon balanced words digital line
+\end{verbatim}
+
+\section{Direkte Cut-and-Project-Treffer-Versuche}
 
 \begin{verbatim}
 "cut-and-project" rational period
@@ -85,6 +156,9 @@ projected lattice gap sequence period rational
 Relevante MSC-Codes:
 \begin{itemize}[leftmargin=2em]
   \item \textbf{52C23} --- Quasicrystals, aperiodic tilings
+  \item \textbf{52C99} --- Discrete geometry / related miscellaneous
+  \item \textbf{68U05, 68U10} --- Digital geometry, computer graphics,
+        image processing
   \item \textbf{11B85} --- Automata sequences (Sturmian, balanced words)
   \item \textbf{11J71} --- Distribution modulo one (Three-Distance Theorem)
   \item \textbf{37B10} --- Symbolic dynamics
@@ -96,6 +170,10 @@ Relevante MSC-Codes:
 cc:52C23 period gap
 cc:52C23 rational projection
 cc:52C23 one-dimensional period formula
+cc:52C99 "digital straightness" period
+cc:68U05 "discrete line" period rational
+cc:68U05 "digital straight line" rational period
+cc:68U10 "arithmetical discrete line"
 cc:11B85 rational slope period
 cc:11B85 balanced word period multiplicity
 cc:11J71 rational gap period
@@ -113,6 +191,10 @@ Christoffel word period rational slope formula
 mechanical sequence rational slope period
 Fraenkel sequence period gap
 "discrete line" gap period rational
+"arithmetical discrete line" residue
+"arithmetic discrete line" "gap sequence"
+"discrete straight line" "Freeman code" rational
+"rational digital ray" period "basic segment"
 "visible lattice points" line gap rational
 "projected multiset" period
 "projected set" rational lattice period
@@ -148,6 +230,10 @@ au:Lee J.-Y. ti:rational model set
 "minimal period" gap sequence projection
 "period formula" cut-and-project
 "residue class" period gap lattice rational
+"residue classes" "minimal period" "gap sequence"
+"union of arithmetic progressions" "gap sequence" period
+"finite union of arithmetic progressions" gaps period
+"multiset" "arithmetic progressions" "gap sequence"
 "sum of two squares" period lattice
 "Gaussian integers" period lattice projection rational
 \end{verbatim}
@@ -192,6 +278,23 @@ Bei jedem Treffer sollten folgende Schritte erfolgen:
         (z.\,B.\ \texttt{Zbl 1234.56789}) und arXiv-ID falls vorhanden.
 \end{enumerate}
 
+\subsection*{Reproduzierbares Suchprotokoll}
+
+Für eine spätere Endorsement-Anfrage sollte nicht nur das Ergebnis,
+sondern auch der Suchpfad nachvollziehbar sein.  Pro Suchlauf notieren:
+\begin{itemize}[leftmargin=2em]
+  \item Datum, Datenbank und exakte Query-Zeichenkette.
+  \item Anzahl der Treffer und wie viele Treffer tatsächlich gescannt wurden
+        (z.\,B.\ ``erste 50 nach Relevanz'' oder ``alle 17 Treffer'').
+  \item Ausschlussgrund in Kurzform: andere Periodendefinition,
+        nur qualitative Periodizität, nur Symbolfolge statt projizierter
+        Gap-Folge, keine Multiplizitäten, anderer Window-Begriff usw.
+  \item Bei Treffern aus digitaler Geometrie explizit prüfen, ob dort nur
+        die Translation \((b,a)\) der diskreten Gerade gemeint ist oder
+        wirklich die minimale Periode der nach
+        \(\tilde p=\beta x+\alpha y\) sortierten projizierten Gap-Folge.
+\end{itemize}
+
 \section*{Erwartungshorizont}
 
 Basierend auf der bisherigen arXiv-Recherche:
@@ -200,13 +303,17 @@ Basierend auf der bisherigen arXiv-Recherche:
   \item \textbf{Viele Treffer} bei Abschnitten 1--3, aber fast alle
         handeln entweder von irrationalen Slopes (Three-Gap, Sturmian)
         oder von qualitativer Periodizität (ohne explizite Formel).
-  \item \textbf{Vermutlich keinen Treffer} mit $\alpha^2+\beta^2$ als
-        Periodenmodulus. Dieser Term entspringt der euklidischen
-        Geometrie und ist in der rein symbolisch-kombinatorischen C\&P-
-        und Sturmian-Literatur strukturell abwesend.
-  \item \textbf{Möglicherweise einen Pleasants- oder Baake-
-        Festschriftbeitrag}, der das implizit enthält. Das ist die
-        wahrscheinlichste Lücke der arXiv-Suche.
+  \item \textbf{Wahrscheinlich Treffer zur bloßen Periodizität} in der
+        digitalen Geometrie: arithmetische diskrete Geraden sind bei
+        rationalem Richtungsvektor unter Translation durch \((b,a)\)
+        periodisch.  Das wäre verwandte Literatur, aber noch nicht die
+        gesuchte minimale projizierte Gap-Periode.
+  \item \textbf{Offen ist die spezifische Minimalformel} mit
+        Multiset-vs.-Set-Konvention, \(\omega\)-Parameter und
+        \(D=\alpha^2+\beta^2\) als Modulus nach Projektion und Sortierung.
+  \item \textbf{Mögliche weitere Lücken} sind Pleasants-/Baake-nahe
+        Sammelbände sowie Vor-2000-Physik-Literatur zu rationalen
+        Approximanten.
 \end{itemize}
 
 \section*{Zeitaufwand}
@@ -284,39 +391,49 @@ eingestuft):
 
 \subsection*{Hauptbefund nach beiden Runden}
 
-\textbf{Der Modulus $p^2+q^2$ taucht in keiner der durchsuchten Quellen
-als Periode/Modulus einer projektzionsbasierten Folge auf.} Das ist
-auffällig: Die Konstante ist mathematisch sehr natürlich (Norm in
-$\mathbb{Z}[i]$, Determinante der Drehmatrix nach Skalierung), aber sie
-erscheint in der durchsuchten Literatur nur in den klassischen
-Kontexten:
+\textbf{Die bisher durchsuchten Quellen enthalten keinen direkten Treffer
+für die minimale Periode der nach Projektion sortierten Gap-Folge.}
+Die Konstante \(p^2+q^2\) ist mathematisch natürlich (Norm in
+\(\mathbb{Z}[i]\), Determinante der Drehmatrix nach Skalierung) und tritt
+im eigenen Beweis als Projektion-/Restklassenmodulus auf.  In der bislang
+durchsuchten Literatur erschien sie jedoch nicht als die konkrete minimale
+Periodenlänge bzw.\ Perioden-Dichotomie dieser Gap-Folge.  Gefunden wurden
+stattdessen vor allem die klassischen Kontexte:
 \begin{itemize}[leftmargin=2em]
   \item Summe-zweier-Quadrate-Sätze (Fermat/Euler)
   \item Gauß'sche Ganzzahl-Normen
   \item Pythagoreische Tripel via Stern-Brocot
 \end{itemize}
-Keiner dieser Kontexte verbindet $p^2+q^2$ mit einer Periodenlänge.
+Keiner dieser Kontexte verbindet \(p^2+q^2\) mit der hier betrachteten
+minimalen projizierten Gap-Periode.
 
 Die naheliegende Sturmian-/Christoffel-Theorie liefert konsequent
 Periode $p+q$ (Wortlänge der charakteristischen Sturmian-Folge), nicht
 $p^2+q^2$. Das Three-Gap-Theorem liefert qualitative Lückenanzahl
 ($\le3$), nicht Periodenlänge. Die C\&P-Literatur konzentriert sich auf
-den irrationalen, aperiodischen Fall.
+den irrationalen, aperiodischen Fall; die digitale Geometrie liefert
+voraussichtlich die engste Vergleichsliteratur für den rationalen
+Strip selbst.
 
 \subsection*{Verbleibende Lücken (ehrlich)}
 
 \begin{enumerate}[leftmargin=2em]
+  \item \textbf{Digitale Geometrie.}
+        Literatur zu arithmetischen/digitalen Geraden
+        (Reveilles, Debled-Rennesson, Klette, Rosenfeld, Dorst, Wu,
+        Brons; ggf.\ Berthé/Vuillon) hat höchste Priorität, weil die
+        Strip-Bedingung dort nahezu wörtlich als
+        \(\mu \le ax-by < \mu+W\) erscheint.  Zu unterscheiden ist
+        unbedingt zwischen bloßer Translationsperiodizität der diskreten
+        Gerade und der minimalen Periode der projizierten Gap-Folge.
   \item \textbf{Baake-Grimm \emph{Aperiodic Order} Bd.~1+2} ---
         Standardwerk; Index-Stichworte ``rational window'' / ``periodic
         case'' gezielt prüfen.
   \item \textbf{Senechal \emph{Quasicrystals and Geometry}} ---
         verwandt, könnte verstreute Lemmas enthalten.
-  \item \textbf{Vor-2000 Physik-Literatur} (Acta Cryst., Phys. Rev. B,
-        russische Schulen Korepin/Niizeki/Tokihiro) --- schlecht
-        web-indiziert.
-  \item \textbf{Diskrete-Geometrie-Literatur} zu digitalen Geraden mit
-        Gewichtungen (Khalimsky, Klette, Rosenfeld) --- Multiplizitäts-/
-        Gewichtungsvarianten könnten $p^2+q^2$ produzieren.
+  \item \textbf{Vor-2000-Physik.}
+        Schlecht web-indizierte Literatur in Acta Cryst. und Phys. Rev. B
+        sowie Arbeiten aus den Schulen um Korepin, Niizeki und Tokihiro.
   \item \textbf{Festschriften / Sammelbände} (Pleasants ``Designer
         quasicrystals'', AMS 2000) --- nicht auf arXiv.
 \end{enumerate}
@@ -327,13 +444,15 @@ schließen soll.
 \subsection*{Gesamteinschätzung}
 
 Nach insgesamt ca.~45 systematischen Suchanfragen über arXiv und Web
-ist die ehrliche Bilanz: \textbf{Die kombinierte Form der beiden
-Theoreme --- Multiset-vs.-Set, $\omega$-Parameter, $p^2+q^2$-Dichotomie
---- ist mit hoher Wahrscheinlichkeit neu.} Der Professor hat recht mit
-seiner methodischen Vorsicht; die zwei wahrscheinlichsten Quellen für
-eine Vorpublikation (arXiv und Volltextsuche im Web) wurden jedoch
-gründlich durchforstet, ohne Treffer. Eine zbMATH-Recherche (insbesondere
-für Vor-2000-Literatur und Festschriften) ist der empfohlene
-abschließende Schritt vor der erneuten Endorsement-Anfrage.
+ist die vorsichtige Bilanz: \textbf{Es wurde kein direkter Beleg gefunden,
+dass die kombinierte Form der beiden Theoreme --- Multiset-vs.-Set,
+\(\omega\)-Parameter, \(p^2+q^2\)-Dichotomie nach Projektion und Sortierung
+--- bereits publiziert ist.}  Der Professor hat recht mit seiner
+methodischen Vorsicht: Vor einer erneuten Endorsement-Anfrage sollte die
+digitale-Geometrie-Literatur gezielt nachverfolgt und die Recherche in
+zbMATH/MathSciNet reproduzierbar protokolliert werden.  Danach lässt sich
+deutlich präziser sagen: bekannte Grundlage ist die Periodizität
+arithmetischer diskreter Geraden; als offenbar nicht explizit gefundener
+Beitrag bleibt die minimale projizierte Multiset-/Set-Gap-Periode.
 
 \end{document}
