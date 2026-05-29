@@ -1838,6 +1838,52 @@ The difference from Theorem~\ref{thm:main} is significant:
           coincide.
 \end{enumerate}
 
+\subsection{Arithmetic discrete lines and digital geometry}
+
+The strip condition~\eqref{eq:r_range},
+\(-\beta\omega \le \alpha x - \beta y \le \alpha\omega\), has the same form as
+an \emph{arithmetic discrete line} in the sense of
+Reveill\`{e}s~\cite{Reveilles1991},
+\[
+    D(\alpha,\beta,\mu,W)
+    = \bigl\{(x,y)\in\mathbb{Z}^2 : \mu \le \alpha x - \beta y < \mu + W\bigr\},
+\]
+here with \(\mu = -\beta\omega\) and arithmetic thickness
+\(W = (\alpha+\beta)\,\omega\) (up to the choice of boundary convention).
+This family of objects has been studied extensively in digital geometry, and
+two of its periodicity results are directly comparable to ours:
+\begin{itemize}
+    \item the arithmetic discrete line \(D(\alpha,\beta,\mu,W)\) is invariant
+          under translation by the direction vector \((\beta,\alpha)\)
+          \cite{Reveilles1991}; and
+    \item the chain code (Freeman word) of the digital straight line of
+          rational slope \(\alpha/\beta\) is periodic, its period governed by
+          the Stern--Brocot / continued-fraction structure of the slope
+          \cite{LachaudSaid2013, BerstelEtAl2008}.
+\end{itemize}
+
+These results are nevertheless structurally distinct from
+Theorem~\ref{thm:main}:
+\begin{enumerate}
+    \item \textbf{Different combinatorial object.} The digital-geometry
+          results describe the chain code read in geometric order along the
+          line, whereas Theorem~\ref{thm:main} concerns the sequence of
+          distances between consecutive lattice points after projection and
+          \emph{sorting} by \(\tilde{p} = \beta x + \alpha y\).
+    \item \textbf{Dependence on \(\omega\).} The translation period of a
+          discrete line depends only on its slope, whereas the projected gap
+          period here depends on the strip width~\(\omega\) through the
+          count~\(N\) of admissible levels.
+    \item \textbf{No multiplicity convention.} Discrete lines are point sets;
+          the multiset-versus-set distinction that is central to
+          Section~\ref{sec:setvalued} has no counterpart there.
+\end{enumerate}
+The modulus \(D = \alpha^2+\beta^2\) of Theorem~\ref{thm:main} does occur in
+this literature, but in a different role: it appears as a squared-radius /
+curvature quantity in the arithmetic theory of discrete
+circles~\cite{FiorioJametToutant2006}, not as the period modulus of a sorted
+distance sequence.
+
 \subsection{Cut-and-project sets and model sets}
 
 The mainstream literature on model sets~\cite{Senechal2009, Meyer1972,
@@ -1921,6 +1967,13 @@ Val\'{e}rie Berth\'{e} and Christophe Reutenauer,
 \textsc{doi}: \href{https://doi.org/10.1007/s00283-023-10316-z}%
 {10.1007/s00283-023-10316-z}.
 
+\bibitem{FiorioJametToutant2006}
+Christophe Fiorio, Damien Jamet, and Jean-Luc Toutant,
+``Discrete circles: an arithmetical approach with non-constant thickness,''
+in \emph{Vision Geometry XIV}, Proceedings of SPIE, vol.~6066,
+art.~60660C, 2006.
+\textsc{doi}: \href{https://doi.org/10.1117/12.642976}{10.1117/12.642976}.
+
 \bibitem{HaynesEtAl2016}
 Alan Haynes, Henna Koivusalo, James Walton, and Lorenzo Sadun,
 ``Gaps problems and frequencies of patches in cut and project sets,''
@@ -1933,6 +1986,14 @@ vol.~161, no.~1, pp.~65--85, 2016.
 Dirk Kunert,
 \emph{Repository cut-and-project}, version \texttt{v1.3-arxiv}, 2025.\newline
 Available at: \url{https://github.com/dkunert/cut-and-project/tree/v1.3-arxiv}.
+
+\bibitem{LachaudSaid2013}
+Jacques-Olivier Lachaud and Mouhammad Sa\"{i}d,
+``Two efficient algorithms for computing the characteristics of a subsegment
+of a digital straight line,''
+\emph{Discrete Applied Mathematics}, vol.~161, no.~15, pp.~2293--2315, 2013.
+\textsc{doi}: \href{https://doi.org/10.1016/j.dam.2012.08.038}%
+{10.1016/j.dam.2012.08.038}.
 
 \bibitem{Mathlib2020}
 The mathlib Community,
@@ -1964,6 +2025,13 @@ LNAI, vol.~12699, pp.~625--635, Springer, 2021.
 Yves Meyer,
 \emph{Algebraic Numbers and Harmonic Analysis},
 North-Holland, Amsterdam, 1972.
+
+\bibitem{Reveilles1991}
+Jean-Pierre Reveill\`{e}s,
+\emph{G\'{e}om\'{e}trie discr\`{e}te, calcul en nombres entiers et
+algorithmique},
+Th\`{e}se d'\'{E}tat, Universit\'{e} Louis Pasteur, Strasbourg, 1991.
+HAL: \href{https://theses.hal.science/tel-01279525}{tel-01279525}.
 
 \bibitem{Senechal2009}
 Marjorie Senechal,
