@@ -47,7 +47,8 @@ N & \text{if } N < D, \\
 \end{cases}
 $$
 
-In every case $\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}$,
+In every case $\lambda_{\mathrm{set}}$ divides $\lambda_{\mathrm{multiset}}$
+(so in particular $\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}$),
 with equality if and only if $N \le D$.
 
 For positive irrational slope and strip half-width $\omega > 0$, the
