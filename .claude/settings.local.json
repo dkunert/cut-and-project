@@ -88,7 +88,14 @@
       "WebFetch(domain:univ-smb.hal.science)",
       "WebFetch(domain:www.dgtal.org)",
       "WebFetch(domain:www.mscand.dk)",
-      "WebFetch(domain:hal.science)"
+      "WebFetch(domain:hal.science)",
+      "WebFetch(domain:doi.org)",
+      "WebFetch(domain:linkinghub.elsevier.com)",
+      "WebFetch(domain:www.sciencedirect.com)",
+      "WebFetch(domain:api.crossref.org)",
+      "Bash(latexmk -pdf -interaction=nonstopmode -halt-on-error research.tex)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(latexmk -pdf -interaction=nonstopmode -halt-on-error rational_cut_and_project_gap_periods.tex)"
     ]
   }
 }
