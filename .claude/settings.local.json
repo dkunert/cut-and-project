@@ -131,7 +131,20 @@
       "Bash(sed -n '1,90p')",
       "Bash(pdftotext quasi.pdf -)",
       "Bash(sed -n '11930,11948p')",
-      "Bash(pdftotext -layout quasi.pdf -)"
+      "Bash(pdftotext -layout quasi.pdf -)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(echo \"EXIT $?\")",
+      "Bash(echo \"exitcode=$?\")",
+      "Bash(echo \"curl_exit=$?\")",
+      "WebFetch(domain:www.google.com)",
+      "Bash(ping -c1 -t3 api.zbmath.org)",
+      "Bash(echo \"ping_rc=$?\")",
+      "Bash(getent hosts *)",
+      "Bash(nslookup api.zbmath.org)",
+      "WebFetch(domain:example.com)",
+      "Bash(set -x)",
+      "Bash(set +x)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }
