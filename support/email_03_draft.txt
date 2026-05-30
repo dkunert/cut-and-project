@@ -1,0 +1,85 @@
+Addressee: mbaake@math.uni-bielefeld.de
+
+Betreff: Frage zur Bekanntheit eines Periodenresultats für rationale Cut-and-Project-Folgen
+
+Sehr geehrter Herr Professor Baake,
+
+ich bin unabhängiger Forscher (ursprünglich Maschinenbau-Ingenieur,
+promoviert in Kontinuumsmechanik/Robotik) und habe in meiner Freizeit
+ein Resultat über die Periodenlängen eindimensionaler
+Cut-and-Project-Folgen erarbeitet und in Lean 4 vollständig
+formalisiert. Bevor ich es einreiche, möchte ich ausschließen, dass es
+bereits bekannt ist. Da Ihre beiden Bände „Aperiodic Order" (Vol. 1,
+2013; Vol. 2, 2017) das Standardwerk des Gebiets sind und ich sie auch
+zitiere, wende ich mich mit der Bitte um eine kurze Einschätzung an Sie.
+
+Worum es geht:
+
+Für teilerfremde α, β und einen Fensterparameter ω ≥ 0 betrachte ich die
+Gitterpunkte eines Streifens
+
+    −βω ≤ αx − βy ≤ αω,
+
+projiziere sie orthogonal auf die Gerade f(x) = (α/β)x und SORTIERE die
+projizierten Werte nach p̃ = βx + αy. Die Folge der Lücken (gaps)
+zwischen aufeinanderfolgenden projizierten Punkten ist periodisch, und
+ich gebe die minimale Periodenlänge exakt an. Mit
+
+    N = ⌊ωα⌋ + ⌊ωβ⌋ + 1,    D = α² + β²,
+
+gilt:
+
+  • Multiset-Konvention (Punkte mit Vielfachheit):
+        Periode = N,     falls D ∤ N,
+        Periode = N/D,   falls D | N.
+
+  • Set-Konvention (Punkte ohne Vielfachheit):
+        Periode = N,     falls N < D,
+        Periode = 1,     falls N ≥ D.
+
+  • In jedem Fall teilt die Set-Periode die Multiset-Periode (Gleichheit
+    genau dann, wenn N ≤ D).
+
+Das für mich charakteristische Merkmal ist der Modulus D = α² + β²
+(Summe zweier Quadrate) als Periodenmodulus der nach Projektion
+SORTIERTEN Lückenfolge, zusammen mit der Multiset/Set-Unterscheidung und
+der ω-Abhängigkeit über N. Der Beweis reduziert das Problem auf die
+Verteilung von N aufeinanderfolgenden Restklassen modulo D. Ergänzend
+zeige ich, dass irrationale Steigungen aperiodische Lückenfolgen liefern,
+womit die rational/irrational-Dichotomie geschlossen ist.
+
+Meine Frage an Sie ist einfach:
+
+    Ist Ihnen dieses Resultat (oder eine dazu äquivalente Aussage)
+    bereits aus der Literatur bekannt? Falls ja, wäre ich für einen
+    Literaturhinweis ausgesprochen dankbar.
+
+Damit Ihre Mühe gering bleibt: Ich habe bereits eine ausführliche
+Recherche durchgeführt — arXiv, zbMATH Open (auf Titel-, Abstract- und
+MSC-Ebene), dblp/DGCI-DGMM sowie gezielt Reveillès, Klette-Rosenfeld und
+Senechal — und keinen direkten Treffer gefunden. Den durchsuchbaren
+Volltext von Senechals „Quasicrystals and Geometry" habe ich geprüft;
+bei Ihren Bänden lagen mir nur Frontmatter und Corrigenda vor, nicht der
+Volltext. Der gesamte mir zugängliche Rahmen ist durchgehend
+irrational/aperiodisch ausgerichtet, sodass rationale Steigungen dort
+nur als trivialer periodischer Kristall auftreten — die hier betrachtete
+sortierte, rationale Gap-Periode mit Modulus α² + β² scheint nicht
+vorzukommen. Genau deshalb meine Unsicherheit, ob die kombinierte Form
+vielleicht doch irgendwo — etwa als Hilfslemma in einem Beitrag mit
+anderem Schwerpunkt — bereits existiert.
+
+Die Arbeit ist vollständig in Lean 4 (mathlib) formalisiert; alle
+Theoreme sind maschinengeprüft (kein sorry, kein axiom, 3 758 Zeilen).
+Gerne sende ich Ihnen das PDF und das Lean-Repository.
+
+Vielen Dank für Ihre Zeit — auch eine sehr kurze Antwort wäre mir eine
+große Hilfe.
+
+Mit freundlichen Grüßen
+Dirk Kunert
+
+—
+Dirk Kunert
+Unabhängiger Forscher
+dirk.kunert@gmail.com
+https://github.com/dkunert
