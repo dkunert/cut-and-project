@@ -144,7 +144,15 @@
       "WebFetch(domain:example.com)",
       "Bash(set -x)",
       "Bash(set +x)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(echo \"curl=$?\")",
+      "Bash(python3 -c \"import json;print\\(json.load\\(open\\('/tmp/r1.json'\\)\\)['status']['nr_total_results']\\)\")",
+      "Bash(echo \"1820-1900 = $\\(python3 -c \"import json;print\\(json.load\\(open\\('/tmp/r1.json'\\)\\)['status']['nr_total_results']\\)\" 2>/dev/null\\)\")",
+      "Bash(python3 -c \"import json;print\\(json.load\\(open\\('/tmp/r2.json'\\)\\)['status']['nr_total_results']\\)\")",
+      "Bash(echo \"1900-1940 = $\\(python3 -c \"import json;print\\(json.load\\(open\\('/tmp/r2.json'\\)\\)['status']['nr_total_results']\\)\" 2>/dev/null\\)\")",
+      "Bash(sed -n '30,36p' support/research.tex)",
+      "Bash(sed -n '884,912p' support/research.tex)",
+      "Bash(echo \"latexmk_exit=$?\")"
     ]
   }
 }
