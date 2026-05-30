@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\paperlabel}[1]{\texttt{#1}}
+\newcommand{\papercite}[1]{\texttt{\textbackslash cite\{#1\}}}
+
+\title{Codex-Review der Opus-4.8-Änderungen\\
+\large Hinweise zu \texttt{rational\_cut\_and\_project\_gap\_periods.tex}}
+\author{}
+\date{30. Mai 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Drei konkrete Findings}
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Realisierung jedes \(r\in\mathcal R\) etwas sauberer begründen.}
+
+        In der Passage um Zeile~670 ist die neue Aussage mathematisch richtig,
+        aber die Formulierung
+        \[
+          \text{``the range computation of Step~1 shows the strip condition is
+          satisfiable for every such \(r\)''}
+        \]
+        begründet nicht ganz das, was sie begründen soll.  Dass jedes
+        \(r\in\mathcal R\) tatsächlich zu akzeptierten Gitterpunkten führt,
+        folgt aus der zuvor konstruierten Kongruenzklasse \(P_r\), der
+        Integrality-Rechnung über \(\gcd(\alpha,\beta)=1\) bzw. die
+        Invertierbarkeit modulo \(D\), und erst danach aus \(r\in\mathcal R\)
+        für die Strip-Bedingung.
+
+        Bessere Ersatzformulierung:
+        \begin{quote}
+        Conversely, if \(\tilde p\in P_r\), then the congruence
+        \paperlabel{eq:residue} makes both coordinates in
+        \paperlabel{eq:solution}
+        integral.  Since \(r\in\mathcal R\), the resulting lattice point
+        satisfies the strip condition \paperlabel{eq:r\_range}.  Thus every
+        \(r\in\mathcal R\) is realized by accepted lattice points, and
+        \(P_r\) is exactly the set of \(\tilde p\)-values with invariant \(r\).
+        \end{quote}
+
+  \item \textbf{Randkonvention nicht als exakt ``one less'' formulieren.}
+
+        In der Passage um Zeile~213 ist die neue Erklärung zur geschlossenen
+        Intervallkonvention hilfreich.  Die Wendung
+        \[
+          \text{``rather than one less''}
+        \]
+        ist aber etwas zu stark: Bei halb-offenen oder anders verschobenen
+        Randkonventionen ist die Zählung nicht in jeder Situation schlicht
+        exakt um eins kleiner.  Gemeint ist nur, dass die gewählte geschlossene
+        Konvention den \(+1\)-Term in
+        \[
+          N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1
+        \]
+        erklärt.
+
+        Bessere Ersatzformulierung:
+        \begin{quote}
+        The interval is closed: lattice points lying on either bounding line
+        are accepted.  This boundary convention is reflected in the \(+1\) term
+        in
+        \(N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1\), the count
+        of admissible levels used in Section~\paperlabel{sec:mainresult}.
+        \end{quote}
+
+  \item \textbf{Related-Work-Satz zu Haynes et al. typographisch glätten.}
+
+        Der neue Hinweis auf Haynes--Koivusalo--Walton--Sadun ist inhaltlich
+        gut und sollte bleiben.  Um Zeile~1905 entsteht aber eine sehr lange
+        Satzfolge:
+        \[
+          \text{``\dots obtained here is a different invariant. Where the rational case \dots''}
+        \]
+        Das kompiliert problemlos, liest sich aber im Quelltext und im
+        Abschnitt etwas gedrängt.
+
+        Bessere Ersatzformulierung:
+        \begin{quote}
+        The closest work in the gap-statistics direction is
+        \papercite{HaynesEtAl2016}, which studies gap and patch-frequency
+        distributions for irrational cut-and-project sets.  The rational,
+        sorted-gap minimal period obtained here is a different invariant.
+
+        Where the rational case is treated, the emphasis is on different
+        invariants: for instance, \papercite{GaehlerHuntonKellendonk2013}
+        computes the integral \v{C}ech cohomology of the tiling spaces
+        associated with rational projection-method patterns, an
+        algebraic-topological invariant unrelated to the minimal period of the
+        sorted gap sequence studied here.
+        \end{quote}
+\end{enumerate}
+
+\section*{Kurzbilanz}
+
+Keine der drei Stellen ist ein harter mathematischer Fehler.  Die Änderungen
+von Opus~4.8 sind insgesamt plausibel; die obigen Punkte sind Präzisierungen,
+die den Text robuster und reviewer-fester machen.
+
+\end{document}
