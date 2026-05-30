@@ -211,10 +211,9 @@ The set of \emph{accepted lattice points} is
     \right\}.
 \end{equation}
 The interval is closed: lattice points lying on either bounding line are
-accepted.  This boundary convention is what makes
-\(N = \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1\) (rather
-than one less) the correct count of admissible levels in
-Section~\ref{sec:mainresult}.
+accepted.  This closed-boundary convention underlies the count
+\(N = \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1\) of
+admissible levels derived in Section~\ref{sec:mainresult}.
 
 \subsection{Projection and ordering}\label{subsec:projection}
 
@@ -667,10 +666,9 @@ arithmetic progression
 Conversely, if \(\tilde{p} \in P_r\), then the congruence
 \eqref{eq:residue} makes both coordinates in~\eqref{eq:solution} integral,
 and since \(r \in \mathcal{R}\), the resulting lattice point satisfies the
-strip condition~\eqref{eq:r_range}.  In particular each \(r \in \mathcal{R}\)
-is realized by an accepted lattice point, so \(P_r \neq \emptyset\): the
-range computation of Step~1 shows the strip condition is satisfiable for
-every such \(r\).  Thus \(P_r\) is exactly the set of
+strip condition~\eqref{eq:r_range}.  Since \(c_r \in P_r\), the progression
+is nonempty, so every \(r \in \mathcal{R}\) is realized by an accepted
+lattice point.  Thus \(P_r\) is exactly the set of
 \(\tilde{p}\)-values with invariant \(r\).  The complete multiset of
 projected values is
 \[
