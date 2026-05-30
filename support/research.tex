@@ -874,4 +874,155 @@ reproduzierbar protokollierte \textbf{zbMATH-/MathSciNet-(und
 ADS-)Volltextrecherche} schließen, die vor einer erneuten
 Endorsement-Anfrage durchgeführt werden sollte.
 
+\subsection*{Runde 4: zbMATH-Open-Recherche (30.\,Mai 2026)}
+
+\textit{Handlung:} Die oben mehrfach als nächster Schritt vorgemerkte
+zbMATH-Recherche wurde durchgeführt --- programmatisch über die
+REST-API (\url{https://api.zbmath.org/v1/document/_search}), um den
+Suchpfad exakt reproduzierbar zu protokollieren.
+
+\medskip
+\textit{Wichtige Tool-Befunde (Korrektur der ursprünglichen Annahme):}
+\begin{itemize}[leftmargin=2em]
+  \item Die API liefert \emph{nicht} den Review-/Abstract-Volltext: jedes
+        \texttt{editorial\_contributions}-Feld enthält den Platzhalter
+        ``zbMATH Open Web Interface contents unavailable due to conflicting
+        licenses.'' Verfügbar sind Titel, Autoren, Jahr, MSC, Keywords,
+        Zbl-ID und Referenzliste. Die in der Anleitung (Abschnitt
+        ``Hintergrund'') angenommene Volltext-Durchsuchbarkeit der Reviews
+        gilt also \emph{nicht} über die API.
+  \item \emph{Aber:} Die Suchfelder \texttt{ab:} (Abstract) und
+        \texttt{any:} (überall) sind sehr wohl indexiert und durchsuchbar
+        (\texttt{ab:period} $\to$ 52\,753, \texttt{any:period} $\to$
+        60\,534 Treffer). Eine abstract-/metadatentiefe Suche ist somit
+        möglich --- nur die \emph{Anzeige} des Review-Textes ist gesperrt.
+  \item Trefferzahl steht im Feld \texttt{status.nr\_total\_results}.
+        Eine HTTP-404-Antwort bedeutet bei dieser API \textbf{null
+        Treffer} (Body: ``successful access, but no result''), \emph{kein}
+        Syntaxfehler --- verifiziert an einer Unsinns-Query.
+  \item Funktionierende Syntax: feldpräfixiert (\texttt{ti:}, \texttt{au:},
+        \texttt{cc:}, \texttt{ab:}, \texttt{any:}), Phrasen in
+        Anführungszeichen, Verknüpfung mehrerer Felder mit `` \& ''.
+\end{itemize}
+
+\medskip
+\textit{Kalibrierung} (Beleg, dass die Läufe intakt sind):
+\begin{verbatim}
+ti:group          60517      au:Serre          657
+ab:period         52753      any:period        60534
+\end{verbatim}
+
+\medskip
+\textit{Durchgeführt:} ca.~90 feldbasierte Anfragen auf Titel-/Autor-/
+MSC-Ebene plus 24 \texttt{ab:}/\texttt{any:}-Kombinationen des
+Fingerabdrucks (sortierte projizierte Gap-Periode, Multiset/Set,
+$p^2+q^2$-Modulus). Die diagnostischen Anfragen und ihre Trefferzahlen:
+\begin{verbatim}
+-- Direkte Achse (Titel-Ebene) --
+ti:"cut-and-project"                          48
+ti:"cut-and-project" & ti:period               0
+ti:"cut-and-project" & ti:gap                  0
+ti:"model set"       & ti:period               0
+cc:52C23 & ti:period                           0
+cc:52C23 & ti:gap                             10   (gap labeling, Spektrallücken)
+cc:52C23 & ti:rational                         3   (Kohomologie/Tilings)
+ti:"strip projection"                          1   (Cotfas 2006, irrational)
+
+-- Digitale Geometrie (Titel-Ebene) --
+ti:"digital straightness"                      5
+ti:"chain code"                               38
+au:Reveilles                                  16
+ti:"discrete line" & ti:period                 0
+ti:"arithmetic discrete line"                  0
+
+-- Verwandte Konzepte (Titel-Ebene) --
+ti:"three distance" / ti:"three-gap"      22 / 18
+ti:Sturmian & ti:period / & ti:gap          2 / 2
+ti:Christoffel & ti:period                     1   (Schwarz-Christoffel)
+ti:Beatty & ti:gap / & ti:period            0 / 0
+
+-- Fingerabdruck (Abstract-/Überall-Ebene) --
+any:"cut and project" & any:period             2   (Baake-Grimm; off-topic)
+ab:"cut and project" & ab:period               1   (Baake-Grimm; off-topic)
+any:"period length" & any:"cut and project"    0
+any:"minimal period" & any:projection & any:gap 0
+any:residue & any:projection & any:gap & any:period 0
+ab:"gap sequence" & ab:period                  0
+any:"sum of two squares" & any:period & any:lattice 1 (Mueller-Dressler 1972)
+ab:"arithmetic discrete line" & ab:period      0
+ab:"model set" & ab:period & ab:rational       0
+\end{verbatim}
+
+\medskip
+\textit{Triage der nächstgelegenen Kandidaten} (alle ausgeschlossen):
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Haynes--Koivusalo--Walton--Sadun}, ``Gaps problems and
+        frequencies of patches in cut and project sets'' (Zbl~1371.11110,
+        2016) --- der nächstliegende Treffer (richtige Autoren, Objekt
+        ``gaps''$+$``cut and project''). Behandelt jedoch
+        \emph{Patch-Frequenz-Statistik} aperiodischer (irrationaler)
+        Modellmengen, keine geschlossene minimale Periode der sortierten
+        Gap-Folge, kein $p^2+q^2$-Modulus. Off-topic (vgl.\ Open
+        Problem~2 im Paper).
+  \item \textbf{Gähler--Hunton--Kellendonk}, ``Integral cohomology of
+        rational projection method patterns'' (Zbl~1270.52025, 2013) ---
+        ``rational''$+$``projection'', aber topologische Invariante
+        (Kohomologie von Tiling-Räumen, MSC 55R20), keine Gap-Periode.
+  \item \textbf{Cotfas}, ``Modified strip projection method''
+        (arXiv:math-ph/0605046, 2006) --- nächster Vokabel-Treffer
+        (``strip projection''); Konstruktion zur Cluster-Besetzungsdichte
+        quasiperiodischer Packungen, irrationaler Slope, keine Periode.
+  \item \textbf{Müller--Dressler}, ``Über eine gewichtete Mittelung der
+        Gitterpunkte'' (Zbl~0227.10040, 1972) --- einziger Treffer der
+        ``sum of two squares''-Anfrage; Gitterpunktzählung, keine
+        projizierte Gap-Periode.
+\end{itemize}
+
+\medskip
+\textit{Ergebnis:} \textbf{Kein Treffer.} Über alle Achsen --- direkte
+Cut-and-Project, digitale Geometrie (diskrete Geraden, Chaincode,
+Reveillès), Drei-Abstands-/Drei-Lücken-Theoreme, Sturmian/Christoffel,
+Modellmengen/Quasikristalle, der Haynes-Autorenkreis, die Festschriften
+sowie die \texttt{ab:}/\texttt{any:}-Fingerabdruck-Kombinationen ---
+findet sich kein Eintrag, der eine geschlossene minimale Periode der
+\emph{nach Projektion sortierten} Gap-Folge einer \emph{rationalen}
+Streifenprojektion mit $D=\alpha^2+\beta^2$ als Modulus, der
+Multiset-/Set-Distinktion oder der $\omega$-Abhängigkeit über
+$N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1$ angibt.
+Besonders aussagekräftig sind die \emph{leeren} Fingerabdruck-Anfragen
+auf Abstract-/Überall-Ebene (z.\,B.\ \texttt{any:"period length" \&
+any:"cut and project"} $=0$, \texttt{any:"minimal period" \&
+any:projection \& any:gap} $=0$): das Resultat erscheint in keiner
+zbMATH-indizierten Titel-, Abstract- oder Schlagwort-Ebene.
+
+\medskip
+\textit{Reststreuung (ehrlich):}
+\begin{itemize}[leftmargin=2em]
+  \item Der Review-/Rezensions-\emph{Text} ist über die API gesperrt
+        (Lizenz); die Suche traf also Titel, Abstract, Keywords, MSC und
+        Bibliografie, nicht jedoch den vollständigen Publikations-PDF-Body.
+        Ein als Hilfslemma in einem Beitrag mit thematisch unverdächtigem
+        Titel \emph{und} Abstract (ohne die Wörter Periode/Lücke/Projektion)
+        verstecktes Resultat bliebe daher unsichtbar --- das ist die
+        verbliebene, prinzipielle Restlücke.
+  \item Da der Fingerabdruck (Summe zweier Quadrate als Periodenmodulus
+        einer sortierten Gap-Folge) sprachlich sehr distinktiv ist, würde
+        er bei echter Behandlung mit hoher Wahrscheinlichkeit als
+        Schlagwort/Abstract-Begriff auftauchen; garantiert ist das nicht.
+  \item MathSciNet (kostenpflichtig) und NASA~ADS (Physik) wurden hier
+        \emph{nicht} programmatisch abgefragt. Inhaltlich überschneiden sie
+        sich weitgehend mit der zbMATH-/arXiv-Abdeckung; ihr Mehrwert läge
+        nur in der schlecht web-indizierten Vor-2000-Physik (Lücke~5),
+        die jedoch bereits strukturell ausgeschlossen wurde.
+\end{itemize}
+
+\medskip
+\textit{Gesamtbilanz nach Runde~4:} Die zbMATH-Achse bestätigt das
+Ergebnis aller vorherigen Runden auf Titel-, Abstract- und MSC-Ebene und
+hebt das Restrisiko von ``niedrig'' auf ``sehr niedrig''. Eine darüber
+hinausgehende Absicherung könnte nur noch der Volltext-PDF-Body einzelner
+Publikationen liefern --- praktisch am ehesten durch \emph{eine} gezielte
+Experten-E-Mail (digitale Geometrie / aperiodische Ordnung) statt durch
+weitere Datenbankläufe.
+
 \end{document}
