@@ -29,9 +29,13 @@ unzureichend abdeckt, ist eine \textbf{zbMATH Open}-Recherche der
 empfohlene nächste Schritt.
 
 zbMATH Open (\url{https://zbmath.org}) ist seit 2021 kostenfrei und
-enthält ca.~4 Millionen mathematische Publikationen seit 1940, jeweils
-mit kurzem Review (1--3 Absätze, von einem Mathematiker geschrieben).
-Die Reviews sind volltextsuchbar --- das ist das entscheidende
+enthält mehrere Millionen mathematische Publikationen mit
+Publikationsjahren bis weit ins 19.~Jahrhundert zurück (laut
+zbMATH-About-Seite), jeweils mit kurzem Review bzw.\ Summary (1--3
+Absätze, meist von einem Mathematiker geschrieben). Dieser
+Review-/Summary-Text ist \emph{indexiert und durchsuchbar} (Feld
+\texttt{ab:}); seine \emph{Anzeige} ist je nach Lizenz mal im Volltext
+verfügbar, mal gesperrt. Die Durchsuchbarkeit ist das entscheidende
 Hilfsmittel, um schnell durch viele Kandidaten zu scannen.
 
 \section*{Die gesuchten Theoreme}
@@ -884,18 +888,23 @@ Suchpfad exakt reproduzierbar zu protokollieren.
 \medskip
 \textit{Wichtige Tool-Befunde (Korrektur der ursprünglichen Annahme):}
 \begin{itemize}[leftmargin=2em]
-  \item Die API liefert \emph{nicht} den Review-/Abstract-Volltext: jedes
-        \texttt{editorial\_contributions}-Feld enthält den Platzhalter
-        ``zbMATH Open Web Interface contents unavailable due to conflicting
-        licenses.'' Verfügbar sind Titel, Autoren, Jahr, MSC, Keywords,
-        Zbl-ID und Referenzliste. Die in der Anleitung (Abschnitt
-        ``Hintergrund'') angenommene Volltext-Durchsuchbarkeit der Reviews
-        gilt also \emph{nicht} über die API.
-  \item \emph{Aber:} Die Suchfelder \texttt{ab:} (Abstract) und
-        \texttt{any:} (überall) sind sehr wohl indexiert und durchsuchbar
+  \item Das Feld \texttt{ab:} durchsucht in zbMATH \emph{nicht} ein
+        separates Abstract, sondern den \textbf{Review-/Summary-Text}
+        (\texttt{editorial\_contributions}); \texttt{any:} schließt dieses
+        Feld mit ein. Dieser Text ist indexiert und durchsuchbar; nur seine
+        \emph{Anzeige} über die API ist uneinheitlich: bei manchen Einträgen
+        wird der volle Review geliefert (live geprüft, z.\,B.\ Baake--Grimm,
+        \emph{Aperiodic Order} Vol.~1, Zbl~1295.37001, Review von
+        A.~van~Enter), bei anderen erscheint der Platzhalter ``zbMATH Open
+        Web Interface contents unavailable due to conflicting licenses.''
+        (z.\,B.\ Haynes et al., Gähler--Hunton--Kellendonk). Für die Suche
+        ist das unerheblich --- gesucht wird im Index, nicht in der Anzeige.
+  \item Eine \emph{review-/summary-tiefe} Suche ist somit möglich
         (\texttt{ab:period} $\to$ 52\,753, \texttt{any:period} $\to$
-        60\,534 Treffer). Eine abstract-/metadatentiefe Suche ist somit
-        möglich --- nur die \emph{Anzeige} des Review-Textes ist gesperrt.
+        60\,534 Treffer), nicht nur eine reine Titel-/MSC-Suche. Die
+        ursprüngliche Annahme (Abschnitt ``Hintergrund''), die Reviews
+        seien durchsuchbar, gilt also --- nur eben nicht der
+        Publikations-Volltext (PDF-Body).
   \item Trefferzahl steht im Feld \texttt{status.nr\_total\_results}.
         Eine HTTP-404-Antwort bedeutet bei dieser API \textbf{null
         Treffer} (Body: ``successful access, but no result''), \emph{kein}
@@ -998,13 +1007,15 @@ zbMATH-indizierten Titel-, Abstract- oder Schlagwort-Ebene.
 \medskip
 \textit{Reststreuung (ehrlich):}
 \begin{itemize}[leftmargin=2em]
-  \item Der Review-/Rezensions-\emph{Text} ist über die API gesperrt
-        (Lizenz); die Suche traf also Titel, Abstract, Keywords, MSC und
-        Bibliografie, nicht jedoch den vollständigen Publikations-PDF-Body.
-        Ein als Hilfslemma in einem Beitrag mit thematisch unverdächtigem
-        Titel \emph{und} Abstract (ohne die Wörter Periode/Lücke/Projektion)
-        verstecktes Resultat bliebe daher unsichtbar --- das ist die
-        verbliebene, prinzipielle Restlücke.
+  \item Die Suche erfasste Titel, Autoren, MSC, Keywords, Bibliografie
+        \emph{und} den zbMATH-Review-/Summary-Index (\texttt{ab:}/\texttt{any:}),
+        nicht jedoch den vollständigen Publikations-PDF-Body. Einzelne
+        Review-Texte sind zwar nicht \emph{anzeigbar}, aber sehr wohl
+        \emph{indexiert} --- die Suchtiefe ist davon nicht betroffen. Ein als
+        Hilfslemma in einem Beitrag mit thematisch unverdächtigem Titel
+        \emph{und} unverdächtigem Review/Summary (ohne die Wörter
+        Periode/Lücke/Projektion) verstecktes Resultat bliebe daher
+        unsichtbar --- das ist die verbliebene, prinzipielle Restlücke.
   \item Da der Fingerabdruck (Summe zweier Quadrate als Periodenmodulus
         einer sortierten Gap-Folge) sprachlich sehr distinktiv ist, würde
         er bei echter Behandlung mit hoher Wahrscheinlichkeit als
