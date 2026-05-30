@@ -210,12 +210,17 @@ The set of \emph{accepted lattice points} is
           \frac{\alpha}{\beta}\,x + \omega\right]
     \right\}.
 \end{equation}
+The interval is closed: lattice points lying on either bounding line are
+accepted.  This boundary convention is what makes
+\(N = \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1\) (rather
+than one less) the correct count of admissible levels in
+Section~\ref{sec:mainresult}.
 
 \subsection{Projection and ordering}\label{subsec:projection}
 
 The orthogonal projection of \((x, y) \in \mathbb{R}^2\) onto the line \(f\)
 is
-\begin{equation}\label{eq:projection}
+\begin{equation}
     \mathbf{p} \;=\;
     \frac{1}{\alpha^2 + \beta^2}
     \begin{pmatrix}
@@ -230,7 +235,7 @@ The \(x\)-coordinate of the projected point is
 \]
 Since the factor \(\frac{\beta}{\alpha^2+\beta^2}\) is a positive constant,
 the ordering of projected points is determined by
-\begin{equation}\label{eq:ptilde}
+\begin{equation}
     \tilde{p} \;:=\; \beta x + \alpha y.
 \end{equation}
 
@@ -457,12 +462,16 @@ Then the period length of the gap sequence~\eqref{eq:delta} is
         N/D & \text{if } D \mid N.
     \end{cases}
 \end{equation}
+Here \(\lambda_{\mathrm{multiset}}\) denotes the minimal period
+\(\lambda\) of Definition~\ref{def:period} applied to the multiset gap
+sequence; the set-valued analogue \(\lambda_{\mathrm{set}}\) is introduced
+in Section~\ref{sec:setvalued}.
 \end{theorem}
 
 \begin{remark}[Interpretation of \(N\)]\label{rem:N}
 The quantity \(N\) equals
 \[
-    \#\bigl([-\beta\omega,\,\alpha\omega]\cap\mathbb{Z}\bigr),
+    \#\bigl([-\omega\beta,\,\omega\alpha]\cap\mathbb{Z}\bigr),
 \]
 the number of integers in the range of the invariant
 \(r = \alpha x - \beta y\) (see Section~\ref{subsec:step1}).
@@ -519,26 +528,26 @@ at \(\omega = 1\), where
 
 The strip condition~\eqref{eq:points}, multiplied by \(\beta > 0\), reads
 \[
-    \alpha(x - \omega) \;\le\; \beta y \;\le\; \alpha x + \beta\omega,
+    \alpha(x - \omega) \;\le\; \beta y \;\le\; \alpha x + \omega\beta,
 \]
 equivalently
 \begin{equation}\label{eq:r_range}
-    -\beta\omega \;\le\;
+    -\omega\beta \;\le\;
     \underbrace{\alpha x - \beta y}_{=:\,r}
-    \;\le\; \alpha\omega.
+    \;\le\; \omega\alpha.
 \end{equation}
 Since \(r \in \mathbb{Z}\), it takes values in
-\begin{equation}\label{eq:R}
+\begin{equation}
     \mathcal{R} \;:=\;
-    \bigl\{-\lfloor\beta\omega\rfloor,\;
-    -\lfloor\beta\omega\rfloor + 1,\; \ldots,\;
-    \lfloor\alpha\omega\rfloor\bigr\},
+    \bigl\{-\lfloor\omega\beta\rfloor,\;
+    -\lfloor\omega\beta\rfloor + 1,\; \ldots,\;
+    \lfloor\omega\alpha\rfloor\bigr\},
 \end{equation}
 using the identity \(\lceil{-x}\rceil = -\lfloor x \rfloor\).
 Hence
 \[
     |\mathcal{R}| =
-    \lfloor\alpha\omega\rfloor + \lfloor\beta\omega\rfloor + 1 = N.
+    \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1 = N.
 \]
 
 The invariant \(r\) is constant along each track: if \((x, y)\) and
@@ -622,7 +631,7 @@ The step \((\beta, \alpha)\) is the direction of~\(f\).
 \label{subsec:step2}
 
 For a fixed \(r \in \mathcal{R}\), the system
-\begin{equation}\label{eq:system}
+\begin{equation}
     \beta x + \alpha y = \tilde{p}, \qquad
     \alpha x - \beta y = r
 \end{equation}
@@ -658,7 +667,10 @@ arithmetic progression
 Conversely, if \(\tilde{p} \in P_r\), then the congruence
 \eqref{eq:residue} makes both coordinates in~\eqref{eq:solution} integral,
 and since \(r \in \mathcal{R}\), the resulting lattice point satisfies the
-strip condition~\eqref{eq:r_range}.  Thus \(P_r\) is exactly the set of
+strip condition~\eqref{eq:r_range}.  In particular each \(r \in \mathcal{R}\)
+is realized by an accepted lattice point, so \(P_r \neq \emptyset\): the
+range computation of Step~1 shows the strip condition is satisfiable for
+every such \(r\).  Thus \(P_r\) is exactly the set of
 \(\tilde{p}\)-values with invariant \(r\).  The complete multiset of
 projected values is
 \[
@@ -697,11 +709,11 @@ unit on \(\mathbb{Z}/D\mathbb{Z}\) is a bijection.
 The \(N\) residues \(\{c_r : r \in \mathcal{R}\}\) are the image of \(N\)
 consecutive integers under multiplication by
 \(m := -\alpha\beta^{-1} \bmod D\), with \(\gcd(m, D) = 1\).  Explicitly:
-\begin{equation}\label{eq:residues}
+\begin{equation}
     \{c_r\}_{r \in \mathcal{R}} \;=\;
     \{m \cdot r_0,\; m(r_0+1),\; \ldots,\; m(r_0+N-1)\} \bmod D,
 \end{equation}
-where \(r_0 = -\lfloor\beta\omega\rfloor\).
+where \(r_0 = -\lfloor\omega\beta\rfloor\).
 
 \begin{lemma}[Nonuniform residue distribution]\label{lem:nonuniform}
 If \(D \nmid N\), the multiset of \(N\) residues
@@ -856,13 +868,13 @@ residue classes and \(q\) on the remaining \(D - s\) classes.
 
 It is convenient to pass to the \(m\)-stepping parametrization
 \[
-    f(x) := \mu(mx), \qquad x \in \mathbb{Z}/D\mathbb{Z},
+    \hat{\mu}(x) := \mu(mx), \qquad x \in \mathbb{Z}/D\mathbb{Z},
 \]
 where \(m=-\alpha\beta^{-1}\pmod D\).
 Since \(m\) is invertible modulo \(D\), this is only a relabeling of the
 same data.  In this parametrization, the heavy set
 \[
-    H := \{x \in \mathbb{Z}/D\mathbb{Z} : f(x)=q+1\}
+    H := \{x \in \mathbb{Z}/D\mathbb{Z} : \hat{\mu}(x)=q+1\}
 \]
 is a contiguous cyclic interval of length \(s\):
 \[
@@ -974,9 +986,9 @@ function:
 \[
     \mu(c+\sigma)=\mu(c) \qquad \text{for all } c\in \mathbb{Z}/D\mathbb{Z}.
 \]
-Equivalently, the relabeled function \(f\) satisfies
+Equivalently, the relabeled function \(\hat{\mu}\) satisfies
 \[
-    f(x+\tau)=f(x), \qquad \tau := m^{-1}\sigma \pmod D.
+    \hat{\mu}(x+\tau)=\hat{\mu}(x), \qquad \tau := m^{-1}\sigma \pmod D.
 \]
 Since \(m\) is invertible modulo~\(D\) and \(0<\sigma<D\), we have
 \(\tau\not\equiv 0\pmod D\).
@@ -1482,7 +1494,7 @@ irrationality.  Hence \(y_1 = y_2\), and the equation then forces
 \emph{Step 2: A projected period lifts to a lattice translation of
 \(A\).}\quad
 Suppose, for contradiction, that the projected gap sequence has a finite
-period \(\lambda \in \mathbb{N}\).  Let \(\Lambda := \tilde p(A) \subset
+period \(\lambda \in \mathbb{N}\).  Let \(\Lambda_A := \tilde p(A) \subset
 \mathbb{R}\) be the projected set, and write its increasing enumeration
 as \((\ell_i)_{i \in \mathbb{Z}}\) (well defined by local finiteness and
 unboundedness).  Let \(g_i := \ell_{i+1} - \ell_i\) be the gap sequence;
@@ -1490,14 +1502,14 @@ the periodicity \(g_{i+\lambda} = g_i\) makes the partial sum
 \(\sigma := g_i + g_{i+1} + \cdots + g_{i+\lambda - 1}\) independent of
 \(i\), so \(\ell_{i+\lambda} - \ell_i = \sigma\) for all \(i\).  Since all
 gaps are positive, \(\sigma > 0\), and consequently
-\(\Lambda + \sigma = \Lambda\).
-Choose any \(z_0 \in A\); since \(\tilde p(z_0) + \sigma \in \Lambda\),
+\(\Lambda_A + \sigma = \Lambda_A\).
+Choose any \(z_0 \in A\); since \(\tilde p(z_0) + \sigma \in \Lambda_A\),
 there exists \(z_1 \in A\) with
 \(\tilde p(z_1) = \tilde p(z_0) + \sigma\).  Set
 \(v := z_1 - z_0 \in \mathbb{Z}^2\), so \(\tilde p(v) = \sigma\).
 
 We claim \(A + v \subseteq A\).  For any \(z \in A\),
-\(\tilde p(z) + \sigma \in \Lambda\), so there is \(z' \in A\) with
+\(\tilde p(z) + \sigma \in \Lambda_A\), so there is \(z' \in A\) with
 \(\tilde p(z') = \tilde p(z) + \sigma = \tilde p(z + v)\); injectivity of
 \(\tilde p\) on \(\mathbb{Z}^2\) (Step~1) gives \(z' = z + v\), hence
 \(z + v \in A\).  This forward inclusion is all that Step~3 will use.
@@ -1551,7 +1563,7 @@ threaded through to the headline theorems
 and \texttt{set\_\allowbreak main\_\allowbreak theorem\_\allowbreak geometric\_\allowbreak concrete}).
 The irrational case (Proposition~\ref{prop:irrational}) is formalized
 separately in \texttt{Irrational.lean}.  The two files together
-comprise approximately 3{,}750 lines of verified code with no
+comprise approximately 3{,}760 lines of verified code with no
 \texttt{sorry} axioms, and are available in the companion
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
@@ -1841,14 +1853,14 @@ The difference from Theorem~\ref{thm:main} is significant:
 \subsection{Arithmetic discrete lines and digital geometry}
 
 The strip condition~\eqref{eq:r_range},
-\(-\beta\omega \le \alpha x - \beta y \le \alpha\omega\), has the same form as
+\(-\omega\beta \le \alpha x - \beta y \le \omega\alpha\), has the same form as
 an \emph{arithmetic discrete line} in the sense of
 Reveill\`{e}s~\cite{Reveilles1991},
 \[
     D(\alpha,\beta,\mu,W)
     = \bigl\{(x,y)\in\mathbb{Z}^2 : \mu \le \alpha x - \beta y < \mu + W\bigr\},
 \]
-here with \(\mu = -\beta\omega\) and arithmetic thickness
+here with \(\mu = -\omega\beta\) and arithmetic thickness
 \(W = (\alpha+\beta)\,\omega\) (up to the choice of boundary convention).
 This family of objects has been studied extensively in digital geometry, and
 two of its periodicity results are directly comparable to ours:
@@ -1887,10 +1899,13 @@ distance sequence.
 \subsection{Cut-and-project sets and model sets}
 
 The mainstream literature on model sets~\cite{BaakeGrimm2013,
-BaakeGrimm2017, Senechal2009, Meyer1972, HaynesEtAl2016} focuses largely
+BaakeGrimm2017, Senechal1995, Meyer1972, HaynesEtAl2016} focuses largely
 on irrational slopes and aperiodic order.
 Rational slopes yield periodic structures and are therefore often less
-central from that perspective.  Where the rational case is treated, the
+central from that perspective.  The closest work in the gap-statistics
+direction is~\cite{HaynesEtAl2016}, which studies gap and patch-frequency
+distributions for irrational cut-and-project sets; the rational,
+sorted-gap minimal period obtained here is a different invariant.  Where the rational case is treated, the
 emphasis is on different invariants: for instance, \cite{GaehlerHuntonKellendonk2013}
 computes the integral \v{C}ech cohomology of the tiling spaces associated
 with rational projection-method patterns, an algebraic-topological
@@ -2038,7 +2053,7 @@ Jens Marklof and Andreas Str\"{o}mbergsson,
 {10.4169/amer.math.monthly.124.8.741}.
 
 \bibitem{Moura2021}
-Leonardo de Moura, Sebastian Ullrich,
+Leonardo de Moura and Sebastian Ullrich,
 ``The Lean~4 theorem prover and programming language,''
 \emph{Proceedings of the 28th International Conference on Automated
 Deduction (CADE-28)},
@@ -2058,7 +2073,7 @@ algorithmique},
 Th\`{e}se d'\'{E}tat, Universit\'{e} Louis Pasteur, Strasbourg, 1991.
 HAL: \href{https://theses.hal.science/tel-01279525}{tel-01279525}.
 
-\bibitem{Senechal2009}
+\bibitem{Senechal1995}
 Marjorie Senechal,
 \emph{Quasicrystals and Geometry},
 Cambridge University Press, 1995.
