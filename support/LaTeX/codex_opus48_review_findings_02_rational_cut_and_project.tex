@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\emergencystretch=5em
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\paperfile}{\path{LaTeX/rational_cut_and_project_gap_periods.tex}}
+\newcommand{\researchfile}{\path{support/research.tex}}
+
+\title{Codex-Review der aktuellen uncommitted Änderungen\\
+\large Hinweise zu \paperfile{} und \researchfile{}}
+\author{}
+\date{31. Mai 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Kurzurteil}
+
+Die aktuellen uncommitted Änderungen an \paperfile{} und \researchfile{} sind
+im Kern plausibel und stärken die Recherche.  Ich sehe keinen mathematischen
+Blocker.  Vor einem Commit würde ich aber zwei kleine Präzisierungen am
+Paper-Text vornehmen und die neue stärkere Aussage im Rechercheprotokoll nur
+dann so stehen lassen, wenn die direkte Konsultation beider Baake--Grimm-Bände
+tatsächlich auf Volltext- bzw.\ Indexbasis erfolgt ist.
+
+\section*{Findings}
+
+\begin{enumerate}[leftmargin=2em,itemsep=8pt]
+  \item \textbf{Mehrdeutiger Bezug von ``this literature'' im Paper.}
+
+        In \paperfile{} um Zeile~1913 ist die neue Aussage zu
+        \(D=\alpha^2+\beta^2\) inhaltlich plausibel:
+        \(a^2+b^2\) tritt in Baake--Grimm Vol.~2 im Kontext von
+        similar sublattices und coincidence-site lattices als
+        Gaussian-integer norm form auf, also als enumerative Größe und nicht
+        als Periodenmodulus einer Gap-Folge.
+
+        Die Formulierung
+        \begin{quote}
+        The constant \(D = \alpha^2+\beta^2\) itself does appear in this
+        literature, but in an enumerative role \dots
+        \end{quote}
+        ist jedoch leicht mehrdeutig, weil direkt davor
+        Gähler--Hunton--Kellendonk erwähnt werden.  Die Norm-Aussage gehört
+        nicht zu diesem Paper, sondern zu Baake--Grimm Vol.~2 /
+        Baake--Zeiner.
+
+        Bessere Formulierung:
+        \begin{quote}
+        In Baake--Zeiner's chapter in Vol.~2 of
+        \code{\textbackslash cite\{BaakeGrimm2017\}}, the constant
+        \(D=\alpha^2+\beta^2\) appears in an enumerative role---as the
+        Gaussian-integer norm form used to count similar sublattices and
+        coincidence-site lattices of \(\mathbb Z^2\)---rather than as the
+        period modulus of a gap sequence.
+        \end{quote}
+
+  \item \textbf{Spezifische Kapitelreferenz wäre besser als nur der Sammelband.}
+
+        Die neue Paper-Passage zitiert derzeit nur
+        \code{\textbackslash cite\{BaakeGrimm2017\}}.  Für die spezifische
+        Aussage über \(a^2+b^2\), similar sublattices und CSLs wäre eine
+        Kapitelangabe robuster.  Das einschlägige Kapitel ist Baake--Zeiner,
+        Ch.~3 von \emph{Aperiodic Order. Vol.~2}, mit dem Thema geometric
+        enumeration problems for lattices and embedded \(\mathbb Z\)-modules.
+
+        Minimaler Fix ohne neuen Bibitem:
+        \begin{quote}
+        \dots in Baake--Zeiner's Ch.~3 of \code{\textbackslash cite\{BaakeGrimm2017\}} \dots
+        \end{quote}
+
+        Noch sauberer wäre ein eigener Bibitem für das Kapitel, falls der
+        Abschnitt im Paper bibliographisch sehr präzise sein soll.  Für die
+        jetzige Related-Work-Abgrenzung reicht die Kapitelangabe im Text aber
+        wahrscheinlich aus.
+
+  \item \textbf{Stärkere Baake--Grimm-Aussage im Rechercheprotokoll nur mit
+        tatsächlicher Volltext-/Indexgrundlage.}
+
+        In \researchfile{} um Zeile~350 steht nun:
+        \begin{quote}
+        Both \emph{Aperiodic Order} volumes were consulted directly (not merely
+        their frontmatter) \dots
+        \end{quote}
+        und der alte Residualpunkt zum offenen Baake--Grimm-Vol.-1-Indexcheck
+        wurde entfernt.
+
+        Das ist konsistent, \emph{wenn} wirklich beide Bände direkt konsultiert
+        wurden.  Die gestagete \code{.gitignore}-Änderung für
+        \code{support/bibliography/v1.pdf} und
+        \code{support/bibliography/v2.pdf} spricht dafür.  Da diese PDFs nicht
+        getrackt sind, ist diese Evidenz aber nur lokal.  Inhaltlich ist das
+        okay; beim Commit sollten \code{.gitignore} und die Rechercheänderung
+        zusammen betrachtet werden.
+
+        Falls nur Frontmatter/Snippets vorlagen, sollte die Formulierung
+        abgeschwächt werden, etwa:
+        \begin{quote}
+        The available full-text/index material for both volumes was consulted
+        directly \dots
+        \end{quote}
+\end{enumerate}
+
+\section*{Positive Punkte}
+
+\begin{itemize}[leftmargin=2em,itemsep=4pt]
+  \item Das Entfernen der alten Restlücke
+        ``Baake--Grimm Vol.~1, verbatim index check'' ist konsistent, falls die
+        direkte Konsultation tatsächlich erfolgt ist.
+  \item Der neue Appendix \code{Where the fingerprint terms occur in
+        Baake--Grimm} in \researchfile{} macht die Recherche nachvollziehbarer.
+  \item Die Abgrenzung ``counting quantity, not a period modulus'' passt gut
+        zur mathematischen Rolle von \(a^2+b^2\) in der CSL-/similar-sublattice-
+        Literatur.
+\end{itemize}
+
+\section*{Build- und Statuscheck}
+
+\begin{itemize}[leftmargin=2em,itemsep=4pt]
+  \item \code{latexmk} für \paperfile{} läuft durch.
+        Keine undefinierten Referenzen oder Zitate; nur die bekannten zwei
+        Underfull-Box-Warnungen.
+  \item \code{latexmk} für \researchfile{} läuft durch.
+        Keine undefinierten Referenzen oder Zitate; nur ältere Layoutwarnungen
+        (Overfull/Underfull boxes).
+  \item \code{git diff --check} für die beiden Dateien meldet keine
+        Whitespace-Probleme.
+\end{itemize}
+
+\section*{Empfehlung}
+
+Ich würde die Paper-Passage minimal umformulieren, so dass sie explizit
+Baake--Zeiner / Vol.~2 nennt, statt ``this literature'' zu verwenden.  Danach
+sind die Änderungen aus meiner Sicht commit-reif, vorausgesetzt die direkte
+Baake--Grimm-Konsultation in \researchfile{} entspricht dem tatsächlich
+vorliegenden Arbeitsstand.
+
+\end{document}
