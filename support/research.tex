@@ -1,1039 +1,641 @@
 \documentclass[11pt]{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[ngerman]{babel}
-\usepackage{amsmath,amssymb}
-\usepackage{hyperref}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,margin=2.5cm}
+\geometry{a4paper,margin=2.6cm}
 
-\title{zbMATH-Rechercheanleitung\\
-\large Prior-Art-Suche zu den Periodenformeln\\
-\textit{Period Formulas for Rational Cut-and-Project Strip Projections}}
-\author{Erstellt von Claude (Opus 4.7) für Dirk Kunert}
-\date{28. Mai 2026}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Zi}{\mathbb{Z}[i]}
+\newcommand{\pt}{\tilde{p}}
+\newcommand{\lmult}{\lambda_{\mathrm{multiset}}}
+\newcommand{\lset}{\lambda_{\mathrm{set}}}
+
+\title{Prior Art for the Minimal-Period Formulas of\\
+Rational Cut-and-Project Strip Projections:\\[2pt]
+\large A Survey of the Search and the Remaining Verification Items}
+
+\author{Dirk Kunert\thanks{The literature search summarised here was carried out
+with the assistance of AI tools (ChatGPT, Gemini, and Claude). All bibliographic
+data and exclusion judgements were checked against primary sources by the author;
+remaining errors are the author's own.}}
+
+\date{31 May 2026}
 
 \begin{document}
 \maketitle
 
-\section*{Hintergrund}
+\begin{abstract}
+This note documents, for the benefit of a referee or arXiv endorser, the prior-art
+search conducted in support of the manuscript on period lengths of one-dimensional
+\emph{rational} cut-and-project sequences. The manuscript proves a closed-form
+minimal period for the order-sorted gap sequence of a rational strip projection:
+with coprime $\alpha,\beta\in\N$, window $\omega\ge 0$,
+$N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1$ and
+$D=\alpha^2+\beta^2$, the multiset period equals $N$ when $D\nmid N$ and $N/D$
+otherwise, while the set-valued period equals $N$ when $N<D$ and $1$ otherwise.
+The concern motivating the search is that this result, or an equivalent lemma,
+might already exist---possibly buried in work on an ostensibly different subject,
+since the constant $D=\alpha^2+\beta^2$ is number-theoretically ubiquitous and the
+ambient objects (strip projections, arithmetic discrete lines, gap sequences) are
+classical. We argue that the \emph{conjunction} of features---a sorted projected
+gap period, with $D=\alpha^2+\beta^2$ in the role of a period modulus, a
+multiset-versus-set dichotomy, and a window dependence through $N$---forms a
+distinctive fingerprint, and we report the outcome of four search rounds
+(approximately $180$ logged queries across arXiv, HAL, dblp, Google Books, the
+digital-geometry and aperiodic-order monograph literature, and the zbMATH Open
+index), followed by individual treatment of six printed or poorly indexed sources.
+No source examined states the result, as a theorem or as an auxiliary lemma. We
+close by delineating the residual blind spots---principally the full-text bodies of
+a few printed sources and the inherent limit of metadata- and review-level
+indexing---and identify a single targeted expert enquiry as the most economical way
+to discharge them.
+\end{abstract}
 
-Ein Mathematik-Professor möchte das Paper nicht ohne gründlichere
-Literaturrecherche endorsen, weil er vermutet, das Resultat sei
-wahrscheinlich bereits bekannt --- möglicherweise als Lemma in einem
-Paper zu einem anderen Thema versteckt. Eine erste arXiv-Recherche
-(ca.~20 Suchanfragen) ergab keinen direkten Treffer. Da arXiv die
-Vor-2000-Literatur in Number Theory und Combinatorics-on-Words
-unzureichend abdeckt, ist eine \textbf{zbMATH Open}-Recherche der
-empfohlene nächste Schritt.
+\section{Purpose and scope}\label{sec:purpose}
 
-zbMATH Open (\url{https://zbmath.org}) ist seit 2021 kostenfrei und
-enthält mehrere Millionen mathematische Publikationen mit
-Publikationsjahren bis weit ins 19.~Jahrhundert zurück (laut
-zbMATH-About-Seite), jeweils mit kurzem Review bzw.\ Summary (1--3
-Absätze, meist von einem Mathematiker geschrieben). Dieser
-Review-/Summary-Text ist \emph{indexiert und durchsuchbar} (Feld
-\texttt{ab:}); seine \emph{Anzeige} ist je nach Lizenz mal im Volltext
-verfügbar, mal gesperrt. Die Durchsuchbarkeit ist das entscheidende
-Hilfsmittel, um schnell durch viele Kandidaten zu scannen.
+The manuscript under consideration establishes minimal-period formulas for a
+one-dimensional rational cut-and-project construction. Because its central constant
+$D=\alpha^2+\beta^2$ occurs throughout number theory and discrete geometry, and
+because the surrounding objects are classical, a natural concern---raised while
+seeking an endorsement---is that the result may already be in the literature,
+perhaps as an auxiliary lemma in a paper on a different topic. This note records the
+resulting due-diligence search in a form an expert reader can audit: the axes
+searched, the nearest catalogued neighbours and why each is structurally distinct,
+and the residual uncertainty that no database search can, in principle, remove.
 
-\section*{Die gesuchten Theoreme}
+The document is deliberately self-contained and assumes familiarity with
+cut-and-project (model) sets, the Steinhaus three-distance theorem, Sturmian and
+Christoffel words, and the arithmetic-discrete-line tradition of digital geometry.
+It is \emph{not} a contribution to the mathematics of the manuscript; it is a prior-art
+statement. Section~\ref{sec:result} fixes the object and the fingerprint;
+Section~\ref{sec:disguise} explains why the result is easy to overlook;
+Section~\ref{sec:method} states the methodology;
+Section~\ref{sec:findings} reports the findings axis by axis;
+Section~\ref{sec:zbmath} reports the zbMATH Open round and how to read its empty
+fingerprint queries; Section~\ref{sec:residual} lists what remains to be verified;
+Section~\ref{sec:conclusion} states the balance. Appendix~\ref{app:queries}
+reproduces the zbMATH query log.
 
-Setup: $\alpha,\beta\in\mathbb{N}$ koprim, $\omega\ge0$. Mit
-\[
-  N \;=\; \lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1,
-  \qquad
-  D \;=\; \alpha^2+\beta^2.
-\]
+\section{The result under assessment}\label{sec:result}
 
-\paragraph{Theorem 1 (Multiset-Periode):}
-\[
-  \lambda_{\mathrm{multiset}} \;=\;
-  \begin{cases} N & D\nmid N,\\ N/D & D\mid N. \end{cases}
-\]
-
-\paragraph{Theorem 2 (Set-Periode):}
-\[
-  \lambda_{\mathrm{set}} \;=\;
-  \begin{cases} N & N<D,\\ 1 & N\ge D. \end{cases}
-\]
-
-Außerdem: $\lambda_{\mathrm{set}}\mid\lambda_{\mathrm{multiset}}$
-mit Gleichheit gdw.\ $N\le D$.
-
-\section*{Mathematische Übersetzung für versteckte Treffer}
-
-Der wahrscheinlichste Ort für ein verstecktes Lemma ist nicht unbedingt die
-Cut-and-Project-Literatur selbst, sondern die \textbf{digitale Geometrie}
-zu arithmetischen bzw.\ digitalen Geraden.  Der Grund ist die direkte
-Übersetzung der Strip-Bedingung:
-\[
-  -\beta\omega \le \alpha x-\beta y \le \alpha\omega.
-\]
-In der digitalen Geometrie erscheinen sehr ähnliche Objekte typischerweise
-als arithmetische diskrete Geraden
-\[
-  \mu \le ax-by < \mu+W,
-\]
-wobei \(W\) die arithmetische Dicke, \(ax-by\) der Rest bzw.\ das Level,
-und \((b,a)\) der Haupt- oder Periodizitätsvektor ist.  In unserem Modell
-ist \(N\) die Anzahl der zulässigen Level \(r=\alpha x-\beta y\), und
-\(D=\alpha^2+\beta^2\) entsteht erst nach der orthogonalen Projektion und
-Sortierung über
-\[
-  \tilde p=\beta x+\alpha y,\qquad
-  \tilde p \equiv -\alpha\beta^{-1}r \pmod D.
-\]
-
-\textbf{Konsequenz für die Recherche:} Bekannte Aussagen zur
-Translationsperiodizität diskreter Geraden sind erwartbar und sollten
-aktiv zitiert werden.  Gesucht ist spezifischer: eine minimale Periode der
-nach \(\tilde p\) sortierten projizierten Gap-Folge, getrennt nach
-Multiset- und Set-Konvention.  Diese Formulierung ist viel enger als die
-bloße Periodizität der diskreten Gerade unter Translation durch
-\((\beta,\alpha)\).
-
-\section*{Suchsyntax von zbMATH}
-
-\begin{itemize}[leftmargin=2em]
-  \item \texttt{cc:CODE} --- Mathematics Subject Classification (MSC) Code
-  \item \texttt{au:Name} --- Autor
-  \item \texttt{ti:Wort} --- Titel-Stichwort
-  \item \texttt{ut:Wort} --- Stichwort (User-Keyword)
-  \item \texttt{py:JJJJ} --- Erscheinungsjahr
-  \item \texttt{"Phrase"} --- Wortgruppensuche
+Fix coprime $\alpha,\beta\in\N$ and a window parameter $\omega\ge 0$. A lattice
+point $(x,y)\in\Z^2$ is \emph{accepted} if it lies in the closed strip
+\begin{equation}\label{eq:strip}
+  -\beta\omega \;\le\; \alpha x-\beta y \;\le\; \alpha\omega ,
+\end{equation}
+and each accepted point is assigned the projected coordinate
+$\pt=\beta x+\alpha y$, the image of $(x,y)$ under orthogonal projection onto the
+line of slope $\alpha/\beta$ (up to the scaling that makes $\pt$ an integer). The
+integer level $r:=\alpha x-\beta y$ ranges over the
+\begin{equation}\label{eq:N}
+  N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1
+\end{equation}
+admissible values permitted by the closed strip~\eqref{eq:strip}; the constant term
+$+1$ records the closed-boundary convention (lattice points on either bounding line
+are accepted). Set
+\begin{equation}\label{eq:D}
+  D:=\alpha^2+\beta^2 .
+\end{equation}
+Because $\gcd(\alpha,\beta)=1$ we have $\gcd(\beta,D)=\gcd(\beta,\alpha^2)=1$ and
+likewise $\gcd(\alpha,D)=1$, so $\beta$ is invertible modulo $D$ and the level and
+projection coordinates of an accepted point satisfy
+\begin{equation}\label{eq:residue}
+  \pt \;\equiv\; -\alpha\,\beta^{-1}\,r \pmod{D}.
+\end{equation}
+Consequently the accepted values of $\pt$, taken in increasing order, form a
+finite union of $N$ arithmetic progressions of common difference $D$, one per level
+$r$; their consecutive differences (the \emph{gaps}) repeat periodically. Two
+conventions are studied:
+\begin{itemize}[leftmargin=1.8em,itemsep=2pt]
+  \item the \emph{multiset} gap sequence, which retains the multiplicity of each gap
+        value (distinct accepted points may share a projected coordinate);
+  \item the \emph{set} gap sequence, which records only the distinct gap values in
+        order.
 \end{itemize}
+The manuscript determines the minimal period of each.
 
-\section{Digitale Geometrie / arithmetische diskrete Geraden (höchste Priorität)}
+\begin{theorem}[Multiset period]\label{thm:multiset}
+\[
+  \lmult \;=\;
+  \begin{cases} N, & D\nmid N,\\[2pt] N/D, & D\mid N. \end{cases}
+\]
+\end{theorem}
 
-Diese Suchachse adressiert die Professorenvermutung am direktesten:
-Das Resultat könnte dort als Periodizitäts- oder Restklassenlemma zu
-thick/discrete/arithmetic lines auftreten, ohne Cut-and-Project im Titel
-oder Abstract zu nennen.
+\begin{theorem}[Set-valued period]\label{thm:set}
+\[
+  \lset \;=\;
+  \begin{cases} N, & N<D,\\[2pt] 1, & N\ge D, \end{cases}
+\]
+and $\lset \mid \lmult$, with equality if and only if $N\le D$.
+\end{theorem}
 
-\begin{verbatim}
-"arithmetical discrete line" period
-"arithmetic discrete line" period
-"arithmetical discrete line" translation periodicity
-"arithmetic discrete line" translation periodicity
-"discrete line" "invariant" "translation" "(b,a)"
-"discrete line" "main vector" period
-"arithmetical thickness" "discrete line" period
-"Bezoutian lines" "arithmetical thickness"
-"naive line" "standard line" "thick line" periodicity
-"D(a,b,mu,omega)" period
-"Freeman code" rational slope period digital line
-"digital straightness" rational periodic
-"digital straight line" rational slope period
-"droite discrète arithmétique" périodicité
-"épaisseur arithmétique" "droite discrète"
-\end{verbatim}
+For an irrational slope the projected gap sequence admits no period at all; the
+manuscript proves this aperiodicity separately and formalises it. Both period
+theorems and the irrational case are machine-checked in Lean~4 against
+\texttt{mathlib}.
 
-Besonders relevante Namen und Referenzen für diese Achse:
-\begin{verbatim}
-au:Reveilles discrete line
-au:Debled-Rennesson discrete line period
-au:Klette digital straightness period
-au:Rosenfeld digital straightness period
-au:Dorst spirograph digitized straight lines
-au:Wu rational digital ray basic segment
-au:Brons rational digital rays periodic
-au:Berstel Christoffel digital line
-au:Berthé discrete line arithmetic
-au:Vuillon balanced words digital line
-\end{verbatim}
-
-\section{Direkte Cut-and-Project-Treffer-Versuche}
-
-\begin{verbatim}
-"cut-and-project" rational period
-"cut and project" rational slope period gap
-"strip projection" lattice period
-projected lattice gap sequence period rational
-"a^2+b^2" period lattice
-"alpha^2+beta^2" period
-\end{verbatim}
-
-\section{MSC-Code-basierte Suchen}
-
-Relevante MSC-Codes:
-\begin{itemize}[leftmargin=2em]
-  \item \textbf{52C23} --- Quasicrystals, aperiodic tilings
-  \item \textbf{52C99} --- Discrete geometry / related miscellaneous
-  \item \textbf{68U05, 68U10} --- Digital geometry, computer graphics,
-        image processing
-  \item \textbf{11B85} --- Automata sequences (Sturmian, balanced words)
-  \item \textbf{11J71} --- Distribution modulo one (Three-Distance Theorem)
-  \item \textbf{37B10} --- Symbolic dynamics
-  \item \textbf{68R15} --- Combinatorics on words
-  \item \textbf{11H06} --- Lattices and convex bodies (geometry of numbers)
-\end{itemize}
-
-\begin{verbatim}
-cc:52C23 period gap
-cc:52C23 rational projection
-cc:52C23 one-dimensional period formula
-cc:52C99 "digital straightness" period
-cc:68U05 "discrete line" period rational
-cc:68U05 "digital straight line" rational period
-cc:68U10 "arithmetical discrete line"
-cc:11B85 rational slope period
-cc:11B85 balanced word period multiplicity
-cc:11J71 rational gap period
-cc:37B10 cut-and-project rational period
-cc:68R15 Sturmian rational period gap
-\end{verbatim}
-
-\section{Verwandte Konzepte und Verkleidungen}
-
-\begin{verbatim}
-Beatty sequence rational period gap
-Christoffel word period rational slope formula
-"three distance" rational multiplicity period
-"three gap" rational period multiset
-mechanical sequence rational slope period
-Fraenkel sequence period gap
-"discrete line" gap period rational
-"arithmetical discrete line" residue
-"arithmetic discrete line" "gap sequence"
-"discrete straight line" "Freeman code" rational
-"rational digital ray" period "basic segment"
-"visible lattice points" line gap rational
-"projected multiset" period
-"projected set" rational lattice period
-\end{verbatim}
-
-\section{Autoren-zentrierte Suchen}
-
-Diese Autoren arbeiten/arbeiteten im engsten Umfeld; ihre
-Publikationsliste lohnt einen Blick:
-
-\begin{verbatim}
-au:Haynes A. ti:cut-and-project
-au:Koivusalo H. ti:gap
-au:Pleasants P. ti:quasicrystal
-au:Baake M. ti:rational period
-au:Grimm U. ti:rational projection
-au:Marklof J. ti:gap rational
-au:Strömbergsson A. ti:gap
-au:Berthé V. ti:Sturmian rational
-au:Berstel J. ti:Christoffel period
-au:Boshernitzan M. ti:gap period
-au:Fraenkel A. ti:Beatty period
-au:Lagarias J. ti:lattice projection
-au:Akiyama S. ti:quasicrystal rational
-au:Solomyak B. ti:cut-and-project
-au:Lee J.-Y. ti:rational model set
-\end{verbatim}
-
-\section{Spezifische Stichwort-Kombinationen}
-
-\begin{verbatim}
-"period length" lattice strip rational projection
-"minimal period" gap sequence projection
-"period formula" cut-and-project
-"residue class" period gap lattice rational
-"residue classes" "minimal period" "gap sequence"
-"union of arithmetic progressions" "gap sequence" period
-"finite union of arithmetic progressions" gaps period
-"multiset" "arithmetic progressions" "gap sequence"
-"sum of two squares" period lattice
-"Gaussian integers" period lattice projection rational
-\end{verbatim}
-
-\section{Festschriften und Sammelbände}
-
-Diese gedruckten Bände sind nicht auf arXiv und besonders verdächtig
-für versteckte Lemmas:
-
-\begin{verbatim}
-ti:"Directions in Mathematical Quasicrystals"
-ti:"Aperiodic Order" Baake Grimm
-au:Pleasants "designer quasicrystal"
-ti:"Quasicrystals and Discrete Geometry"
-ti:"Mathematics of Aperiodic Order"
-\end{verbatim}
-
-\section{Physik-Literatur}
-
-Diese Literatur enthält oft Periodenformeln für rationale Approximanten
-quasikristalliner Strukturen:
-
-\begin{verbatim}
-"rational approximant" Fibonacci period formula
-au:Niizeki rational approximant period
-au:Sutô quasicrystal rational
-au:Tokihiro quasicrystal rational period
-"periodic approximant" quasicrystal period formula
-\end{verbatim}
-
-\section*{Vorgehen beim Durchscannen}
-
-Bei jedem Treffer sollten folgende Schritte erfolgen:
-
-\begin{enumerate}[leftmargin=2em]
-  \item \textbf{Review lesen} (1--2 Absätze, von einem anderen
-        Mathematiker geschrieben) --- meist genug, um zu entscheiden,
-        ob das Paper relevant ist.
-  \item \textbf{Bei Unklarheit:} Klick auf ``References'' /
-        ``Citations'' --- wer zitiert das Paper, wen zitiert es selbst.
-  \item \textbf{Bei verdächtigem Treffer:} zbMATH-ID notieren
-        (z.\,B.\ \texttt{Zbl 1234.56789}) und arXiv-ID falls vorhanden.
+\paragraph{The fingerprint.}
+The object to be searched for is the \emph{conjunction} of four features:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em,itemsep=2pt]
+  \item the gap sequence of the orthogonally projected and \emph{order-sorted}
+        accepted points---not the chain-code word read along the abscissa, and not a
+        spectral or diffraction gap;
+  \item the modulus $D=\alpha^2+\beta^2$ in the role of a \emph{period}
+        (equivalently $N/D$ as a period in the degenerate case $D\mid N$);
+  \item the \emph{multiset-versus-set} dichotomy, with the divisibility relation
+        $\lset\mid\lmult$;
+  \item the \emph{window dependence} through $N$ of~\eqref{eq:N}.
 \end{enumerate}
+Each feature in isolation is classical (see Section~\ref{sec:findings}); the claim
+of novelty concerns their conjunction. The search below was designed to detect that
+conjunction even when it is named differently or appears as a step in a larger
+argument.
 
-\subsection*{Reproduzierbares Suchprotokoll}
+\section{Why the result is easy to overlook}\label{sec:disguise}
 
-Für eine spätere Endorsement-Anfrage sollte nicht nur das Ergebnis,
-sondern auch der Suchpfad nachvollziehbar sein.  Pro Suchlauf notieren:
-\begin{itemize}[leftmargin=2em]
-  \item Datum, Datenbank und exakte Query-Zeichenkette.
-  \item Anzahl der Treffer und wie viele Treffer tatsächlich gescannt wurden
-        (z.\,B.\ ``erste 50 nach Relevanz'' oder ``alle 17 Treffer'').
-  \item Ausschlussgrund in Kurzform: andere Periodendefinition,
-        nur qualitative Periodizität, nur Symbolfolge statt projizierter
-        Gap-Folge, keine Multiplizitäten, anderer Window-Begriff usw.
-  \item Bei Treffern aus digitaler Geometrie explizit prüfen, ob dort nur
-        die Translation \((b,a)\) der diskreten Gerade gemeint ist oder
-        wirklich die minimale Periode der nach
-        \(\tilde p=\beta x+\alpha y\) sortierten projizierten Gap-Folge.
-\end{itemize}
+Two mathematical ``disguises'' make a direct keyword search inadequate and explain
+where a hidden lemma would most plausibly live.
 
-\section*{Erwartungshorizont}
-
-Basierend auf der bisherigen arXiv-Recherche:
-
-\begin{itemize}[leftmargin=2em]
-  \item \textbf{Viele Treffer} bei Abschnitten 1--3, aber fast alle
-        handeln entweder von irrationalen Slopes (Three-Gap, Sturmian)
-        oder von qualitativer Periodizität (ohne explizite Formel).
-  \item \textbf{Wahrscheinlich Treffer zur bloßen Periodizität} in der
-        digitalen Geometrie: arithmetische diskrete Geraden sind bei
-        rationalem Richtungsvektor unter Translation durch \((b,a)\)
-        periodisch.  Das wäre verwandte Literatur, aber noch nicht die
-        gesuchte minimale projizierte Gap-Periode.
-  \item \textbf{Offen ist die spezifische Minimalformel} mit
-        Multiset-vs.-Set-Konvention, \(\omega\)-Parameter und
-        \(D=\alpha^2+\beta^2\) als Modulus nach Projektion und Sortierung.
-  \item \textbf{Mögliche weitere Lücken} sind Pleasants-/Baake-nahe
-        Sammelbände sowie Vor-2000-Physik-Literatur zu rationalen
-        Approximanten.
-\end{itemize}
-
-\section*{Zeitaufwand}
-
-Geplant: 60--90 Minuten für eine gründliche Durchsicht.
-
-\section*{Bisheriger Stand der arXiv-Recherche}
-
-Zwei systematische Suchrunden über arXiv und Web wurden durchgeführt
-(insgesamt ca.~45 Suchanfragen). \textbf{In beiden Runden: kein Paper
-gefunden, das eines der beiden Theoreme beweist} --- weder als
-Hauptresultat noch als verstecktes Lemma.
-
-\subsection*{Runde 1: Notations- und Themen-orientierte Suche}
-
-Geprüfte arXiv-Kandidaten (alle als \emph{nicht direkter Treffer}
-eingestuft):
-
-\begin{itemize}[leftmargin=2em]
-  \item arXiv:1411.0578 (Haynes-Kelly-Koivusalo) --- Gap-Frequenzen,
-        nicht Periode
-  \item arXiv:2409.10920 (Sturmian Hamiltonians) --- Periode $q$, nicht
-        $\alpha+\beta+1$
-  \item arXiv:2012.14744 (Fibonacci-Quasikristall) --- Physik-Sicht,
-        keine Herleitung
-  \item arXiv:2401.01803 (Sharp density discrepancy) --- methodisch
-        nahe, keine Periodenaussage
-  \item arXiv:2103.13619, 2602.12801 (Balanced words) --- Zählformeln,
-        nicht Periode
-  \item arXiv:1408.3724 (Gap sequence cutting sequence) --- irrationale
-        Steigung
-  \item arXiv:1004.3072 (Projecting cubic lattice) --- anderes Thema
-  \item arXiv:math-ph/0601026 (Nested quasicrystalline discretisations)
-        --- Self-Similarity
-  \item arXiv:1704.06463 (Gap structure 1D C\&P Hamiltonians) ---
-        Spektrallücken, nicht Gap-Folge
-  \item arXiv:1905.06138 (Abelian periods Sturmian) --- andere
-        Periodendefinition
-  \item arXiv:1210.2343 (Ostrowski numeration) --- Local Period
-  \item arXiv:1612.04906, 2208.01680 (Three Gap Theorem Varianten)
-  \item arXiv:1402.2125 (Bounded remainder sets)
-  \item arXiv:1503.04091 (Linear repetitivity)
-  \item arXiv:1311.7277 (Codimension-one C\&P nets)
-  \item arXiv:1606.08831 (Pure point diffraction)
-  \item arXiv:2106.07422 (Ammann-Beenker gap asymptotics)
-  \item arXiv:2409.19514 (Large gaps planar quasicrystals)
-\end{itemize}
-
-\subsection*{Runde 2: Notations-unabhängige Suche nach mathematischer Substanz}
-
-Die zweite Runde verzichtete bewusst auf die Symbolnamen
-``$\alpha$/$\beta$'' und suchte stattdessen nach der mathematischen
-Bedeutung (zwei koprime natürliche Zahlen $p,q$; Quadratsumme $p^2+q^2$;
-Floor-Zählformel; Multiset-vs.-Set-Konventionen). Sieben Kategorien mit
-ca.~28 Suchanfragen.
-
-Geprüfte neue arXiv-Kandidaten (alle als \emph{nicht relevant}
-eingestuft):
-
-\begin{itemize}[leftmargin=2em]
-  \item arXiv:2012.14019 (Čopar, Gaps in $\sqrt{n}$) ---
-        $\sqrt{n}$-Statistik, keine Periodenformel
-  \item arXiv:2406.09107 (Square roots and lattices) ---
-        $\sqrt{n}$-Statistik via Gitterrichtungen
-  \item arXiv:1809.07298 (Periodic Functions, Lattices, Projections)
-        --- Kristallographische Periodengitter, keine $\lambda$-Formel
-  \item arXiv:1110.5467 (Laurent-Nogueira) ---
-        Diophantische Approximation mit koprimen $p,q$, aber keine
-        Folgenperiode
-  \item arXiv:2603.11311 (C\&P in Poincaré disc) --- Hyperbolisches
-        Setting, völlig anders
-  \item arXiv:1404.4269 (Gap Sequence of Fibonacci Factors) ---
-        Fibonacci/irrational, nicht $p^2+q^2$
-\end{itemize}
-
-\subsection*{Hauptbefund nach beiden Runden}
-
-\textbf{Die bisher durchsuchten Quellen enthalten keinen direkten Treffer
-für die minimale Periode der nach Projektion sortierten Gap-Folge.}
-Die Konstante \(p^2+q^2\) ist mathematisch natürlich (Norm in
-\(\mathbb{Z}[i]\), Determinante der Drehmatrix nach Skalierung) und tritt
-im eigenen Beweis als Projektion-/Restklassenmodulus auf.  In der bislang
-durchsuchten Literatur erschien sie jedoch nicht als die konkrete minimale
-Periodenlänge bzw.\ Perioden-Dichotomie dieser Gap-Folge.  Gefunden wurden
-stattdessen vor allem die klassischen Kontexte:
-\begin{itemize}[leftmargin=2em]
-  \item Summe-zweier-Quadrate-Sätze (Fermat/Euler)
-  \item Gauß'sche Ganzzahl-Normen
-  \item Pythagoreische Tripel via Stern-Brocot
-\end{itemize}
-Keiner dieser Kontexte verbindet \(p^2+q^2\) mit der hier betrachteten
-minimalen projizierten Gap-Periode.
-
-Die naheliegende Sturmian-/Christoffel-Theorie liefert konsequent
-Periode $p+q$ (Wortlänge der charakteristischen Sturmian-Folge), nicht
-$p^2+q^2$. Das Three-Gap-Theorem liefert qualitative Lückenanzahl
-($\le3$), nicht Periodenlänge. Die C\&P-Literatur konzentriert sich auf
-den irrationalen, aperiodischen Fall; die digitale Geometrie liefert
-voraussichtlich die engste Vergleichsliteratur für den rationalen
-Strip selbst.
-
-\subsection*{Runde 3: Digitale Geometrie / Reveilles-Schule}
-
-Die dritte Runde adressiert gezielt die in Runde~2 identifizierte
-Lücke: die Tradition der arithmetischen diskreten Geraden nach
-Reveilles (Thèse Strasbourg, 1991). Die Strip-Bedingung des Papers
-\(-\beta\omega \le \alpha x-\beta y \le \alpha\omega\) hat dieselbe
-Form wie eine arithmetische diskrete Gerade
+\paragraph{The strip is an arithmetic discrete line.}
+Up to the choice of boundary convention, the strip~\eqref{eq:strip} coincides with
+the arithmetic discrete line of Reveill\`es~\cite{Reveilles1991},
 \[
-  D(\alpha,\beta,\mu,W)
-  = \{(x,y) : \mu \le \alpha x-\beta y < \mu+W\},
+  D(\alpha,\beta,\mu,W)=\{(x,y)\in\Z^2 : \mu \le \alpha x-\beta y < \mu+W\},
 \]
-mit \(\mu=-\beta\omega\) und arithmetischer Dicke
-\(W=(\alpha+\beta)\omega\), bis auf die übliche Wahl der
-Randkonvention.
-Ca.~22 Suchanfragen über arXiv, Google Scholar, HAL, DGCI/DGMM-Bände,
-DGtal-Doku, AMS CRM-Reihe.
+with offset $\mu=-\beta\omega$ and arithmetic thickness $W=(\alpha+\beta)\omega$.
+In digital geometry the same set carries an extensive and largely self-contained
+vocabulary (naive, standard, and thick lines; the leaning/main direction vector
+$(\beta,\alpha)$; remainder, period, and pattern), so a result about it could be
+stated without ever mentioning ``cut and project''. The digital-geometry corpus is
+therefore the single most likely hiding place, and it received the most attention
+(Round~3, Section~\ref{ssec:dg}).
 
-Geprüfte Kandidaten (alle als \emph{nicht direkter Treffer} eingestuft):
+\paragraph{$\alpha^2+\beta^2$ is everywhere.}
+The constant $D=\alpha^2+\beta^2$ is simultaneously the norm $N_{\Zi}(\beta+\alpha i)$
+of a Gaussian integer, the squared length $\lVert(\beta,\alpha)\rVert^2$ of the
+projection direction, and the determinant of the integer similarity aligning $\Z^2$
+with the strip. It is thus number-theoretically natural and recurs across the
+literature---in the two-squares theorems of Fermat and Euler, in Gaussian-integer
+norms, in coincidence-site-lattice and similar-sublattice counting, and as a squared
+radius in digital circles. The search must therefore distinguish the many
+appearances of $\alpha^2+\beta^2$ \emph{as a counting or curvature quantity} from
+its appearance \emph{as the period modulus} of the sorted projected gap sequence,
+which is the feature claimed to be new. Every nearest neighbour identified below
+turns out to use $\alpha^2+\beta^2$ in one of the former roles.
 
-\begin{itemize}[leftmargin=2em]
-  \item \textbf{Reveilles, Thèse 1991} (HAL tel-01279525) ---
-        Ur-Definition $D(a,b,\mu,\omega)$; Konnektivitätssätze;
-        Translationsperiode entlang $(b,a)$.
-        Kein $a^2+b^2$-Modulus, keine sortierte Gap-Periode,
-        keine Multiset/Set-Distinktion.
-        (Volltext durch Anubis blockiert; Inhalt aus zitierenden Folgepapern rekonstruiert.)
-  \item \textbf{Fiorio, Jamet, Toutant, Discrete Circles} (HAL hal-00580556;
-        SPIE Vision Geometry XIV, 2006) ---
-        $p^2+q^2$ erscheint als Krümmungsgröße (Radius$^2$),
-        nicht als Periodenmodulus.
-  \item \textbf{Debled-Rennesson et al.}
-        Thèse 1995 sowie Lachaud--Said, DAM 161(15):2293--2315, 2013, behandeln die
-        Chaincode-Periode $q$ via Stern-Brocot; das bezieht sich auf
-        das Freeman-Wort, nicht auf sortierte Distanzen.
-        DOI: \url{https://doi.org/10.1016/j.dam.2012.08.038}.
-  \item \textbf{Berstel/Berthé/Lauve/Reutenauer/Saliola,
-        Combinatorics on Words: Christoffel Words} (AMS CRM-27) ---
-        Christoffel-Wortlänge $p+q$; Three-Gap-Theorem; keine
-        \(\omega\)-parametrisierte sortierte Gap-Periode.
-  \item \textbf{Lachaud/Said/Feschet, Patterns} (DGtal-Doku, DAM 2013) ---
-        Pattern-Periode $p+q$; selbe Lücke wie Debled-Rennesson.
-  \item \textbf{Uscka-Wehlou, PhD Uppsala 2009} ---
-        Run-hierarchische Beschreibung; Chaincode-Periode $q$;
-        komplett orthogonal.
+\section{Methodology and sources}\label{sec:method}
+
+The search proceeded in four rounds and was logged for reproducibility: for each
+query we recorded the date, the database, the exact query string, the hit count,
+and the exclusion reason (most commonly: a different period definition; merely
+qualitative periodicity; a symbolic word rather than the projected gap sequence;
+no multiplicities; or a different notion of window).
+
+\begin{itemize}[leftmargin=1.8em,itemsep=3pt]
+  \item \textbf{Round~1} (notation- and topic-oriented; arXiv and web;
+        $\approx 20$ queries) and \textbf{Round~2} (notation-independent, by
+        mathematical substance: two coprime integers, the quantity $p^2+q^2$, a
+        floor counting formula, multiset/set conventions; $\approx 28$ queries)
+        swept the cut-and-project, three-gap, Sturmian, and quasicrystal literature.
+  \item \textbf{Round~3} ($\approx 22$ queries; arXiv, HAL, dblp, Google Books, the
+        AMS CRM series) targeted the arithmetic-discrete-line tradition identified in
+        Round~2 as the most likely hiding place.
+  \item Six printed or poorly indexed sources flagged after Round~3 were then worked
+        individually (Section~\ref{ssec:books}).
+  \item \textbf{Round~4} ($\approx 90$ field queries plus $24$ review-level
+        fingerprint combinations) used the zbMATH Open REST API
+        (\url{https://api.zbmath.org/v1/document/_search}) to make the search path
+        exactly reproducible (Section~\ref{sec:zbmath}, Appendix~\ref{app:queries}).
 \end{itemize}
 
-\subsection*{Hauptbefund nach Runde 3}
+Table~\ref{tab:sources} summarises the databases and their indexing depth. The
+distinction between \emph{metadata/review-level} indexing (title, authors, MSC,
+keywords, and---for zbMATH---the reviewer's summary text) and \emph{full-text}
+indexing (the published PDF body) is essential to reading the result and is revisited
+in Section~\ref{sec:residual}.
 
-Die digitale-Geometrie-Literatur enthält zwei nahe, aber strukturell
-verschiedene Periodenaussagen:
-\begin{enumerate}[leftmargin=2em]
-  \item \textbf{Translationsperiodizität} der arithmetischen diskreten
-        Geraden \(D(\alpha,\beta,\mu,W)\) unter Verschiebung um den
-        Richtungsvektor $(\beta,\alpha)$ --- Reveilles 1991, kanonisch.
-  \item \textbf{Chaincode-/Christoffel-Wort-Periode $q$}
-        (bzw.\ Wortlänge $p+q$) der Naiv-Linie ---
-        Berstel / Debled-Rennesson / Lachaud, kanonisch.
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Source & Indexing depth & Role in the search\\
+\midrule
+arXiv & title / abstract / full text & primary, post-2000\\
+zbMATH Open & title / MSC / keywords / review text & primary, broad and historical\\
+dblp & title / authors & enumeration of DGCI/DGMM proceedings\\
+HAL & full text (theses) & Reveill\`es thesis; French DG school\\
+Google Books & in-book search & monographs (Klette--Rosenfeld; Senechal)\\
+NASA ADS / journal archives & abstract / full text & physics ``rational approximants''\\
+\bottomrule
+\end{tabular}
+\caption{Databases consulted and the depth at which each is indexed.}
+\label{tab:sources}
+\end{table}
+
+\section{Findings by literature axis}\label{sec:findings}
+
+Across all axes the pattern is consistent: the constituent objects and constants are
+classical and are cited in the manuscript as related work, but the conjunction of
+Section~\ref{sec:result} was not located. We summarise each axis and then the
+nearest individual records.
+
+\subsection{Cut-and-project sets and model sets}
+
+The model-set literature \cite{Meyer1972,BaakeGrimm2013,Senechal1995} is framed
+throughout for \emph{totally irrational} windows, where the projected set is
+aperiodic; the rational case is the trivial periodic crystal (a lattice Dirac comb)
+and is generally not studied as a source of a nontrivial closed-form period. Gap and
+patch statistics in this setting concern \emph{frequencies} and limiting
+distributions for irrational slopes, not a finite minimal period for a rational one.
+The nearest catalogued record on the cut-and-project axis,
+G\"ahler--Hunton--Kellendonk~\cite{GaehlerHuntonKellendonk2013}, does treat
+\emph{rational} projection-method patterns, but computes their integral \v{C}ech
+cohomology---an algebraic-topological invariant of the associated tiling space, not a
+gap period. Thus the phrase ``rational projection method'' is occupied in the
+literature, but for cohomology.
+
+\subsection{Arithmetic discrete lines and digital geometry}\label{ssec:dg}
+
+This is the closest comparison and received the most scrutiny. The literature
+contains exactly two genuine period statements about $D(\alpha,\beta,\mu,W)$, both
+classical:
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=2pt]
+  \item \textbf{Translation periodicity} of the discrete line along its direction
+        vector $(\beta,\alpha)$~\cite{Reveilles1991}, embedded in the modular
+        $\mathrm{SL}(2,\Z)$ structure of such lines;
+  \item the \textbf{chain-code / Christoffel-word period}---the code length $q$, or
+        equivalently the word length $p+q$---of the naive line
+        \cite{BerstelEtAl2008,LachaudSaid2013,KletteRosenfeld2004}.
 \end{enumerate}
-
-Drei strukturelle Unterschiede zu den Paper-Theoremen:
-\begin{itemize}[leftmargin=2em]
-  \item \textbf{Kombinatorisches Objekt:} DG-Literatur betrachtet das
-        Chaincode-Wort in geometrischer Reihenfolge entlang $x$.
-        Das Paper betrachtet die nach Projektion auf $\tilde p$
-        \emph{sortierte} Distanzfolge.
-  \item \textbf{$\omega$-Abhängigkeit:} DG-Periode hängt nur von der
-        Steigung ab. Die Paper-Periode $N$ hängt zentral von $\omega$ ab.
-  \item \textbf{Multiset/Set-Distinktion fehlt komplett} in der
-        DG-Literatur: diskrete Geraden sind dort Punktmengen; eine
-        Multiset-Konvention hat keinen Vorläufer.
+Three structural differences separate these from Theorems~\ref{thm:multiset}
+and~\ref{thm:set}:
+\begin{itemize}[leftmargin=1.8em,itemsep=2pt]
+  \item \emph{Combinatorial object.} Digital geometry studies the chain-code word
+        read in geometric order along $x$; the manuscript studies the
+        \emph{order-sorted} sequence of projected distances. These are different
+        sequences with different periods.
+  \item \emph{Window dependence.} The digital-geometry period depends only on the
+        slope; the manuscript's $N$ depends centrally on the window $\omega$.
+  \item \emph{Multiset convention.} Discrete lines are point sets; no multiset
+        (multiplicity-bearing) convention, and hence no analogue of
+        $\lset\mid\lmult$, appears in that literature.
 \end{itemize}
-
-In den geprüften DG-Quellen erscheint der Modulus $p^2+q^2$ als
-Krümmungsgröße bei diskreten Kreisen oder als $\|v\|^2$ in
-Konnektivitätsabschätzungen, aber nicht als Periodenmodulus einer
-Distanzfolge.
-
-\subsection*{Verbleibende Lücken nach drei Runden (ehrlich)}
-
-\begin{enumerate}[leftmargin=2em]
-  \item \textbf{Reveilles-Thèse-Volltext} (HAL tel-01279525) ---
-        \textbf{GESCHLOSSEN (geprüft 29.05.2026).} Der Volltext wurde über
-        HAL beschafft (245 Seiten, Thèse d'État, soutenue le 20-12-1991;
-        Jury u.\,a.\ J.~Berstel) und direkt am Dokument durchgesehen ---
-        damit kein bloßes ``bibliographisches Indiz'' mehr, sondern die
-        tatsächliche Kapitelstruktur.
-
-        \textit{Ergebnis:} Die Periodizitätsresultate der Thèse sind
-        (i)~die Chaincode-/Paliers-/Christoffel-/Sturm-Periode (§IV, §VII;
-        Stern-Brocot, Theorem der Bijektion periodische Sturm-Wörter
-        $\leftrightarrow$ Rationale) und (ii)~die Translationsperiodizität
-        entlang $(\beta,\alpha)$, eingebettet in die modulare
-        $\mathrm{SL}(2,\mathbb{Z})$-Struktur der diskreten Geraden (§II)
-        --- genau die Aussagen, die im Related-Work-Abschnitt ohnehin
-        zitiert werden. Der einzige thematisch nahe Abschnitt, §VIII
-        ``Le dénombrement des points d'un réseau entier dans une fenêtre
-        isothétique et le Lattice problem'' (inkl.\ §VIII.3 ``Droites
-        discrètes et résidus quadratiques''), behandelt die
-        Gitterpunktzählung à la Hardy--Ramanujan/Cesàro/Knuth sowie
-        Gauß-Summen-Auswertungen via Euklid-Algorithmus. Dort tritt
-        \emph{keine} nach Projektion sortierte Distanzfolge auf,
-        \emph{keine} Multiset-vs.-Set-Distinktion, und $p^2+q^2$ erscheint
-        \emph{nicht} als Periodenmodulus. Damit ist das in den ersten drei
-        Runden notierte Restrisiko ausgeräumt.
-
-  \item \textbf{DGCI/DGMM-Tagungsbände} (dblp-indexiert: 1996--2025,
-        20 Bände, Springer LNCS; pre-1996 nicht von dblp erfasst) ---
-        zunächst nur stichprobenartig durchgesehen.
-
-        \textit{Handlung:} Statt Stichprobe vollständig, aber zeitsparend
-        über \texttt{dblp.org} (führt die kompletten Inhaltsverzeichnisse
-        aller Bände). DGCI wurde 2021 mit ISMM zu DGMM verschmolzen, daher
-        zwei Venue-Seiten:
-        \begin{itemize}[leftmargin=1.5em]
-          \item DGCI (bis 2019):
-                \url{https://dblp.org/db/conf/dgci/index.html}
-          \item DGMM (ab 2021):
-                \url{https://dblp.org/db/conf/dgmm/index.html}
-        \end{itemize}
-        Jeden Jahrgang öffnen und die Titelliste per Browser-Suche
-        (Cmd-F) nach folgenden Stichworten durchgehen: \texttt{period},
-        \texttt{gap}, \texttt{distance}, \texttt{multiset},
-        \texttt{Christoffel}, \texttt{Sturm}, \texttt{pattern},
+Where $\alpha^2+\beta^2$ does occur in digital geometry it is a squared radius or
+curvature for discrete circles
+\cite{FiorioJametToutant2006}---not a period modulus. Three specific verifications
+were carried out:
+\begin{itemize}[leftmargin=1.8em,itemsep=2pt]
+  \item The Reveill\`es thesis~\cite{Reveilles1991} was read in full from the HAL
+        scan ($245$\,pp.). Its periodicity results are exactly (1) and (2) above; the
+        thematically closest section, \S VIII (``Lattice problem''; \S VIII.3
+        ``Droites discr\`etes et r\'esidus quadratiques''), treats Gauss-sum
+        lattice-point counting, with \emph{no} sorted gap sequence, \emph{no}
+        multiset/set distinction, and $\alpha^2+\beta^2$ \emph{not} as a period
+        modulus.
+  \item The DGCI/DGMM proceedings (all $20$ dblp-indexed volumes, 1996--2025) were
+        title-scanned for \texttt{period}, \texttt{gap}, \texttt{distance},
+        \texttt{multiset}, \texttt{Christoffel}, \texttt{Sturm}, \texttt{pattern},
         \texttt{chain code}, \texttt{thickness}, \texttt{residue},
-        \texttt{projection}, \texttt{lattice}. Nur Titel-Treffer per
-        SpringerLink-Volltext nachlesen; bei Bedarf BibTeX direkt aus
-        dblp exportieren.
-
-        \textit{Einschränkung:} dblp indexiert nur Titel + Autoren, nicht
-        Abstracts/Volltext --- ein in einem Paper mit unverdächtigem Titel
-        verstecktes Lemma taucht also nicht auf. dblp engt damit nur den
-        Kandidatenkreis ein; die Bestätigung läuft über den
-        SpringerLink-Volltext der Treffer. Erwartung: Treffer zu
-        Chaincode-/Pattern-Perioden, aber keiner zur sortierten
-        Distanzfolge. Suchpfad protokollieren (Datum, Band, Trefferzahl).
-
-        \textit{Ergebnis (dblp-Titel-Scan, 29.05.2026):} Durchgesehen
-        wurden \emph{alle} von dblp geführten Bände --- 16 DGCI-Bände
-        (1996, 1997, 1999, 2000, 2002, 2003, 2005, 2006, 2008, 2009, 2011,
-        2013, 2014, 2016, 2017, 2019) und 4 DGMM-Bände (2021, 2022, 2024,
-        2025). Die Titel-Treffer der Stichwortliste verteilen sich auf drei
-        Cluster:
-        \begin{itemize}[leftmargin=1.5em]
-          \item \textbf{Tomographie/Rekonstruktion} (Stichwort
-                ``projection''/``lattice''): Mojette-Transform, Radon,
-                X-ray-/Lattice-Set-Rekonstruktion (Guédon, Normand,
-                Svalbe, Brunetti, Batenburg u.\,a.) --- anderes Thema.
-          \item \textbf{Distanztransformationen/Metriken} (Stichwort
-                ``distance''): Distance Transforms, Chamfer-/Neighborhood-
-                Sequence-Metriken (Strand, Nagy, Coeurjolly u.\,a.) ---
-                anderes Thema.
-          \item \textbf{Arithmetische diskrete Geraden / Stern-Brocot /
-                Christoffel} (thematisch nah): Uscka-Wehlou (2008,
-                continued fractions); Feschet--Reveill\`es (2006, $n$-D
-                digital lines); Berth\'e--Labb\'e (2011, 3D discrete
-                lines); Blondin~Mass\'e et al.\ (2009, Christoffel \&
-                Fibonacci tiles); Sivignon (2013, Farey-Fan/DSL-Subsegment);
-                Hoarau--Monteil (2013, patterns in integer discrete
-                circles); Laboureix--Debled-Rennesson (2024, Stern-Brocot-
-                Erkennung); Roussillon--Labb\'e (2024, rational discrete
-                planes); Anosova--Kenmochi (2021, periodic point sets).
-        \end{itemize}
-        \textbf{Kein direkter Treffer:} Keiner dieser Titel betrifft die
-        nach Projektion sortierte Gap-Folge bzw.\ die Multiset/Set-Periode
-        mit $p^2+q^2$-Modulus. Der dritte Cluster ist genau die im
-        Related-Work-Abschnitt bereits als orthogonal eingeordnete
-        Chaincode-/Christoffel-/Stern-Brocot-Linie (die discrete-circle-
-        Treffer stützen zudem die $p^2+q^2$-als-Krümmung-Bemerkung).
-
-        \textit{Volltext-/Abstract-Check der vier nächsten Kandidaten
-        (29.05.2026):} alle bestätigt orthogonal ---
-        \begin{itemize}[leftmargin=1.5em]
-          \item Sivignon (2013, hal-00765981): $O(\log n)$-Algorithmus zur
-                Berechnung der DSS-Charakteristiken (Steigung, Versatz)
-                durch Lokalisierung im Farey-Fächer --- Erkennung, keine
-                Periode.
-          \item Laboureix--Debled-Rennesson (2024): Stern-Brocot-Erkennung
-                naiver DSS / arithmetischer Hyperebenen via Trenn-Sehnen
-                --- keine sortierte Distanzfolge.
-          \item Roussillon--Labb\'e (2024): Zerlegung rationaler diskreter
-                Ebenen in kleinere bei Überschreiten einer
-                $L^1$-Norm-Schwelle des Normalenvektors --- anderes Objekt
-                (Punktmenge der Ebene), kein $p^2+q^2$-Periodenmodulus,
-                keine Multiset/Set-Distinktion.
-          \item Hoarau--Monteil (2013, lirmm-00799373): Charakterisierung
-                der Muster (konvexer Wörter) in ganzzahligen diskreten
-                Kreisen via Pell-Fermat-Gleichung --- stützt die
-                $p^2+q^2$-als-Krümmung-Linie, aber keine Gap-Periode.
-        \end{itemize}
-        Damit ist auch der ``nah dran, Titel verrät's nicht''-Fall für die
-        heißesten Kandidaten ausgeräumt.
-
-        \textit{Reststreuung:} Titel-Index $\Rightarrow$ ein in einem
-        unverdächtig betitelten Beitrag (außerhalb dieser vier) verstecktes
-        Lemma bliebe unentdeckt; pre-1996-DGCI-Bände sind nicht auf dblp.
-        Beides ist über die geplante zbMATH/MathSciNet-Volltextrecherche
-        abzudecken, nicht über weitere dblp-Arbeit.
-
-  \item \textbf{Klette/Rosenfeld, Digital Geometry} (2004),
-        Kapitel~9 --- nicht im Volltext zugänglich.
-
-        \textit{Handlung:} Buch über Fernleihe oder die Google-Books-
-        Vorschau besorgen; im Sachregister die Einträge ``period(icity)''
-        und ``chain code'' nachschlagen und genau die referenzierten
-        Seiten in Kap.~9 lesen. Prüffrage: Wird dort jemals \emph{nach
-        Abstand sortiert} oder mit \emph{Multiplizitäten} gearbeitet?
-        Falls nein (erwartet), Lücke geschlossen.
-
-        \textit{Ergebnis (Google-Books-Recherche, 29.05.2026):}
-        \textbf{GESCHLOSSEN (verifiziert).} Kap.~9 trägt den Titel
-        ``2D Straightness'' mit der Gliederung
-        9.1~Basics, 9.2~Supporting Lines, 9.3~Self-Similarity,
-        \textbf{9.4~Periodicity}, \textbf{9.5~Number-Theoretic Properties},
-        9.6~Algorithms. Die Einleitung verortet das Kapitel explizit in
-        ``number theory and the theory of words''; häufige Buchbegriffe
-        sind ``chain code'' und ``DSS''. Der inhaltsgleiche Review-Artikel
-        Klette--Rosenfeld, \emph{Digital straightness --- a review} (DAM
-        139, 2004) charakterisiert die Periodizität als ``the points of
-        any rational DSS are defined by a basic set of points'' --- also
-        die DSS-/Chaincode-Pattern-Periode (an die Steigung gekoppelt),
-        und §9.5 ist Kettenbruch-/Stern-Brocot-Zahlentheorie. Das ist
-        genau die im Related-Work-Abschnitt als orthogonal eingeordnete
-        Linie; \emph{keine} nach Projektion sortierte Distanzfolge,
-        \emph{keine} Multiset/Set-Distinktion, $p^2+q^2$ \emph{nicht} als
-        Periodenmodulus.
-
-        \textit{Verbatim-Bestätigung (In-Book-Suche im Browser,
-        \url{https://books.google.com/books?id=4_iEl6cquGYC}):}
-        Das distinktivste Wort unserer Konstruktion, ``multiset'', kommt
-        im \emph{gesamten} Buch \textbf{nicht} vor. ``orthogonal
-        projection'' erscheint nur in Kapitel~8 in Mess-/Schätzkontexten
-        --- §8.1.2 (Bogenlänge, Steinhaus-Integralgeometrie, Gl.~8.3/8.4)
-        und Def.~8.3 (Oberflächeninhalt via orthogonale Projektion von
-        Dreiecks-Eckpunkten auf eine Fläche) --- also kontinuierliche
-        Objekte zur \emph{Maß}bestimmung, nicht die Projektion von
-        Gitterpunkten. Damit ist die Lücke auch wortwörtlich erledigt; die
-        zuvor offene Tool-Limitierung (nicht maschinell extrahierbare
-        Google-Books-Snippets) ist durch die manuelle Browser-Suche
-        aufgelöst.
-
-  \item \textbf{Baake-Grimm \emph{Aperiodic Order} Bd.~1+2} und
-        \textbf{Senechal \emph{Quasicrystals and Geometry}} ---
-        Index-Stichworte ``rational window'' / ``periodic case''
-        gezielt prüfen.
-
-        \textit{Handlung:} Beide Werke sind in den meisten
-        Universitätsbibliotheken vorhanden. Im Sachregister gezielt
-        ``rational'', ``periodic approximant'', ``crystallographic case'',
-        ``rational cut and project'' nachschlagen und die wenigen
-        genannten Seiten lesen. Senechal wird ohnehin schon zitiert; bei
-        einem relevanten Fund in Baake-Grimm ggf.\ als weitere Referenz im
-        Related-Work-Abschnitt ergänzen.
-
-        \textit{Ergebnis (29.05.2026):} \textbf{Senechal geschlossen
-        (Volltext), Baake-Grimm stark eingegrenzt (Frontmatter).} Geprüft
-        wurden das vollständige Frontmatter von \emph{Aperiodic Order}
-        Vol.~2 (Inhaltsverzeichnis, Foreword von Lagarias, Preface), die
-        Addenda/Corrigenda zu Vol.~1 sowie der \emph{durchsuchbare
-        Volltext} von Senechal (306~S.).
-        \begin{itemize}[leftmargin=1.5em]
-          \item Vol.~2 (2017) gliedert sich in Inflation Tilings, Discrete
-                Tomography of Model Sets, Geometric Enumeration Problems
-                for Lattices/$\mathbb{Z}$-Modules, sowie drei Kapitel zu
-                Almost Periodic Measures --- durchgängig Aperiodik,
-                Diffraktion, Almost-Periodicity. Kein Kapitel zur
-                rationalen, sortierten 1D-Gap-Periode.
-          \item Vol.~1-Corrigenda bestätigen die Kapitelstruktur
-                (Substitutionen, Patterns/Tilings, Inflation, Fourier,
-                Diffraktion, Random Structures); die durchgerechneten
-                Beispiele sind irrational ($\mathbb{Z}[\sqrt2]$, Silver
-                Mean). Rationale Slopes erscheinen nur als trivialer
-                ``ideal crystal''-Fall (Gitter-Dirac-Kamm, Poisson).
-          \item Einzige $p^2+q^2$-nahe Stelle: Vol.~2, Ch.~3
-                (Baake--Zeiner, \emph{similar sublattices} / CSL) ---
-                $a^2+b^2$ als Norm in $\mathbb{Z}[i]$ beim \emph{Zählen}
-                von Teilgittern (Dirichlet-Reihen), also der bekannte
-                ``$p^2+q^2$ ist zahlentheoretisch natürlich''-Kontext,
-                \emph{keine} Periode.
-          \item \textbf{Senechal} (Volltext-Scan): Das einschlägige Kap.~4
-                ``Order on the line'' (1D-Kristalle, Fibonacci, projizierte
-                Kristalle, Substitutionen, Circle Maps, Staircases) und die
-                Projektionsmethode insgesamt sind durchgängig für
-                \emph{totally irrational} Unterräume formuliert; rationale
-                Slopes nur als trivialer periodischer Kristall.
-                ``multiset'' kommt \emph{nicht} vor; ``gap'' nur im Sinne
-                lückenloser Pflasterungen; das einzige $a^2+b^2+c^2+d^2$ ist
-                die 4D-Quaternionennorm (E8/Ikosaeder), nicht unser
-                Periodenmodulus. ``Rational approximants'' werden nur als
-                Literaturhinweis genannt (Physik; vgl.\ Lücke~5).
-                \emph{Kein Treffer.}
-        \end{itemize}
-        \textit{Reststreuung (ehrlich):} Senechal ist als durchsuchbarer
-        Volltext erledigt. Bei Baake-Grimm lagen nur Frontmatter +
-        Corrigenda vor, \emph{nicht} der Volltext/Index; der verbatim
-        Vol.~1-Index-Check (``rational'', ``periodic case'') bleibt offen,
-        Restrisiko niedrig, da der gesamte Rahmen irrational/aperiodisch
-        ausgerichtet ist.
-
-  \item \textbf{Vor-2000-Physik} (Acta Cryst., Phys. Rev. B; Korepin,
-        Niizeki, Tokihiro) --- schlecht web-indiziert.
-
-        \textit{Handlung:} Physik-spezifische Datenbanken statt Google
-        nutzen --- NASA ADS und die Journal-Archive (APS für Phys.\ Rev.\
-        B, IUCr für Acta Cryst.) im Volltext nach Autorname
-        $+$ ``rational approximant'' $+$ ``period'' durchsuchen.
-        Abkürzung: das umfangreiche Literaturverzeichnis von Baake-Grimm
-        (Pkt.~4) zitiert praktisch jede einschlägige Periodenformel ---
-        dort nach genau diesen Autoren querlesen.
-
-        \textit{Ergebnis (Web-/ADS-Recherche, 29.05.2026):}
-        \textbf{strukturell ausgeschlossen (hohe Konfidenz).} Der Begriff
-        ``rationaler Approximant'' bezeichnet in der Physik die periodische
-        Näherung der Fibonacci-Kette: Der irrationale Streifen (Slope
-        $\tau$) wird durch einen rationalen ersetzt (Slopes $1/1, 2/1,
-        3/2, 5/3,\dots$, konvergent gegen $\tau$). Die Periode der $k$-ten
-        Approximante ist die Länge ihrer Einheitszelle bzw.\ die Tile-Zahl
-        $Q(k)=P(k)+P(k-1)$ --- eine \emph{Fibonacci-Zahl} (linear in der
-        Approximanten-Ordnung), also exakt die Sturmian-/Christoffel-Periode
-        $p+q$, \emph{nicht} $p^2+q^2$. Eine gezielte Suche nach
-        ``$p^2+q^2$''/``$a^2+b^2$'' als Periode in dieser Literatur ergab
-        keinen Treffer; die sortierte projizierte Distanz-Multiset-Folge
-        kommt dort nicht vor. Korepins Quasikristall-Arbeit (\emph{Completely
-        integrable models in quasicrystals}, Comm.\ Math.\ Phys.\ 110, 1987)
-        behandelt integrable Spin-/Acht-Vertex-Modelle auf Penrose-Tilings
-        --- mit unserer Periodendichotomie unverwandt.
-
-        \textit{Reststreuung (ehrlich):} Vor-2000-Physik ist umfangreich und
-        schlecht web-indiziert; eine reine Websuche kann sie nicht
-        erschöpfend abdecken. Strukturell ist der Approximanten-Begriff
-        (lineare Einheitszellen-Periode $\sim p+q$) aber klar von unserer
-        $p^2+q^2$-Konstruktion verschieden. Eine vollständige Abdeckung
-        liefert nur die geplante ADS-/zbMATH-/MathSciNet-Volltextrecherche.
-
-  \item \textbf{Festschriften} (Pleasants ``Designer quasicrystals'',
-        AMS 2000) --- nicht auf arXiv.
-
-        \textit{Handlung:} Den Band \emph{Directions in Mathematical
-        Quasicrystals} (CRM Monograph Series~13, AMS 2000) über die
-        Bibliothek besorgen und in Pleasants' Beitrag die Sätze/Lemmata
-        auf eine rationale Periodenformel mit $p^2+q^2$ durchsehen. Dies
-        ist die ``verdächtigste'' Restquelle (gedruckt, nicht indiziert) ---
-        daher als Erstes erledigen.
-
-        \textit{Ergebnis (Inhaltsverzeichnis-Durchsicht, 29.05.2026):}
-        \textbf{stark eingegrenzt (hohe Konfidenz).} Geprüft wurde das
-        vollständige Inhaltsverzeichnis von \emph{Directions in
-        Mathematical Quasicrystals} (Baake--Moody, CRM~13, AMS 2000,
-        13~Beiträge). Der gesamte Band liegt im aperiodischen/irrationalen
-        Rahmen (Diffraktion, Modellmengen, Spektraltheorie,
-        C\textsuperscript{$*$}-/K-Theorie, Dimer-Modell). Befund:
-        \begin{itemize}[leftmargin=1.5em]
-          \item Die als verdächtigste markierte Pleasants-Arbeit
-                ``Designer quasicrystals: Cut-and-project sets with
-                pre-assigned properties'' konstruiert \emph{aperiodische}
-                Cut-and-Project-Mengen mit vorgegebenen Patch-/Diffraktions-
-                Eigenschaften --- keine rationale Periodenformel.
-          \item ``gap'' erscheint nur in ``Hulls of aperiodic solids and
-                gap labeling theorems'' --- das sind \emph{Spektrallücken}
-                (Gap-Labeling für Schrödinger-Operatoren), nicht Gap-Folgen.
-          \item ``Gordon-type arguments \dots one-dimensional quasicrystals''
-                ist Spektraltheorie (Abwesenheit von Eigenwerten), keine
-                Gap-Periode.
-        \end{itemize}
-        Kein Beitrag betrifft die nach Projektion sortierte Gap-Periode,
-        die Multiset/Set-Konvention oder $p^2+q^2$ als Periodenmodulus.
-
-        \textit{Reststreuung (ehrlich):} vorgelegt war nur das
-        Inhaltsverzeichnis, nicht Pleasants' Volltext. Restrisiko niedrig,
-        da der Beitrag erklärtermaßen aperiodische Designer-Modellmengen
-        behandelt; eine wortwörtliche Bestätigung erfordert den
-        gedruckten Beitrag.
-\end{enumerate}
-
-\medskip
-\textit{Querschnitt:} Die Punkte 1 und 2/5 lassen sich am effizientesten
-durch eine reproduzierbare \textbf{zbMATH-/MathSciNet-Volltextrecherche}
-(Reviews durchsuchbar) sowie durch \emph{eine} gezielte Experten-E-Mail an
-einen Digitale-Geometrie-Autor parallel abdecken; beides ist ohnehin als
-nächster Schritt für die Endorsement-Anfrage vorgesehen.
-
-\subsection*{Empfehlung für den Related-Work-Abschnitt}
-
-Auf Basis der dritten Runde lässt sich ein präziser Abgrenzungsabsatz
-formulieren, der die digitale Geometrie korrekt einordnet:
-
-\begin{quote}
-\itshape
-Die Streifenbedingung $|\alpha x - \beta y| \le \text{const}$ definiert
-die in der digitalen Geometrie ausgiebig studierte arithmetische
-diskrete Gerade nach Reveilles (1991). Klassische Resultate dieses
-Felds --- die Translationsperiodizität entlang des Richtungsvektors
-$(\beta,\alpha)$ sowie die Chaincode-/Pattern-Periode (je nach Kodierung
-$q$ bzw.\ Wortlänge $p+q$) nach
-Debled-Rennesson und Lachaud --- sind zu den hier bewiesenen Theoremen
-orthogonal: Wir betrachten die nach Projektion sortierte Lückenfolge
-mit Streifendicke $\omega$ und Multiset-vs.-Set-Konvention; in der
-digitalen Geometrie ist weder die sortierte Distanzfolge noch die
-Multiset-Konvention etabliert.
-\end{quote}
-
-\subsection*{Gesamteinschätzung}
-
-Nach insgesamt ca.~67 systematischen Suchanfragen über arXiv, Web, HAL
-und die DG-Literatur ist die vorsichtige Bilanz: \textbf{Es wurde kein
-direkter Beleg gefunden, dass die kombinierte Form der beiden Theoreme
---- Multiset-vs.-Set, $\omega$-Parameter, $p^2+q^2$-Dichotomie nach
-Projektion und Sortierung --- bereits publiziert ist.} Die in Runde~2
-identifizierte Hauptverdachtsachse (digitale Geometrie) wurde geprüft
-und liefert verwandte, aber strukturell verschiedene Aussagen. Bekannte
-Grundlagen sind die Translationsperiodizität arithmetischer diskreter
-Geraden und die Chaincode-Periode $q$; als offenbar nicht explizit
-gefundener Beitrag bleibt die minimale projizierte
-Multiset-/Set-Gap-Periode mit $\omega$-Parameter und
-$p^2+q^2$-Modulus.
-
-\subsection*{Aktualisierung: Bearbeitung der sechs Restlücken (29.05.2026)}
-
-Die nach drei Runden verbliebenen sechs Lücken wurden anschließend
-einzeln abgearbeitet (Details jeweils oben unter dem betreffenden
-Punkt):
-\begin{enumerate}[leftmargin=2em]
-  \item \textbf{Reveilles-Thèse} --- \emph{geschlossen.} Volltext (HAL,
-        245~S.) am Dokument geprüft: Periodizität = Chaincode-/Sturm-Periode
-        sowie Translationsperiodizität entlang $(\beta,\alpha)$ (modulare
-        $\mathrm{SL}(2,\mathbb{Z})$-Struktur, §II); §VIII (Lattice problem,
-        quadratische Reste) ohne sortierte Gap-Periode.
-  \item \textbf{DGCI/DGMM-Bände} --- \emph{kein Treffer.} dblp-Titel-Scan
-        aller 20 Bände plus Volltext-Check der vier nächsten Kandidaten;
-        nur die bekannte Chaincode-/Stern-Brocot-Linie.
-  \item \textbf{Klette/Rosenfeld, Kap.~9} --- \emph{geschlossen
-        (verbatim).} In-Book-Suche: ``multiset'' kommt nicht vor,
-        ``orthogonal projection'' nur in Kap.~8 (Bogenlänge/Oberfläche).
-  \item \textbf{Baake-Grimm / Senechal} --- Senechal \emph{geschlossen}
-        (durchsuchbarer Volltext, 306~S.), Baake-Grimm \emph{stark
-        eingegrenzt} (Frontmatter beider Bände; Rahmen durchgängig
-        aperiodisch).
-  \item \textbf{Vor-2000-Physik} --- \emph{strukturell ausgeschlossen.}
-        Rationale Approximanten haben lineare Einheitszellen-Periode
-        ($\sim p+q$, Fibonacci-Zahl), nicht $p^2+q^2$; Korepin behandelt
-        integrable Modelle auf Penrose-Tilings.
-  \item \textbf{Pleasants-Festschrift} --- \emph{stark eingegrenzt.}
-        Inhaltsverzeichnis durchgängig aperiodisch; ``gap'' nur als
-        Spektrallücke (gap labeling), Pleasants' Beitrag = aperiodische
-        Designer-Modellmengen.
-\end{enumerate}
-
-\textbf{Bilanz:} In keiner der sechs Quellen findet sich die kombinierte
-Form der Theoreme. Zwei Lücken (1, 4-Senechal) sind am Volltext
-geschlossen, eine (3) verbatim per In-Book-Suche (plus inhaltsgleicher
-Review-Artikel), eine (2) per vollständigem Titel-Scan ohne Treffer, zwei
-(5, 6) strukturell bzw.\ über das Inhaltsverzeichnis stark eingegrenzt. Die
-verbliebenen Restrisiken sind durchweg niedrig und explizit benannt
-(verbatim-Lesung einzelner Buchkapitel: Baake-Grimm-Vol.-1-Index,
-Pleasants-Volltext; vollständige Abdeckung der schlecht indizierten
-Vor-2000-Physik). Sie lassen sich am effizientesten über eine einzige,
-reproduzierbar protokollierte \textbf{zbMATH-/MathSciNet-(und
-ADS-)Volltextrecherche} schließen, die vor einer erneuten
-Endorsement-Anfrage durchgeführt werden sollte.
-
-\subsection*{Runde 4: zbMATH-Open-Recherche (30.\,Mai 2026)}
-
-\textit{Handlung:} Die oben mehrfach als nächster Schritt vorgemerkte
-zbMATH-Recherche wurde durchgeführt --- programmatisch über die
-REST-API (\url{https://api.zbmath.org/v1/document/_search}), um den
-Suchpfad exakt reproduzierbar zu protokollieren.
-
-\medskip
-\textit{Wichtige Tool-Befunde (Korrektur der ursprünglichen Annahme):}
-\begin{itemize}[leftmargin=2em]
-  \item Das Feld \texttt{ab:} durchsucht in zbMATH \emph{nicht} ein
-        separates Abstract, sondern den \textbf{Review-/Summary-Text}
-        (\texttt{editorial\_contributions}); \texttt{any:} schließt dieses
-        Feld mit ein. Dieser Text ist indexiert und durchsuchbar; nur seine
-        \emph{Anzeige} über die API ist uneinheitlich: bei manchen Einträgen
-        wird der volle Review geliefert (live geprüft, z.\,B.\ Baake--Grimm,
-        \emph{Aperiodic Order} Vol.~1, Zbl~1295.37001, Review von
-        A.~van~Enter), bei anderen erscheint der Platzhalter ``zbMATH Open
-        Web Interface contents unavailable due to conflicting licenses.''
-        (z.\,B.\ Haynes et al., Gähler--Hunton--Kellendonk). Für die Suche
-        ist das unerheblich --- gesucht wird im Index, nicht in der Anzeige.
-  \item Eine \emph{review-/summary-tiefe} Suche ist somit möglich
-        (\texttt{ab:period} $\to$ 52\,753, \texttt{any:period} $\to$
-        60\,534 Treffer), nicht nur eine reine Titel-/MSC-Suche. Die
-        ursprüngliche Annahme (Abschnitt ``Hintergrund''), die Reviews
-        seien durchsuchbar, gilt also --- nur eben nicht der
-        Publikations-Volltext (PDF-Body).
-  \item Trefferzahl steht im Feld \texttt{status.nr\_total\_results}.
-        Eine HTTP-404-Antwort bedeutet bei dieser API \textbf{null
-        Treffer} (Body: ``successful access, but no result''), \emph{kein}
-        Syntaxfehler --- verifiziert an einer Unsinns-Query.
-  \item Funktionierende Syntax: feldpräfixiert (\texttt{ti:}, \texttt{au:},
-        \texttt{cc:}, \texttt{ab:}, \texttt{any:}), Phrasen in
-        Anführungszeichen, Verknüpfung mehrerer Felder mit `` \& ''.
+        \texttt{projection}, \texttt{lattice}; the four nearest candidates were then
+        checked at full text. All are recognition algorithms or different objects
+        (Sivignon, Farey-fan subsegment recognition; Laboureix--Debled-Rennesson,
+        Stern--Brocot recognition; Roussillon--Labb\'e, rational discrete planes;
+        Hoarau--Monteil, patterns in discrete circles via Pell--Fermat); none
+        concerns a sorted projected gap period.
+  \item Klette--Rosenfeld, \emph{Digital Geometry}~\cite{KletteRosenfeld2004},
+        Ch.~9 (``2D Straightness'') was verified by in-book search: the word
+        ``multiset'' occurs nowhere in the book, and ``orthogonal projection''
+        appears only in Ch.~8 (arc length and surface area). The companion review
+        article characterises rational-DSS periodicity as ``the points of any
+        rational DSS are defined by a basic set of points''---the slope-bound
+        chain-code/pattern period, exactly line~(2) above.
 \end{itemize}
 
-\medskip
-\textit{Kalibrierung} (Beleg, dass die Läufe intakt sind):
+\subsection{The three-distance theorem; Sturmian and Christoffel words}
+
+The Steinhaus three-distance theorem yields the qualitative statement that at most
+three distinct gaps occur~\cite{ThreeGap}; it gives no period \emph{length}.
+Sturmian and Christoffel theory consistently yields the period $p+q$, the word
+length of the characteristic sequence~\cite{BerstelEtAl2008}---linear in $p,q$,
+never $p^2+q^2$. These are the canonical $p+q$ phenomena; the manuscript cites them
+as related, not competing, results.
+
+\subsection{Monographs and festschriften on aperiodic order}\label{ssec:books}
+
+Baake--Grimm, \emph{Aperiodic Order}, Vols.~1 and~2
+\cite{BaakeGrimm2013,BaakeGrimm2017}, and Senechal, \emph{Quasicrystals and
+Geometry}~\cite{Senechal1995}, are framed uniformly for irrational/aperiodic
+windows; rational slopes appear only as the trivial ideal crystal. Senechal was
+verified at searchable full text ($306$\,pp.): ``multiset'' does not occur, ``gap''
+appears only in the sense of gapless tilings, and the only sum-of-squares norm is
+the four-dimensional quaternionic norm of the $E_8$/icosahedral construction. The
+sole $\alpha^2+\beta^2$-adjacent appearance in either monograph is in
+coincidence-site-lattice / similar-sublattice counting (Baake--Zeiner, Vol.~2,
+Ch.~3), where $a^2+b^2$ is a Gaussian-integer norm in a Dirichlet series---again a
+counting constant, not a period. In the festschrift \emph{Directions in Mathematical
+Quasicrystals}~\cite{BaakeMoody2000}, the contribution flagged as most suspect,
+Pleasants' ``Designer quasicrystals''~\cite{Pleasants2000}, constructs
+\emph{aperiodic} cut-and-project sets with pre-assigned patch and diffraction
+properties; ``gap'' in that volume means a spectral gap (gap labelling), not a gap
+sequence.
+
+\subsection{Rational approximants in the physics literature}
+
+In physics, a ``rational approximant'' replaces the golden-mean slope $\tau$ by its
+convergents $\tfrac11,\tfrac21,\tfrac32,\tfrac53,\dots$; the $k$-th approximant's
+unit-cell period is a Fibonacci number, linear in the order---again the $p+q$
+phenomenon, not $p^2+q^2$. Korepin's integrable quasicrystal models live on Penrose
+tilings and are unrelated to a one-dimensional gap period. This axis is therefore
+\emph{structurally} excluded rather than exhaustively searched; see
+Section~\ref{sec:residual}.
+
+\subsection{Triage of the nearest catalogued records}
+
+Table~\ref{tab:triage} lists the four catalogued records that came closest on
+vocabulary, each with the reason it is not the result.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}>{\raggedright}p{4.6cm}>{\raggedright}p{2.4cm}p{7.3cm}@{}}
+\toprule
+Record & Identifier & Why it is not the result\\
+\midrule
+Haynes--Koivusalo--Walton--Sadun, ``Gaps problems and frequencies of patches in cut and project sets'' \cite{HaynesEtAl2016}
+& Zbl 1371.11110 (2016)
+& Right authors and vocabulary (``gaps'' $+$ ``cut and project''), but patch-frequency statistics of \emph{irrational} model sets; no closed minimal period, no $\alpha^2+\beta^2$ modulus.\\
+G\"ahler--Hunton--Kellendonk, ``Integral cohomology of rational projection method patterns'' \cite{GaehlerHuntonKellendonk2013}
+& Zbl 1270.52025 (2013)
+& ``Rational'' $+$ ``projection,'' but a topological invariant (\v{C}ech cohomology of tiling spaces); not a gap period.\\
+Cotfas, ``Modified strip-projection method'' \cite{Cotfas2006}
+& arXiv:math-ph/0605046
+& Nearest vocabulary match (``strip projection''); occupation density of quasiperiodic packings, irrational slope, no period.\\
+M\"uller--Dressler, ``\"Uber eine gewichtete Mittelung der Gitterpunkte'' \cite{MuellerDressler1972}
+& Zbl 0227.10040 (1972)
+& Only hit of the ``sum of two squares'' $+$ ``lattice'' $+$ ``period'' query; weighted lattice-point averaging, not a projected gap period.\\
+\bottomrule
+\end{tabular}
+\caption{The nearest catalogued records and the reason each is excluded.}
+\label{tab:triage}
+\end{table}
+
+\section{The zbMATH Open round}\label{sec:zbmath}
+
+Round~4 queried the zbMATH Open index programmatically through its REST API, so that
+the search path is exactly reproducible. Three properties of the API matter for
+interpreting the result.
+
+\begin{enumerate}[leftmargin=2.0em,itemsep=3pt]
+  \item The field \texttt{ab:} does not search a separate abstract but the
+        \emph{reviewer's summary text} (the \texttt{editorial\_contributions}
+        field); \texttt{any:} includes it. This text is indexed and searchable even
+        when its \emph{display} is licence-gated (some records return the placeholder
+        ``zbMATH Open Web Interface contents unavailable due to conflicting
+        licenses,'' while others, e.g.\ the review of
+        \emph{Aperiodic Order} Vol.~1, return the full text). Searchability is
+        unaffected by display gating: one searches the index, not the rendered page.
+  \item A review-/summary-level search is therefore possible, not merely a
+        title/MSC search (calibration: \texttt{ab:period} returns $52\,753$ hits,
+        \texttt{any:period} returns $60\,534$). What is \emph{not} searched is the
+        published PDF body.
+  \item The hit count is returned in \texttt{status.nr\_total\_results}; an
+        HTTP~404 response denotes \emph{zero} hits (body: ``successful access, but no
+        result''), not a syntax error.
+\end{enumerate}
+
+Calibration queries confirm the runs are intact (\texttt{ti:group} $=60\,517$,
+\texttt{au:Serre} $=657$). The decisive observations are the \emph{empty}
+fingerprint queries at the review/all-fields level---for example
+\texttt{any:"period length" \& any:"cut and project"} $=0$,
+\texttt{any:"minimal period" \& any:projection \& any:gap} $=0$, and
+\texttt{ab:"gap sequence" \& ab:period} $=0$. The conjoined invariant surfaces at
+no title-, review-, or keyword-level of the zbMATH index. The complete diagnostic
+log is reproduced in Appendix~\ref{app:queries}.
+
+\section{Residual verification items}\label{sec:residual}
+
+The search lowers the residual risk to \emph{low}, but cannot reduce it to zero. We
+state the remaining items honestly, ordered by importance.
+
+\begin{enumerate}[leftmargin=2.0em,itemsep=4pt]
+  \item \textbf{Full-text (PDF-body) blind spot --- the principal, irreducible
+        limit.} Metadata- and review-level indexing cannot detect a result used as
+        an auxiliary lemma in a paper whose \emph{title and reviewer summary both}
+        avoid the words period, gap, and projection. This is a structural limit of
+        every database consulted. Mitigant: the fingerprint---a sum of two squares
+        as the period modulus of a \emph{sorted} gap sequence, with a multiset/set
+        dichotomy---is linguistically distinctive, and would most likely surface as
+        a keyword or summary term if genuinely treated; this is probable, not
+        guaranteed.
+  \item \textbf{Baake--Grimm Vol.~1, verbatim index check.} Only the frontmatter and
+        corrigenda were available; the verbatim index entries ``rational'' and
+        ``periodic case'' were not read. Residual risk is low, given the uniformly
+        aperiodic framing of both volumes.
+  \item \textbf{Pleasants' contribution, full text.} Only the volume's table of
+        contents was inspected. The contribution is explicitly about aperiodic
+        designer model sets; a verbatim reading of the printed article would close
+        the item.
+  \item \textbf{Pre-2000 physics.} Excluded structurally (approximant period
+        $\sim p+q$, a Fibonacci number), but this literature is large and poorly
+        web-indexed, so the exclusion is by argument rather than by exhaustive
+        search.
+  \item \textbf{MathSciNet and NASA ADS not queried programmatically.} Their
+        coverage overlaps zbMATH and arXiv; the marginal value lies only in
+        item~4 above.
+\end{enumerate}
+
+\paragraph{Recommended next step.}
+The most economical way to discharge items~1--4 is \emph{not} a further database run
+but a single targeted enquiry to an expert in arithmetic discrete lines or aperiodic
+order, who can confirm from working knowledge of the full-text corpus whether the
+conjoined invariant of Section~\ref{sec:result} is novel. A database search has been
+pushed to its natural limit; the remaining uncertainty is exactly the kind a
+specialist can resolve from memory.
+
+\section{Balance}\label{sec:conclusion}
+
+After approximately $180$ logged queries across arXiv, the web, HAL, dblp, Google
+Books, and the zbMATH Open index, together with individual treatment of six printed
+or poorly indexed sources, no source examined states the conjoined result of
+Theorems~\ref{thm:multiset} and~\ref{thm:set}, as a theorem or as an auxiliary
+lemma. The constituent constants and objects---$\alpha^2+\beta^2$ as a Gaussian norm
+or curvature, the translation and chain-code periodicities of arithmetic discrete
+lines, the three-distance bound, the Sturmian/Christoffel period $p+q$, the rational
+crystal as a degenerate model set---are classical and are cited as such. What was
+not located is their conjunction: a closed-form minimal period of the order-sorted
+projected gap sequence of a rational strip projection, with modulus
+$D=\alpha^2+\beta^2$, a multiset/set dichotomy, and a window dependence through $N$.
+
+The residual risk is low and is bounded explicitly by the full-text blind spot of
+Section~\ref{sec:residual}. The result is therefore presented as, to the best of a
+thorough but necessarily incomplete search, new; the author welcomes correction from
+any reader who recognises it.
+
+\appendix
+\section{Reproducible zbMATH query log}\label{app:queries}
+
+Queries use field prefixes (\texttt{ti:}, \texttt{au:}, \texttt{cc:}, \texttt{ab:},
+\texttt{any:}), quoted phrases, and the conjunction operator `` \& ''. Counts are
+\texttt{status.nr\_total\_results} as of 30~May 2026; ``$0$'' denotes an HTTP~404
+(no result). Parenthetical notes give the dominant or only record behind a small
+nonzero count.
+
+\begin{small}
 \begin{verbatim}
-ti:group          60517      au:Serre          657
-ab:period         52753      any:period        60534
-\end{verbatim}
+-- Calibration (runs intact) --
+ti:group                                        60517
+au:Serre                                          657
+ab:period                                       52753
+any:period                                      60534
 
-\medskip
-\textit{Durchgeführt:} ca.~90 feldbasierte Anfragen auf Titel-/Autor-/
-MSC-Ebene plus 24 \texttt{ab:}/\texttt{any:}-Kombinationen des
-Fingerabdrucks (sortierte projizierte Gap-Periode, Multiset/Set,
-$p^2+q^2$-Modulus). Die diagnostischen Anfragen und ihre Trefferzahlen:
-\begin{verbatim}
--- Direkte Achse (Titel-Ebene) --
-ti:"cut-and-project"                          48
-ti:"cut-and-project" & ti:period               0
-ti:"cut-and-project" & ti:gap                  0
-ti:"model set"       & ti:period               0
-cc:52C23 & ti:period                           0
-cc:52C23 & ti:gap                             10   (gap labeling, Spektrallücken)
-cc:52C23 & ti:rational                         3   (Kohomologie/Tilings)
-ti:"strip projection"                          1   (Cotfas 2006, irrational)
+-- Direct axis (title level) --
+ti:"cut-and-project"                               48
+ti:"cut-and-project" & ti:period                    0
+ti:"cut-and-project" & ti:gap                       0
+ti:"model set"       & ti:period                    0
+cc:52C23 & ti:period                                0
+cc:52C23 & ti:gap                                  10   (gap labelling / spectral gaps)
+cc:52C23 & ti:rational                              3   (cohomology / tilings)
+ti:"strip projection"                               1   (Cotfas 2006, irrational)
 
--- Digitale Geometrie (Titel-Ebene) --
-ti:"digital straightness"                      5
-ti:"chain code"                               38
-au:Reveilles                                  16
-ti:"discrete line" & ti:period                 0
-ti:"arithmetic discrete line"                  0
+-- Digital geometry (title level) --
+ti:"digital straightness"                           5
+ti:"chain code"                                    38
+au:Reveilles                                       16
+ti:"discrete line" & ti:period                      0
+ti:"arithmetic discrete line"                       0
 
--- Verwandte Konzepte (Titel-Ebene) --
-ti:"three distance" / ti:"three-gap"      22 / 18
-ti:Sturmian & ti:period / & ti:gap          2 / 2
-ti:Christoffel & ti:period                     1   (Schwarz-Christoffel)
-ti:Beatty & ti:gap / & ti:period            0 / 0
+-- Related concepts (title level) --
+ti:"three distance" / ti:"three-gap"           22 / 18
+ti:Sturmian & ti:period / & ti:gap               2 / 2
+ti:Christoffel & ti:period                          1   (Schwarz-Christoffel)
+ti:Beatty & ti:gap / & ti:period                 0 / 0
 
--- Fingerabdruck (Abstract-/Überall-Ebene) --
-any:"cut and project" & any:period             2   (Baake-Grimm; off-topic)
-ab:"cut and project" & ab:period               1   (Baake-Grimm; off-topic)
-any:"period length" & any:"cut and project"    0
-any:"minimal period" & any:projection & any:gap 0
+-- Fingerprint (review / all-fields level) --
+any:"cut and project" & any:period                  2   (Baake-Grimm; off-topic)
+ab:"cut and project" & ab:period                    1   (Baake-Grimm; off-topic)
+any:"period length" & any:"cut and project"         0
+any:"minimal period" & any:projection & any:gap     0
 any:residue & any:projection & any:gap & any:period 0
-ab:"gap sequence" & ab:period                  0
-any:"sum of two squares" & any:period & any:lattice 1 (Mueller-Dressler 1972)
-ab:"arithmetic discrete line" & ab:period      0
-ab:"model set" & ab:period & ab:rational       0
+ab:"gap sequence" & ab:period                       0
+any:"sum of two squares" & any:period & any:lattice 1   (Mueller-Dressler 1972)
+ab:"arithmetic discrete line" & ab:period           0
+ab:"model set" & ab:period & ab:rational            0
 \end{verbatim}
+\end{small}
 
-\medskip
-\textit{Triage der nächstgelegenen Kandidaten} (alle ausgeschlossen):
-\begin{itemize}[leftmargin=2em]
-  \item \textbf{Haynes--Koivusalo--Walton--Sadun}, ``Gaps problems and
-        frequencies of patches in cut and project sets'' (Zbl~1371.11110,
-        2016) --- der nächstliegende Treffer (richtige Autoren, Objekt
-        ``gaps''$+$``cut and project''). Behandelt jedoch
-        \emph{Patch-Frequenz-Statistik} aperiodischer (irrationaler)
-        Modellmengen, keine geschlossene minimale Periode der sortierten
-        Gap-Folge, kein $p^2+q^2$-Modulus. Off-topic (vgl.\ Open
-        Problem~2 im Paper).
-  \item \textbf{Gähler--Hunton--Kellendonk}, ``Integral cohomology of
-        rational projection method patterns'' (Zbl~1270.52025, 2013) ---
-        ``rational''$+$``projection'', aber topologische Invariante
-        (Kohomologie von Tiling-Räumen, MSC 55R20), keine Gap-Periode.
-  \item \textbf{Cotfas}, ``Modified strip projection method''
-        (arXiv:math-ph/0605046, 2006) --- nächster Vokabel-Treffer
-        (``strip projection''); Konstruktion zur Cluster-Besetzungsdichte
-        quasiperiodischer Packungen, irrationaler Slope, keine Periode.
-  \item \textbf{Müller--Dressler}, ``Über eine gewichtete Mittelung der
-        Gitterpunkte'' (Zbl~0227.10040, 1972) --- einziger Treffer der
-        ``sum of two squares''-Anfrage; Gitterpunktzählung, keine
-        projizierte Gap-Periode.
-\end{itemize}
+\begin{thebibliography}{99}
 
-\medskip
-\textit{Ergebnis:} \textbf{Kein Treffer.} Über alle Achsen --- direkte
-Cut-and-Project, digitale Geometrie (diskrete Geraden, Chaincode,
-Reveillès), Drei-Abstands-/Drei-Lücken-Theoreme, Sturmian/Christoffel,
-Modellmengen/Quasikristalle, der Haynes-Autorenkreis, die Festschriften
-sowie die \texttt{ab:}/\texttt{any:}-Fingerabdruck-Kombinationen ---
-findet sich kein Eintrag, der eine geschlossene minimale Periode der
-\emph{nach Projektion sortierten} Gap-Folge einer \emph{rationalen}
-Streifenprojektion mit $D=\alpha^2+\beta^2$ als Modulus, der
-Multiset-/Set-Distinktion oder der $\omega$-Abhängigkeit über
-$N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1$ angibt.
-Besonders aussagekräftig sind die \emph{leeren} Fingerabdruck-Anfragen
-auf Abstract-/Überall-Ebene (z.\,B.\ \texttt{any:"period length" \&
-any:"cut and project"} $=0$, \texttt{any:"minimal period" \&
-any:projection \& any:gap} $=0$): das Resultat erscheint in keiner
-zbMATH-indizierten Titel-, Abstract- oder Schlagwort-Ebene.
+\bibitem{BaakeGrimm2013}
+M.~Baake and U.~Grimm,
+\emph{Aperiodic Order. Vol.~1: A Mathematical Invitation},
+Encyclopedia of Mathematics and its Applications, vol.~149,
+Cambridge University Press, 2013.
 
-\medskip
-\textit{Reststreuung (ehrlich):}
-\begin{itemize}[leftmargin=2em]
-  \item Die Suche erfasste Titel, Autoren, MSC, Keywords, Bibliografie
-        \emph{und} den zbMATH-Review-/Summary-Index (\texttt{ab:}/\texttt{any:}),
-        nicht jedoch den vollständigen Publikations-PDF-Body. Einzelne
-        Review-Texte sind zwar nicht \emph{anzeigbar}, aber sehr wohl
-        \emph{indexiert} --- die Suchtiefe ist davon nicht betroffen. Ein als
-        Hilfslemma in einem Beitrag mit thematisch unverdächtigem Titel
-        \emph{und} unverdächtigem Review/Summary (ohne die Wörter
-        Periode/Lücke/Projektion) verstecktes Resultat bliebe daher
-        unsichtbar --- das ist die verbliebene, prinzipielle Restlücke.
-  \item Da der Fingerabdruck (Summe zweier Quadrate als Periodenmodulus
-        einer sortierten Gap-Folge) sprachlich sehr distinktiv ist, würde
-        er bei echter Behandlung mit hoher Wahrscheinlichkeit als
-        Schlagwort/Abstract-Begriff auftauchen; garantiert ist das nicht.
-  \item MathSciNet (kostenpflichtig) und NASA~ADS (Physik) wurden hier
-        \emph{nicht} programmatisch abgefragt. Inhaltlich überschneiden sie
-        sich weitgehend mit der zbMATH-/arXiv-Abdeckung; ihr Mehrwert läge
-        nur in der schlecht web-indizierten Vor-2000-Physik (Lücke~5),
-        die jedoch bereits strukturell ausgeschlossen wurde.
-\end{itemize}
+\bibitem{BaakeGrimm2017}
+M.~Baake and U.~Grimm,
+\emph{Aperiodic Order. Vol.~2: Crystallography and Almost Periodicity},
+Encyclopedia of Mathematics and its Applications, vol.~166,
+Cambridge University Press, 2017.
 
-\medskip
-\textit{Gesamtbilanz nach Runde~4:} Die zbMATH-Achse bestätigt das
-Ergebnis aller vorherigen Runden auf Titel-, Abstract- und MSC-Ebene und
-hebt das Restrisiko von ``niedrig'' auf ``sehr niedrig''. Eine darüber
-hinausgehende Absicherung könnte nur noch der Volltext-PDF-Body einzelner
-Publikationen liefern --- praktisch am ehesten durch \emph{eine} gezielte
-Experten-E-Mail (digitale Geometrie / aperiodische Ordnung) statt durch
-weitere Datenbankläufe.
+\bibitem{BaakeMoody2000}
+M.~Baake and R.~V.~Moody (eds.),
+\emph{Directions in Mathematical Quasicrystals},
+CRM Monograph Series, vol.~13, American Mathematical Society, 2000.
+
+\bibitem{BerstelEtAl2008}
+J.~Berstel, A.~Lauve, C.~Reutenauer, and F.~V.~Saliola,
+\emph{Combinatorics on Words: Christoffel Words and Repetitions in Words},
+CRM Monograph Series, vol.~27, American Mathematical Society, 2008.
+
+\bibitem{Cotfas2006}
+N.~Cotfas,
+``A modified strip-projection method,''
+arXiv:math-ph/0605046, 2006.
+
+\bibitem{FiorioJametToutant2006}
+C.~Fiorio, D.~Jamet, and J.-L.~Toutant,
+``Discrete circles: an arithmetical approach with non-constant thickness,''
+in \emph{Vision Geometry XIV}, Proc.\ SPIE, vol.~6066, 2006.
+HAL:~hal-00580556.
+
+\bibitem{GaehlerHuntonKellendonk2013}
+F.~G\"ahler, J.~Hunton, and J.~Kellendonk,
+``Integral cohomology of rational projection method patterns,''
+\emph{Algebraic \& Geometric Topology} \textbf{13}(3) (2013) 1661--1708.
+\textsc{doi}:\,\href{https://doi.org/10.2140/agt.2013.13.1661}{10.2140/agt.2013.13.1661}.
+Zbl~1270.52025.
+
+\bibitem{HaynesEtAl2016}
+A.~Haynes, H.~Koivusalo, J.~Walton, and L.~Sadun,
+``Gaps problems and frequencies of patches in cut and project sets,''
+\emph{Mathematical Proceedings of the Cambridge Philosophical Society}
+\textbf{161}(1) (2016) 65--85.
+Zbl~1371.11110.
+
+\bibitem{KletteRosenfeld2004}
+R.~Klette and A.~Rosenfeld,
+\emph{Digital Geometry: Geometric Methods for Digital Picture Analysis},
+Morgan Kaufmann, 2004;
+companion review: ``Digital straightness---a review,''
+\emph{Discrete Applied Mathematics} \textbf{139} (2004) 197--230.
+
+\bibitem{LachaudSaid2013}
+J.-O.~Lachaud and M.~Sa\"{\i}d,
+``Two efficient algorithms for computing the characteristics of a subsegment
+of a digital straight line,''
+\emph{Discrete Applied Mathematics} \textbf{161}(15) (2013) 2293--2315.
+\textsc{doi}:\,\href{https://doi.org/10.1016/j.dam.2012.08.038}{10.1016/j.dam.2012.08.038}.
+
+\bibitem{Meyer1972}
+Y.~Meyer,
+\emph{Algebraic Numbers and Harmonic Analysis},
+North-Holland, Amsterdam, 1972.
+
+\bibitem{MuellerDressler1972}
+W.~M\"uller and A.~Dressler,
+``\"Uber eine gewichtete Mittelung der Gitterpunkte in der Ebene,''
+1972.
+Zbl~0227.10040.
+
+\bibitem{Pleasants2000}
+P.~A.~B.~Pleasants,
+``Designer quasicrystals: cut-and-project sets with pre-assigned properties,''
+in \cite{BaakeMoody2000}.
+
+\bibitem{Reveilles1991}
+J.-P.~Reveill\`es,
+\emph{G\'eom\'etrie discr\`ete, calcul en nombres entiers et algorithmique},
+Th\`ese d'\'Etat, Universit\'e Louis Pasteur, Strasbourg, 1991.
+HAL:~tel-01279525.
+
+\bibitem{Senechal1995}
+M.~Senechal,
+\emph{Quasicrystals and Geometry},
+Cambridge University Press, 1995.
+
+\bibitem{ThreeGap}
+V.~T.~S\'os,
+``On the distribution mod~$1$ of the sequence $n\alpha$,''
+\emph{Ann.\ Univ.\ Sci.\ Budapest.\ E\"otv\"os Sect.\ Math.} \textbf{1} (1958) 127--134;
+see also the three-distance (three-gap) theorem and its standard references.
+
+\end{thebibliography}
 
 \end{document}
