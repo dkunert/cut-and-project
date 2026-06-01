@@ -4,23 +4,13 @@ Subject: Question on rational cut and project gap periods
 
 Dear Dr Koivusalo,
 
-I am an independent researcher and have completed a manuscript on explicit
-minimal-period formulas for one-dimensional rational cut and project strip
-projections. Your 2016 paper "Gaps problems and frequencies of patches in cut and
-project sets" (with Haynes, Sadun, and Walton) is the closest published work I know
-on gaps in this setting, and your more recent cut-and-project programme — the
-polytopal-window papers on complexity and linear repetitivity, and the recent paper
-on substitutionality — is the body of work I found myself comparing against most
-closely. I would be very grateful for your view on whether the result below is
-already in the literature.
+I am an independent researcher and have completed a manuscript on explicit minimal-period formulas for one-dimensional rational cut and project strip projections. Your 2016 paper "Gaps problems and frequencies of patches in cut and project sets" (with Haynes, Sadun, and Walton) is the closest published work I know on gaps in this setting, and your more recent cut-and-project programme — the polytopal-window papers on complexity and linear repetitivity, and the recent paper on substitutionality — is the body of work I found myself comparing against most closely. I would be very grateful for your view on whether the result below is already in the literature.
 
-The setting is a strip projection with rational slope α/β (gcd(α, β) = 1) and window
-parameter ω ≥ 0. With
+The setting is a strip projection with rational slope α/β (gcd(α, β) = 1) and window parameter ω ≥ 0. With
 
     N = ⌊ωα⌋ + ⌊ωβ⌋ + 1,    D = α² + β²,
 
-after orthogonally projecting the accepted lattice points and sorting them along the
-line, the gap sequence has minimal period
+after orthogonally projecting the accepted lattice points and sorting them along the line, the gap sequence has minimal period
 
   • multiset convention (projected values counted with multiplicity):
         λ_multiset = N      if D ∤ N,
@@ -30,33 +20,15 @@ line, the gap sequence has minimal period
         λ_set = N    if N < D,
         λ_set = 1    if N ≥ D.
 
-In particular λ_set | λ_multiset, with equality if and only if N ≤ D. The proof
-reduces the geometry to the distribution of N consecutive residue classes modulo D
-under multiplication by the unit −αβ⁻¹. A complementary result shows that irrational
-slopes give aperiodic gap sequences, closing the rational/irrational dichotomy.
+In particular λ_set | λ_multiset, with equality if and only if N ≤ D. The proof reduces the geometry to the distribution of N consecutive residue classes modulo D under multiplication by the unit −αβ⁻¹. A complementary result shows that irrational slopes give aperiodic gap sequences, closing the rational/irrational dichotomy.
 
-To make the result readily checkable, the proof is fully formalized in Lean 4 /
-Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, with no
-`sorry`, `axiom`, or `admit`. The manuscript is attached as a PDF, and the Lean source
-(tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at
-https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
+To make the result readily checkable, the proof is fully formalized in Lean 4 / Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, with no `sorry`, `axiom`, or `admit`. The manuscript is attached as a PDF, and the Lean source (tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
 
-In preparing the current draft I carried out a systematic, AI-assisted prior-art search,
-summarized in the companion prior-art note, also attached as a PDF: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the
-digital-geometry and aperiodic-order monograph literature, together with your group's
-recent cut-and-project papers. I did not find this exact result stated anywhere. The
-nearest match in vocabulary is the codimension-one linear-repetitivity criterion in
-your "polytopal window II" paper, but that concerns irrational slopes and a
-repetitivity rate rather than a finite period. Professor Alan Haynes kindly looked at an earlier
-draft and felt the formula might be known or follow from standard number theory while
-the Lean verification could be new, though he did not point me to a specific source.
+In preparing the current draft I carried out a systematic, AI-assisted prior-art search, summarized in the companion prior-art note, also attached as a PDF: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the digital-geometry and aperiodic-order monograph literature, together with your group's recent cut-and-project papers. I did not find this exact result stated anywhere. The nearest match in vocabulary is the codimension-one linear-repetitivity criterion in your "polytopal window II" paper, but that concerns irrational slopes and a repetitivity rate rather than a finite period. Professor Alan Haynes kindly looked at an earlier draft and felt the formula might be known or follow from standard number theory while the Lean verification could be new, though he did not point me to a specific source.
 
-I would be grateful for any brief indication of whether this formula, or an equivalent
-lemma, appears somewhere I have missed.
+I would be grateful for any brief indication of whether this formula, or an equivalent lemma, appears somewhere I have missed.
 
-Separately, I am hoping to submit the note to arXiv; as an independent researcher I
-need an endorsement. If, after a brief look, you felt comfortable endorsing the
-submission, that would be a great help — I can send the arXiv endorsement code if so.
+Separately, I am hoping to submit the note to arXiv; as an independent researcher I need an endorsement. If, after a brief look, you felt comfortable endorsing the submission, that would be a great help — I can send the arXiv endorsement code if so.
 
 I completely understand if you do not have the time.
 
