@@ -41,7 +41,7 @@ Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, wit
 (tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at
 https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
 
-In preparing the current draft I carried out a systematic prior-art search,
+In preparing the current draft I carried out a systematic, AI-assisted prior-art search,
 summarized in the attached companion note: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the
 digital-geometry and aperiodic-order monograph literature, together with your group's
 recent cut-and-project papers. I did not find this exact result stated anywhere. The
