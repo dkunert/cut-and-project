@@ -41,18 +41,15 @@ Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, wit
 (tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at
 https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
 
-Since the earlier drafts I have carried out a thorough, AI-assisted prior-art search,
-documented in the companion note attached here: arXiv, zbMATH Open (title, review,
-and MSC level), dblp/DGCI–DGMM, and the digital-geometry and aperiodic-order monograph
-literature, together with a direct reading of your group's recent cut-and-project
-papers. I did not find this exact result stated anywhere. The nearest match in
-vocabulary is the codimension-one linear-repetitivity criterion in your "polytopal
-window II" paper, but there the slope is irrational and the conclusion is a
-repetitivity rate ‖αn + β‖ ≥ c/n rather than a finite period, the relevant integer is
-a lattice-membership order rather than the window count N, and α² + β² does not appear
-as a period modulus. (Alan Haynes kindly looked at an earlier draft and felt the
-formula might be known or follow from standard number theory while the Lean
-verification could be new, but did not point me to a specific source.)
+In preparing the current draft I carried out a systematic prior-art search,
+summarized in the attached companion note: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the
+digital-geometry and aperiodic-order monograph literature, together with your group's
+recent cut-and-project papers. I did not find this exact result stated anywhere. The
+nearest match in vocabulary is the codimension-one linear-repetitivity criterion in
+your "polytopal window II" paper, but that concerns irrational slopes and a
+repetitivity rate rather than a finite period. Alan Haynes kindly looked at an earlier
+draft and felt the formula might be known or follow from standard number theory while
+the Lean verification could be new, though he did not point me to a specific source.
 
 I would be grateful for any brief indication of whether this formula, or an equivalent
 lemma, appears somewhere I have missed.
