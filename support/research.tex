@@ -269,6 +269,60 @@ cohomology---an algebraic-topological invariant of the associated tiling space, 
 gap period. Thus the phrase ``rational projection method'' is occupied in the
 literature, but for cohomology.
 
+\paragraph{The Koivusalo--Walton cut-and-project programme.}
+The most active recent body of work on cut-and-project sets is due to Koivusalo and
+her coauthors---the same group whose gaps paper~\cite{HaynesEtAl2016} is the nearest
+neighbour on the gaps axis (Table~\ref{tab:triage}). We examined this programme
+directly, on the reasoning that if the present period---or an auxiliary lemma
+equivalent to it---were to surface anywhere in the modern literature, this is the
+single most likely place. It does not. Across the complexity
+paper~\cite{KoivusaloWalton2021}, the linear-repetitivity
+papers~\cite{HaynesKoivusaloWalton2015,KoivusaloWalton2020}, the pattern-statistics
+paper~\cite{HaynesJulienKoivusaloWalton2017}, and the density-discrepancy
+paper~\cite{KoivusaloLagace2024}, the standing hypothesis is that the projected
+lattice is dense (the slope is totally irrational), so the patterns are
+\emph{aperiodic} and possess no finite period whatsoever. The invariants studied are
+correspondingly \emph{asymptotic}: the complexity growth exponent $p(r)\asymp
+r^{\kappa}$, the linear-repetitivity rate, or the density discrepancy---each governed
+by the Diophantine (badly-approximable) type of the irrational slope, never a
+closed-form minimal period, and never $D=\alpha^2+\beta^2$ in the role of a period
+modulus.
+
+Two records in this programme are close enough in vocabulary to warrant individual
+exclusion, and both are entered in Table~\ref{tab:triage}. The codimension-one
+linear-repetitivity criterion of Koivusalo--Walton~\cite{KoivusaloWalton2020} is the
+nearest \emph{verbal} match in the entire search: it features a slope, an interval
+window of length $\beta$, an integer $N$ defined by a membership condition ($N\beta$
+lying in the projected lattice), and the distance-to-nearest-integer quantity
+$\lVert\alpha n+\beta\rVert$. The resemblance is nonetheless only verbal: the slope
+is irrational, the conclusion is a \emph{linear-repetitivity rate}
+$\lVert\alpha n+\beta\rVert\ge c/n$ rather than a finite period, the integer $N$ is a
+lattice-membership order rather than the window count
+$N=\lfloor\omega\alpha\rfloor+\lfloor\omega\beta\rfloor+1$, and $\alpha^2+\beta^2$
+plays no role. The substitution paper of
+Harriss--Koivusalo--Walton~\cite{HarrissKoivusaloWalton2025} works in the
+\emph{identical} geometry of the present manuscript ($k=2$, $d=1$, $\Gamma=\Z^2$,
+physical line of slope~$\alpha$), but there the slope is irrational and the question
+is whether the resulting \emph{aperiodic} set is \emph{substitutional} (the answer:
+precisely when the slope is a quadratic irrational); the rational slope is exactly
+the periodic case the cut-and-project standing assumptions exclude. Neither paper
+yields a period formula nor a sum-of-two-squares modulus.
+
+\paragraph{The word ``multiset'' in the cut-and-project corpus.}
+Because the multiset-versus-set dichotomy is itself part of the
+fingerprint~(Section~\ref{sec:result}), we tracked occurrences of the word across the
+cut-and-project sources examined here, not only across the monographs
+(Appendix~\ref{app:bgrimm}). It does occur---for instance in the
+bounded-remainder-set papers of Haynes, Kelly, Koivusalo and
+Furno~\cite{HaynesKellyKoivusalo2016,FurnoHaynesKoivusalo2018}---but there the
+projected pattern is recorded as a multiset so that a non-injective projection
+contributes each point with its \emph{geometric} multiplicity, for use in
+bounded-remainder and bounded-distance-to-a-lattice counts. This is a multiplicity on
+the projected \emph{points}, not the multiplicity on the \emph{gap sequence} of
+Theorems~\ref{thm:multiset} and~\ref{thm:set}; in particular nothing there plays the
+role of the divisibility $\lset\mid\lmult$, which is the operative content of the
+set-versus-multiset distinction here.
+
 \subsection{Arithmetic discrete lines and digital geometry}\label{ssec:dg}
 
 This is the closest comparison and received the most scrutiny. The literature
@@ -374,8 +428,10 @@ Section~\ref{sec:residual}.
 
 \subsection{Triage of the nearest catalogued records}
 
-Table~\ref{tab:triage} lists the four catalogued records that came closest on
-vocabulary, each with the reason it is not the result.
+Table~\ref{tab:triage} lists the catalogued records that came closest on
+vocabulary---including the three most pertinent entries from the recent
+Koivusalo--Walton cut-and-project programme discussed in
+Section~\ref{sec:findings}---each with the reason it is not the result.
 
 \begin{table}[h]
 \centering
@@ -397,6 +453,15 @@ Cotfas, ``Modified strip-projection method'' \cite{Cotfas2006}
 M\"uller--Dressler, ``\"Uber eine gewichtete Mittelung der Gitterpunkte'' \cite{MuellerDressler1972}
 & Zbl 0227.10040 (1972)
 & Only hit of the ``sum of two squares'' $+$ ``lattice'' $+$ ``period'' query; weighted lattice-point averaging, not a projected gap period.\\
+Koivusalo--Walton, ``Cut and project sets with polytopal window II: linear repetitivity'' \cite{KoivusaloWalton2020}
+& Trans. AMS 375 (2022)
+& Nearest \emph{verbal} match (slope, interval window, integer $N$, distance $\lVert\alpha n+\beta\rVert$), but an irrational-slope linear-repetitivity criterion: a rate $\lVert\alpha n+\beta\rVert\ge c/n$, not a finite period; $N$ a lattice-membership order, not the window count; no $\alpha^2+\beta^2$.\\
+Harriss--Koivusalo--Walton, ``When is a cut and project set substitutional?'' \cite{HarrissKoivusaloWalton2025}
+& arXiv:2512.13659 (2025)
+& Identical geometry ($k=2$, $d=1$, $\Z^2$), but characterises the \emph{substitutional} (quadratic-irrational) property of \emph{aperiodic} sets; the rational, periodic slope is the excluded case. No gap period.\\
+Koivusalo--Lagac\'e, ``Sharp density discrepancy for cut and project sets'' \cite{KoivusaloLagace2024}
+& Monatsh. Math. 208 (2025)
+& A ``sum of squares'' and a ``$d\equiv 1\ (\mathrm{mod}\ 4)$'' do appear, but as the classical Gauss-circle lattice-point obstruction in an \emph{asymptotic} density-discrepancy bound, not as a period modulus.\\
 \bottomrule
 \end{tabular}
 \caption{The nearest catalogued records and the reason each is excluded.}
@@ -480,8 +545,10 @@ or poorly indexed sources, no source examined states the conjoined result of
 Theorems~\ref{thm:multiset} and~\ref{thm:set}, as a theorem or as an auxiliary
 lemma. The constituent constants and objects---$\alpha^2+\beta^2$ as a Gaussian norm
 or curvature, the translation and chain-code periodicities of arithmetic discrete
-lines, the three-distance bound, the Sturmian/Christoffel period $p+q$, the rational
-crystal as a degenerate model set---are classical and are cited as such. What was
+lines, the three-distance bound, the Sturmian/Christoffel period $p+q$, the
+asymptotic complexity, repetitivity, and density-discrepancy invariants of irrational
+cut-and-project sets, the rational crystal as a degenerate model set---are classical
+and are cited as such. What was
 not located is their conjunction: a closed-form minimal period of the order-sorted
 projected gap sequence of a rational strip projection, with modulus
 $D=\alpha^2+\beta^2$, a multiset/set dichotomy, and a window dependence through $N$.
@@ -602,12 +669,22 @@ C.~Fiorio, D.~Jamet, and J.-L.~Toutant,
 in \emph{Vision Geometry XIV}, Proc.\ SPIE, vol.~6066, 2006.
 HAL:~hal-00580556.
 
+\bibitem{FurnoHaynesKoivusalo2018}
+J.~Furno, A.~Haynes, and H.~Koivusalo,
+``Bounded remainder sets for rotations on the adelic torus,''
+arXiv:1803.10559, 2018.
+
 \bibitem{GaehlerHuntonKellendonk2013}
 F.~G\"ahler, J.~Hunton, and J.~Kellendonk,
 ``Integral cohomology of rational projection method patterns,''
 \emph{Algebraic \& Geometric Topology} \textbf{13}(3) (2013) 1661--1708.
 \textsc{doi}:\,\href{https://doi.org/10.2140/agt.2013.13.1661}{10.2140/agt.2013.13.1661}.
 Zbl~1270.52025.
+
+\bibitem{HarrissKoivusaloWalton2025}
+E.~Harriss, H.~Koivusalo, and J.~J.~Walton,
+``When is a cut and project set substitutional?,''
+arXiv:2512.13659, 2025.
 
 \bibitem{HaynesEtAl2016}
 A.~Haynes, H.~Koivusalo, J.~Walton, and L.~Sadun,
@@ -616,12 +693,50 @@ A.~Haynes, H.~Koivusalo, J.~Walton, and L.~Sadun,
 \textbf{161}(1) (2016) 65--85.
 Zbl~1371.11110.
 
+\bibitem{HaynesJulienKoivusaloWalton2017}
+A.~Haynes, A.~Julien, H.~Koivusalo, and J.~Walton,
+``Statistics of patterns in typical cut and project sets,''
+arXiv:1702.04041, 2017.
+
+\bibitem{HaynesKellyKoivusalo2016}
+A.~Haynes, M.~Kelly, and H.~Koivusalo,
+``Constructing bounded remainder sets and cut-and-project sets which are bounded
+distance to lattices, II,''
+arXiv:1602.00529, 2016.
+
+\bibitem{HaynesKoivusaloWalton2015}
+A.~Haynes, H.~Koivusalo, and J.~Walton,
+``Linear repetitivity and subadditive ergodic theorems for cut and project sets,''
+arXiv:1503.04091, 2015.
+
 \bibitem{KletteRosenfeld2004}
 R.~Klette and A.~Rosenfeld,
 \emph{Digital Geometry: Geometric Methods for Digital Picture Analysis},
 Morgan Kaufmann, 2004;
 companion review: ``Digital straightness---a review,''
 \emph{Discrete Applied Mathematics} \textbf{139} (2004) 197--230.
+
+\bibitem{KoivusaloLagace2024}
+H.~Koivusalo and J.~Lagac\'e (with an appendix by M.~Bj\"orklund and T.~Hartnick),
+``Sharp density discrepancy for cut and project sets: an approach via lattice point
+counting,''
+\emph{Monatshefte f\"ur Mathematik} \textbf{208}(3) (2025) 397--444.
+\textsc{doi}:\,\href{https://doi.org/10.1007/s00605-025-02135-5}{10.1007/s00605-025-02135-5}.
+arXiv:2401.01803.
+
+\bibitem{KoivusaloWalton2020}
+H.~Koivusalo and J.~J.~Walton,
+``Cut and project sets with polytopal window II: linear repetitivity,''
+\emph{Transactions of the American Mathematical Society} \textbf{375}(7) (2022)
+5097--5149.
+\textsc{doi}:\,\href{https://doi.org/10.1090/tran/8633}{10.1090/tran/8633}.
+arXiv:2012.00591.
+
+\bibitem{KoivusaloWalton2021}
+H.~Koivusalo and J.~J.~Walton,
+``Cut and project sets with polytopal window I: complexity,''
+\emph{Ergodic Theory and Dynamical Systems} \textbf{41}(5) (2021) 1431--1463.
+\textsc{doi}:\,\href{https://doi.org/10.1017/etds.2020.10}{10.1017/etds.2020.10}.
 
 \bibitem{LachaudSaid2013}
 J.-O.~Lachaud and M.~Sa\"{\i}d,
