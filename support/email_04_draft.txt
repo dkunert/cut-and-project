@@ -42,12 +42,12 @@ Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, wit
 https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
 
 In preparing the current draft I carried out a systematic, AI-assisted prior-art search,
-summarized in the attached companion note: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the
+summarized in the companion prior-art note, also attached as a PDF: arXiv, zbMATH Open, dblp/DGCI–DGMM, and the
 digital-geometry and aperiodic-order monograph literature, together with your group's
 recent cut-and-project papers. I did not find this exact result stated anywhere. The
 nearest match in vocabulary is the codimension-one linear-repetitivity criterion in
 your "polytopal window II" paper, but that concerns irrational slopes and a
-repetitivity rate rather than a finite period. Alan Haynes kindly looked at an earlier
+repetitivity rate rather than a finite period. Professor Alan Haynes kindly looked at an earlier
 draft and felt the formula might be known or follow from standard number theory while
 the Lean verification could be new, though he did not point me to a specific source.
 
