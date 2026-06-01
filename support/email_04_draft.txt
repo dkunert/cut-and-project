@@ -35,8 +35,14 @@ reduces the geometry to the distribution of N consecutive residue classes modulo
 under multiplication by the unit −αβ⁻¹. A complementary result shows that irrational
 slopes give aperiodic gap sequences, closing the rational/irrational dichotomy.
 
+To make the result readily checkable, the proof is fully formalized in Lean 4 /
+Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, with no
+`sorry`, `axiom`, or `admit`. The manuscript is attached as a PDF, and the Lean source
+(tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at
+https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
+
 Since the earlier drafts I have carried out a thorough, AI-assisted prior-art search,
-documented in a companion note I am happy to share: arXiv, zbMATH Open (title, review,
+documented in the companion note attached here: arXiv, zbMATH Open (title, review,
 and MSC level), dblp/DGCI–DGMM, and the digital-geometry and aperiodic-order monograph
 literature, together with a direct reading of your group's recent cut-and-project
 papers. I did not find this exact result stated anywhere. The nearest match in
@@ -47,12 +53,6 @@ a lattice-membership order rather than the window count N, and α² + β² does 
 as a period modulus. (Alan Haynes kindly looked at an earlier draft and felt the
 formula might be known or follow from standard number theory while the Lean
 verification could be new, but did not point me to a specific source.)
-
-To make the result readily checkable, the proof is fully formalized in Lean 4 /
-Mathlib — approximately 3,760 lines across Basic.lean and Irrational.lean, with no
-`sorry`, `axiom`, or `admit`. The manuscript is attached as a PDF, and the Lean source
-(tagged v1.4-arxiv, matching the line numbers in Table 1 of the paper) is at
-https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv.
 
 I would be grateful for any brief indication of whether this formula, or an equivalent
 lemma, appears somewhere I have missed.
