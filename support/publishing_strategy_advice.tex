@@ -1,0 +1,145 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\newenvironment{quotebox}
+  {\begin{quote}\itshape\color{black!70}}
+  {\end{quote}}
+
+\title{Should I give up publishing the cut-and-project paper?\\[4pt]
+       \large A strategic assessment}
+\author{Notes prepared with Claude Code}
+\date{2026-06-09}
+
+\begin{document}
+\maketitle
+
+\noindent
+\textit{Context: after sending the paper and a prior-art note to Dr.\ Henna
+Koivusalo (Bristol), she kindly declined --- agreeing with Alan Haynes that
+the rational cut-and-project case is ``considered solved'' / folklore, while
+noting that the Lean formalization may be new. The question: should I give up
+on publishing? What follows is an honest assessment, not encouragement.}
+
+\section*{My honest read}
+
+You shouldn't give up. But you should give up on \textbf{one specific thing},
+and that clarity is what unlocks the rest.
+
+\textbf{Give up on:} \emph{``the theorem is a novel number-theory result,
+recognized as such by number theorists.''} Two independent experts in exactly
+this subfield (Haynes and Koivusalo, who is part of the
+Haynes--Koivusalo--Walton--Sadun group whose paper is your closest pendant)
+have now told you the same thing, consistently, and Koivusalo even handed you
+the references where the folklore lives. Continuing to pitch the \emph{theorem}
+as new to that circle will cost you time and credibility, and it won't change
+their verdict. That door is honestly closed.
+
+\textbf{Do not give up on:} \emph{getting this work published, cited, and
+recognized.} That's a different door, and Koivusalo's email actually props it
+open rather than shutting it. Read her second-to-last paragraph again:
+
+\begin{quotebox}
+I do also agree that the lean application may be new.
+\end{quotebox}
+
+That is the same thing Haynes said unprompted. Two domain experts, neither of
+whom you asked about Lean, both volunteered that the formalization is the part
+with novelty. That's not a consolation prize --- that's them pointing at your
+actual contribution.
+
+\section*{So the pivot isn't a retreat --- it's what they're telling you to do}
+
+Your own strategy notes (\texttt{support/lean.md}) already nailed the reframe a
+week ago:
+
+\begin{quotebox}
+\textbf{Not:} ``I proved a new theorem, please recognize it.''\\
+\textbf{Instead:} ``I formalized X --- is it useful, is it already in Mathlib,
+what did I miss?''
+\end{quotebox}
+
+Koivusalo's reply is evidence \emph{for} that pivot, not against it. The paper
+doesn't die; it changes what it claims to be. The honest framing of the paper
+becomes:
+
+\begin{quotebox}
+A fully machine-checked (Lean 4, 0 \texttt{sorry}/\texttt{axiom}) treatment of
+the gap-period of 1-D rational cut-and-project sequences. The underlying
+number-theoretic result is classical/folklore; the contribution is the
+formalization and the reusable residue-distribution lemmas.
+\end{quotebox}
+
+That is a paper that is \textbf{honest, defensible, and publishable} --- just
+not in the venue you originally aimed at.
+
+\section*{What ``publish'' realistically means now, in priority order}
+
+These are straight from your own notes, and Koivusalo just validated the
+premise behind all of them:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{arXiv preprint, reframed around the formalization.} Legitimate
+  regardless of theorem-novelty. The one change: seek an endorser from
+  \textbf{cs.LO / math.LO}, not number theory. A formalization framing fits
+  that category far better anyway.
+
+  \item \textbf{Mathlib contribution (your Tier A residue-distribution
+  lemmas).} This is the most concrete \emph{recognition} path you have ---
+  merit-based, no endorsement gatekeeping, just review. Your Mathlib pre-check
+  suggested those lemmas aren't already there. If they land, you have a
+  permanent, cited contribution to a tool thousands of people use. That's a
+  more durable form of ``published'' than a journal article almost no one
+  reads.
+
+  \item \textbf{Blog post + Lean Zulip intro.} Cheapest, highest-leverage way
+  to make the artifact visible.
+
+  \item \textbf{CPP / ITP short paper} --- possible later, but be honest with
+  yourself: a 1-D folklore result is borderline as a \emph{standalone}
+  formalization paper. Don't anchor on it.
+\end{enumerate}
+
+\section*{Two pieces of honest homework before you publish anything}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Actually verify Koivusalo's two references.} Open Haynes's
+  \emph{Aperiodic Order} lecture notes and Pytheas Fogg (\emph{Substitutions in
+  Dynamics, Arithmetics and Combinatorics}, Springer LNM 1794) and check
+  whether the period formula is genuinely stated there. This matters either
+  way: if it's there, you cite it and your prior-art section becomes
+  bulletproof; if it's \emph{not} explicitly there, that actually
+  \emph{strengthens} your ``we wrote down and formalized something only
+  folklore-known'' framing. You can't write the honest version of the paper
+  without doing this check.
+
+  \item \textbf{Pin down the set-valued case (Open Problem 2).} Your literature
+  search couldn't find an explicit closed formula for the minimal period of the
+  \emph{set-valued} (multiplicity-discarded) gap sequence --- the three-gap
+  theorem gives structure but not the minimal period. This is the one sliver
+  where I'd genuinely keep an open mind about novelty. But be disciplined: the
+  experts said ``the rational case is solved,'' and they may well consider this
+  part folklore too. Don't let it become the thing you cling to. Treat it as a
+  precise question worth one careful check, not a rescue.
+\end{enumerate}
+
+\section*{Bottom line}
+
+Your instinct not to give up is right --- and you don't have to. But the version
+of ``not giving up'' that works is the one where you \emph{accept the experts'
+verdict on the theorem} and \emph{act on the verdict they volunteered about the
+Lean work}. That's not surrender; it's aiming at the target they're both
+pointing at. The cruel version of this would be to spend three more months
+trying to get number theorists to call the formula new. The kind version ---
+to yourself and the work --- is to put the formalization in front of the people
+who can actually judge it and use it.
+
+\end{document}

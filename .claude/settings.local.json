@@ -152,7 +152,14 @@
       "Bash(echo \"1900-1940 = $\\(python3 -c \"import json;print\\(json.load\\(open\\('/tmp/r2.json'\\)\\)['status']['nr_total_results']\\)\" 2>/dev/null\\)\")",
       "Bash(sed -n '30,36p' support/research.tex)",
       "Bash(sed -n '884,912p' support/research.tex)",
-      "Bash(echo \"latexmk_exit=$?\")"
+      "Bash(echo \"latexmk_exit=$?\")",
+      "Bash(echo \"downloaded, exit $?\")",
+      "Bash(command -v pdfinfo)",
+      "Bash(pdfinfo AperiodicNotes_Haynes.pdf)",
+      "Bash(pdfunite Fogg_00_titlepages.pdf Fogg_preface.pdf Fogg_chap01.pdf Fogg_chap02.pdf Fogg_chap03.pdf Fogg_chap04.pdf Fogg_chap05.pdf Fogg_chap06.pdf Fogg_chap07.pdf Fogg_chap08.pdf Fogg_chap09.pdf Fogg_chap10.pdf Fogg_chap11.pdf Fogg_chap12.pdf Fogg_biblio_index.pdf PytheasFogg_Substitutions_LNM1794_full.pdf)",
+      "Bash(pdfinfo PytheasFogg_Substitutions_LNM1794_full.pdf)",
+      "Bash(echo \"merged: $\\(pdfinfo PytheasFogg_Substitutions_LNM1794_full.pdf)",
+      "Bash(pdftotext -layout /Users/dirk/Documents/knowHow/mathematics/cut-and-project/published/cut-and-project/support/bibliography/misc/AperiodicNotes_Haynes.pdf /tmp/haynes.txt)"
     ]
   }
 }
