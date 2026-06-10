@@ -102,6 +102,29 @@ through via the `GeometricProjection` typeclass; the concrete instance
 set-valued enumeration mirrors the multiset construction with
 multiplicities flattened to $\{0,1\}$.
 
+### Reusable components (Mathlib candidates)
+
+The rational period formula is classical; the contribution here is the
+machine-checked formalization. Part of
+it is general number theory, with no cut-and-project semantics, and may be of
+wider use — these are the natural pieces to upstream to Mathlib:
+
+- **Distribution of `N` consecutive residues mod `D`** (`Basic.lean`, section
+  `ResidueDistribution`). With `count_hits` counting how often each class is
+  hit, `residue_distribution` shows every class is hit `⌊N/D⌋` or `⌈N/D⌉` times
+  with exactly `N mod D` classes attaining the larger value;
+  `uniform_residue_distribution` is the `D ∣ N` case; and
+  `residue_distribution_unit` shows the distribution is invariant under
+  multiplying the residues by a unit of `(ZMod D)ˣ`.
+- **Cyclic-interval stabilizer** (`Basic.lean`, section `Minimality`):
+  `cyclic_interval_stabilizer_trivial` — a proper nonempty cyclic interval of
+  residues mod `D` has trivial translation stabilizer.
+
+The Kronecker-density and `ZMod`-unit building blocks these rest on are already
+in Mathlib; a search of the Mathlib docs and Loogle did not turn up the
+`ResidueDistribution` packaging itself, so it looks like a genuine contribution
+candidate (to be confirmed on the Lean Zulip).
+
 ### Versions
 
 - Lean: `leanprover/lean4:v4.29.1` (pinned in

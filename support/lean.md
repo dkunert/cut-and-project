@@ -179,8 +179,11 @@ knappe Reaktionen erwarten.
 - [x] Erster Mathlib-Abgleich (Tier A offenbar nicht vorhanden).
 - [x] Zulip-Entwürfe vorbereitet (oben).
 - [ ] Zulip-Account anlegen.
-- [ ] Repo aufräumen: README, das die Formalisierung erklärt (was; wie geprüft: 0
+- [x] Repo aufräumen: README, das die Formalisierung erklärt (was; wie geprüft: 0
       `sorry`/`axiom`/`admit`, Lean-/Mathlib-Version, Build-Anleitung).
+      *(2026-06-10: Formalisierungs-Framing + Abschnitt „Reusable components
+      (Mathlib candidates)" mit Tier A im Top-Level-`README.md` ergänzt;
+      Deklarationsnamen gegen `Basic.lean` verifiziert.)*
 - [ ] `#new members`-Vorstellung posten, dann `#Is there code for X?`-Frage.
 - [ ] Je nach Resonanz: Tier A als erste kleine Mathlib-PR isolieren *oder* Blogpost.
 

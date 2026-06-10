@@ -417,6 +417,29 @@ Pleasants' ``Designer quasicrystals''~\cite{Pleasants2000}, constructs
 properties; ``gap'' in that volume means a spectral gap (gap labelling), not a gap
 sequence.
 
+Two further pedagogical sources, flagged by specialists in aperiodic order as
+the natural home of any folklore version of the result, were consulted
+directly. Haynes's lecture notes \emph{Notes on Diophantine approximation and
+aperiodic order}~\cite{HaynesNotes} treat the planar $k=2$, $d=1$
+cut-and-project construction explicitly: a \emph{rational} subspace is named
+``the degeneracy,'' the resulting set is observed to have a nontrivial group of
+periods, and---producing no ``interesting point set which we don't already
+understand''---it is eliminated by assuming an irrational slope for the
+remainder of the notes; the three-distance theorem is stated there for general $\alpha$, with its
+continued-fraction refinement given ``for irrationals'' (Exercise~1.2.4); in
+both forms it concerns the $\le 3$ gap \emph{lengths} of the orbit
+$\{n\alpha\}$, not a period length. Arnoux's Chapter~6 on Sturmian sequences in the Pytheas Fogg
+volume~\cite{PytheasFogg2002} defines Sturmian as \emph{balanced and not eventually periodic}, so
+that the rational slope (equivalently the eventually periodic case) is excluded
+by definition; the three-distance theorem is not stated there as a named
+result, and ``periodic coding sequences'' in that chapter denote periodic
+continued fractions (quadratic irrationals), not rational slopes. In neither
+source does the modulus $\alpha^2+\beta^2$, the multiset/set dichotomy, or a
+minimal-period formula for the rational case appear. Both directly confirm that
+the conjoined invariant of Section~\ref{sec:result} is absent, and both frame
+the rational one-dimensional case as a classically understood degeneracy rather
+than open territory.
+
 \subsection{Rational approximants in the physics literature}
 
 In physics, a ``rational approximant'' replaces the golden-mean slope $\tau$ by its
@@ -538,10 +561,25 @@ conjoined invariant of Section~\ref{sec:result} is novel. A database search has 
 pushed to its natural limit; the remaining uncertainty is exactly the kind a
 specialist can resolve from memory.
 
+\paragraph{Update.} This step has since been carried out. Two specialists in
+aperiodic order, consulted informally, judged the rational one-dimensional case
+classical and pointed to exactly the two pedagogical sources now examined in
+Section~\ref{ssec:books}~\cite{HaynesNotes,PytheasFogg2002}; a direct reading of
+both confirms that the explicit formula does not appear and that each treats the
+rational case as a degeneracy. Both also remarked, independently and unprompted,
+that the Lean~4 formalization accompanying the manuscript may be the genuinely
+new contribution. This does not contradict the balance below: the experts'
+``folklore'' judgment concerns the rational result being a routine consequence
+of standard theory, whereas what the search establishes---and what the two
+references confirm---is that the explicit closed-form formula, with modulus
+$\alpha^2+\beta^2$ and the multiset/set dichotomy, is itself not written down in
+the literature. The novelty therefore rests narrowly on the explicit formula
+and its machine-checked proof, not on the rational case being unexplored.
+
 \section{Balance}\label{sec:conclusion}
 
 After approximately $180$ logged queries across arXiv, the web, HAL, dblp, Google
-Books, and the zbMATH Open index, together with individual treatment of six printed
+Books, and the zbMATH Open index, together with individual treatment of eight printed
 or poorly indexed sources, no source examined states the conjoined result of
 Theorems~\ref{thm:multiset} and~\ref{thm:set}, as a theorem or as an auxiliary
 lemma. The constituent constants and objects---$\alpha^2+\beta^2$ as a Gaussian norm
@@ -710,6 +748,12 @@ A.~Haynes, H.~Koivusalo, and J.~Walton,
 ``Linear repetitivity and subadditive ergodic theorems for cut and project sets,''
 arXiv:1503.04091, 2015.
 
+\bibitem{HaynesNotes}
+A.~Haynes,
+\emph{Notes on Diophantine approximation and aperiodic order},
+lecture notes, Univ.\ of Houston, June 2016;
+\texttt{www.math.uh.edu/\textasciitilde{}haynes/notes.html}.
+
 \bibitem{KletteRosenfeld2004}
 R.~Klette and A.~Rosenfeld,
 \emph{Digital Geometry: Geometric Methods for Digital Picture Analysis},
@@ -761,6 +805,11 @@ Zbl~0227.10040.
 P.~A.~B.~Pleasants,
 ``Designer quasicrystals: cut-and-project sets with pre-assigned properties,''
 in \cite{BaakeMoody2000}.
+
+\bibitem{PytheasFogg2002}
+N.~Pytheas Fogg (V.~Berth\'e, S.~Ferenczi, C.~Mauduit, A.~Siegel, eds.),
+\emph{Substitutions in Dynamics, Arithmetics and Combinatorics},
+Lecture Notes in Math.\ \textbf{1794}, Springer, 2002.
 
 \bibitem{Reveilles1991}
 J.-P.~Reveill\`es,

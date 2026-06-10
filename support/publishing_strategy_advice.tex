@@ -131,6 +131,38 @@ premise behind all of them:
   precise question worth one careful check, not a rescue.
 \end{enumerate}
 
+\section*{Update (June 2026): both homework items completed}
+
+Both checks above have now been carried out directly; the prior-art sections of
+the paper and of \texttt{research.tex} were updated accordingly.
+
+\textbf{Homework 1 --- the two references.} Haynes's lecture notes and Pytheas
+Fogg (Ch.~6, Arnoux) were read directly. The explicit period formula appears in
+\emph{neither}; moreover both actively frame the one-dimensional rational case
+as degenerate --- Haynes \S3.2 literally calls it ``the degeneracy'' and
+excludes it by assuming an irrational slope, and Pytheas Fogg defines Sturmian
+as \emph{not} eventually periodic, so the rational case is excluded by
+definition. Neither the modulus $\alpha^2+\beta^2$ nor the multiset/set
+dichotomy occurs. Net: the formula is not printed in the standard references,
+but those references treat the rational case as classically understood --- so
+``not printed'' is \emph{not} the same as ``novel.''
+
+\textbf{Homework 2 --- the set-valued case (this reverses my earlier guess
+above).} Reading the proof shows the set-valued period is the \emph{most
+elementary} part, not a novelty sliver: it is $1$ when $N \ge D$ (the projected
+set is all of $\mathbb{Z}$, so the gaps are constantly $1$) and equals the
+multiset period $N$ when $N < D$ (no coincidences, so set $=$ multiset). It
+carries no independent content and sits closer to the classical
+three-gap/point-set folklore than the multiset case does. The earlier literature
+search ``found nothing'' because it is too trivial to write down, not because it
+is deep.
+
+\textbf{Consequence.} The defensible novelty is uniform and narrow: (i)~the
+explicit closed-form multiset formula with its cyclic-interval minimality
+argument, (ii)~the multiplicity-convention framing (set versus multiset give
+different periods), and (iii)~the Lean~4 formalization. This \emph{confirms}
+rather than changes the pivot below.
+
 \section*{Bottom line}
 
 Your instinct not to give up is right --- and you don't have to. But the version
