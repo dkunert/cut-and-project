@@ -114,28 +114,37 @@ through via the `GeometricProjection` typeclass; the concrete instance
 set-valued enumeration mirrors the multiset construction with
 multiplicities flattened to $\{0,1\}$.
 
-### Reusable components (Mathlib candidates)
+### Relation to Mathlib
 
 The rational period formula is classical; the contribution here is the
-machine-checked formalization. Part of
-it is general number theory, with no cut-and-project semantics, and may be of
-wider use — these are the natural pieces to upstream to Mathlib:
+machine-checked formalization. The number-theoretic core (no cut-and-project
+semantics) largely overlaps with existing Mathlib:
 
-- **Distribution of `N` consecutive residues mod `D`** (`Basic.lean`, section
-  `ResidueDistribution`). With `count_hits` counting how often each class is
-  hit, `residue_distribution` shows every class is hit `⌊N/D⌋` or `⌈N/D⌉` times
-  with exactly `N mod D` classes attaining the larger value;
-  `uniform_residue_distribution` is the `D ∣ N` case; and
-  `residue_distribution_unit` shows the distribution is invariant under
-  multiplying the residues by a unit of `(ZMod D)ˣ`.
+- **Per-class residue count.** `count_hits D r0 N x` (`Basic.lean`, section
+  `ResidueDistribution`) counts how many of `N` consecutive integers fall in
+  residue class `x` mod `D`. This is exactly `Nat.Ico_filter_modEq_card`, and its
+  closed value `⌊N/D⌋ + [v % D < N % D]` is `Nat.count_modEq_card`, both in
+  `Mathlib/Data/Int/CardIntervalMod.lean`. The supporting lemmas
+  `count_hits_D` / `_lt_D` / `_mul_D` / `_eq` reprove this per-class count, and the
+  `⌊N/D⌋`/`⌈N/D⌉` two-valuedness is also
+  `Finset.equitableOn_iff_exists_eq_eq_add_one`.
+- **Aggregate distribution over `ZMod D`.** `residue_distribution` packages the
+  aggregate counts (exactly `N % D` heavy classes, `D − N % D` light;
+  `uniform_residue_distribution` is the `D ∣ N` case), and
+  `residue_distribution_unit` adds invariance under multiplication by a unit of
+  `(ZMod D)ˣ`. The abstract `n % k` / `k − n % k` split is mirrored by
+  `IsEquipartition.card_large_parts_eq_mod` / `card_small_parts_eq_mod`; the
+  specialization to residue classes over `ZMod D` (with the unit-invariance) does
+  not appear to be packaged as a single named result, but it is a short corollary
+  of the above rather than new mathematics.
 - **Cyclic-interval stabilizer** (`Basic.lean`, section `Minimality`):
   `cyclic_interval_stabilizer_trivial` — a proper nonempty cyclic interval of
-  residues mod `D` has trivial translation stabilizer.
+  residues mod `D` has trivial translation stabilizer. This one looks more
+  genuinely absent from Mathlib, though niche.
 
-The Kronecker-density and `ZMod`-unit building blocks these rest on are already
-in Mathlib; a search of the Mathlib docs and Loogle did not turn up the
-`ResidueDistribution` packaging itself, so it looks like a genuine contribution
-candidate (to be confirmed on the Lean Zulip).
+In short: the per-class counting is already in Mathlib (`CardIntervalMod`); what
+is specific here is the aggregate/unit-invariant packaging over `ZMod D`, kept
+local. Exact status to be confirmed on the Lean Zulip.
 
 ### Versions
 
