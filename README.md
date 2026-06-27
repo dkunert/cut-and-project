@@ -61,6 +61,18 @@ no finite period.
   (statements, proofs, related-literature discussion, and Lean
   correspondence in Table 1).
 
+## Companion work
+
+The three-gap (Steinhaus) theorem — that the gaps of
+$\lbrace i\alpha/\beta \bmod 1 : 0 \le i < N \rbrace$ take **at most three
+distinct lengths** — is complementary to the period results here: this work
+gives the *period* of the rational gap sequence, while the three-gap theorem
+bounds the *number of distinct gap lengths* in a single window. A
+self-contained Lean 4 / Mathlib formalization of the three-gap theorem,
+uniform in the rotation number (rational and irrational alike), is given in a
+companion project:
+<https://github.com/dkunert/three-gap-theorem-lean>.
+
 ## Lean 4 formalization
 
 The mathematical core is formalized in
