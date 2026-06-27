@@ -188,10 +188,17 @@ a `Makefile` with targets `make all` / `make perf` / `make debug` /
   set/multiset CSV (`tests/set_theorem_balanced_test.csv`) from
   Python implementations of both period algorithms.
 
-## Acknowledgement
+## Provenance
 
 The author used ChatGPT, Gemini, and Claude as AI assistants during
 mathematical exploration, drafting, proof construction, and the
-creation of the Lean formalization. The author has independently
-verified the mathematical content and accepts full responsibility for
-the results and any errors.
+creation of the Lean formalization, all under the author's direction.
+The author has independently verified the mathematical content and
+accepts full responsibility for the results and any errors. The
+correctness of the Lean formalization rests not on this provenance but
+on the Lean 4 kernel: anyone can rebuild it and inspect the axiom list
+(no `sorry`, `admit`, or `axiom`).
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). © 2026 Dirk Kunert.
