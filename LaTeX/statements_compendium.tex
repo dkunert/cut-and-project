@@ -1,0 +1,447 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,amsfonts,mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage[a4paper,margin=1in]{geometry}
+
+% Tolerate long, unbreakable \texttt{...} identifiers without
+% producing visible right-margin overruns.
+\tolerance=2000
+\emergencystretch=5em
+\hbadness=2000
+\hyphenpenalty=50
+
+% Same theorem setup as the main paper, so that all statement numbers
+% (Theorem/Lemma/Corollary/Proposition/Definition/Remark/Example) coincide
+% with those of the main paper.
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title[Statement Compendium: Rational Cut-and-Project Period Formulas]{%
+  Statement Compendium for\\
+  \emph{Period Formulas for Rational Cut-and-Project Strip Projections:
+  Multiset and Set Cases}}
+
+\author{Dirk Kunert}
+\address{Independent Researcher}
+\email{dirk.kunert@gmail.com}
+
+\subjclass[2020]{Primary 52C23; Secondary 11A07, 11B25, 11H06, 37B10, 68V20}
+\keywords{cut-and-project sets, projected multisets, gap sequences,
+period length, set-valued period, rational slope}
+
+\date{June 13, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is a companion to the paper \emph{Period Formulas for Rational
+Cut-and-Project Strip Projections: Multiset and Set Cases} (D.\ Kunert).
+It collects, for quick reference, \emph{every} formal statement of that
+paper---definitions, theorems, propositions, lemmas, corollaries, remarks,
+and examples---reproduced \emph{verbatim} and \emph{without proofs}.
+Section headings and statement numbers coincide exactly with those of the
+main paper, so any item here can be located there by its number.
+\end{abstract}
+
+\noindent\textbf{Conventions for this compendium.}
+\begin{itemize}
+  \item Statements are quoted verbatim from the main paper; proofs, figures,
+        and connecting prose are omitted.
+  \item Theorem/Lemma/Corollary/Proposition/Definition/Remark/Example
+        numbers (e.g.\ \emph{Theorem 3.1}, \emph{Lemma 4.4}) match the main
+        paper exactly. Section numbering therefore starts at~\S2; the main
+        paper's Introduction (\S1) and its proof, formalization, literature,
+        and discussion sections contain no formal statements and are not
+        reproduced. (Equation numbers are local to this document.)
+  \item Three references that point into the main paper's proofs, figures, or
+        bibliography have been redirected to read ``the main paper''; every
+        other cross-reference resolves within this document.
+\end{itemize}
+
+\medskip
+
+% =====================================================================
+% Section numbers start at 2 so that statement numbers match the paper.
+\setcounter{section}{1}
+\section{Construction of the Sequences}\label{sec:setup}
+% =====================================================================
+
+This section fixes the minimal notation needed to read the statements; the
+full construction is given in the main paper. Fix coprime
+\(\alpha, \beta \in \mathbb{N}\) and a window parameter \(\omega \ge 0\), and
+project the accepted lattice points of the rational strip onto the line of
+slope \(\alpha/\beta\). Sorting the projected values \(\tilde{p}\) in
+nondecreasing order, \emph{with multiplicities retained}, yields
+\((\tilde{p}^{(i)}_s)_{i \in \mathbb{Z}}\) and the \emph{gap sequence}
+\begin{equation}\label{eq:delta}
+    \delta^{(i)} \;:=\; \tilde{p}^{(i+1)}_s - \tilde{p}^{(i)}_s.
+\end{equation}
+
+\begin{definition}\label{def:period}
+The sequence \((\delta^{(i)})_{i \in \mathbb{Z}}\) has \emph{period length}
+\(\lambda \in \mathbb{N}\) if \(\lambda\) is the smallest positive integer
+such that \(\delta^{(i+\lambda)} = \delta^{(i)}\) for all~\(i\).
+\end{definition}
+
+% =====================================================================
+\section{Main Result}\label{sec:mainresult}
+% =====================================================================
+
+\begin{theorem}[Period length formula]\label{thm:main}
+Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha, \beta) = 1\) and let
+\(\omega \in \mathbb{R}_{\ge 0}\).  Define
+\begin{equation}\label{eq:ND}
+    N \;:=\; \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1,
+    \qquad
+    D \;:=\; \alpha^2 + \beta^2.
+\end{equation}
+Then the period length of the gap sequence~\eqref{eq:delta} is
+\begin{equation}\label{eq:formula}
+    \lambda_{\mathrm{multiset}} \;=\;
+    \begin{cases}
+        N   & \text{if } D \nmid N, \\
+        N/D & \text{if } D \mid N.
+    \end{cases}
+\end{equation}
+Here \(\lambda_{\mathrm{multiset}}\) denotes the minimal period
+\(\lambda\) of Definition~\ref{def:period} applied to the multiset gap
+sequence; the set-valued analogue \(\lambda_{\mathrm{set}}\) is introduced
+in Section~\ref{sec:setvalued}.
+\end{theorem}
+
+\begin{remark}[Interpretation of \(N\)]\label{rem:N}
+The quantity \(N\) equals
+\[
+    \#\bigl([-\omega\beta,\,\omega\alpha]\cap\mathbb{Z}\bigr),
+\]
+the number of integers in the range of the invariant
+\(r = \alpha x - \beta y\) (see the generic-case proof in the main paper).
+Geometrically, \(N\) counts the number of tracks, namely the parallel arithmetic progressions of
+projected values counted with multiplicity (illustrated in the main paper).
+\end{remark}
+
+\begin{remark}[Interpretation of \(D\)]\label{rem:D}
+The quantity \(D = \alpha^2+\beta^2\) is the common difference of each
+arithmetic progression of \(\tilde{p}\)-values.
+It also equals \(\lVert(\beta,\alpha)\rVert^2\), the squared length of the
+direction vector of~\(f\).
+\end{remark}
+
+\begin{remark}[Computational verification]\label{rem:verification}
+The multiset and set formulas have been verified jointly against the same
+CSV datasets, since each row records both \(\lambda_{\mathrm{multiset}}\)
+and \(\lambda_{\mathrm{set}}\):
+\begin{itemize}
+    \item 51{,}012 test cases with \(\alpha, \beta\) up to \({\sim}100{,}000\)
+          and rational \(\omega\) up to \({\sim}10\), all satisfying
+          \(D \nmid N\) (51{,}011 with \(N < D\), one with \(N \ge D\));
+          see file \texttt{multiset\_\allowbreak and\_\allowbreak set\_\allowbreak new\_\allowbreak find\_\allowbreak patterns\_\allowbreak 51012\_\allowbreak lines.csv}
+          in the repository's \texttt{tests/} folder.
+    \item 477 cases at \((\alpha, \beta) = (1, 2)\) with rational \(\omega\)
+          chosen so that \(D \mid N\) (with \(N\) up to \({\sim}4{,}300\)),
+          verifying the \(\lambda = N/D\) branch; see file
+          \texttt{multiset\_\allowbreak and\_\allowbreak set\_\allowbreak degenerate\_\allowbreak patterns\_\allowbreak 5000\_\allowbreak lines.csv}
+          in the repository's \texttt{tests/} folder.
+    \item 240 additional cases generated by an independent Python
+          implementation, balanced 120 / 120 between \(N < D\) and
+          \(N \ge D\) and spanning 25 distinct \((\alpha, \beta)\) pairs;
+          see file \texttt{set\_\allowbreak theorem\_\allowbreak balanced\_\allowbreak test.csv}.
+\end{itemize}
+All 51{,}729 cases produce exact matches with zero failures for both the
+multiset formula~\eqref{eq:formula} and the set formula~\eqref{eq:setformula}
+(see Theorem~\ref{thm:setperiod} below).  These computations are used only
+as consistency checks; the proofs below are independent of the empirical
+verification.
+
+Historically, the \(D \nmid N\) branch of the multiset
+formula~\eqref{eq:formula} was first suggested by inspecting the datasets
+at \(\omega = 1\), where
+\(\lambda_{\mathrm{multiset}} = \alpha + \beta + 1\)
+(see Corollary~\ref{cor:omega1}).
+\end{remark}
+
+% =====================================================================
+\section{\texorpdfstring{Proof: The Generic Case \(D \nmid N\)}{Proof: The Generic Case D does not divide N}}\label{sec:proof}
+% =====================================================================
+
+\emph{In the main paper the statements below constitute the proof of the
+generic case; their own proofs are omitted here.}
+
+\begin{lemma}\label{lem:gcd}
+\(\gcd(\alpha, D) = \gcd(\beta, D) = 1\).
+\end{lemma}
+
+\begin{corollary}\label{cor:inverse}
+The modular inverse \(\beta^{-1} \pmod{D}\) exists, and the map
+\(r \mapsto c_r = -\alpha\beta^{-1}r \bmod D\) is a bijection on
+\(\mathbb{Z}/D\mathbb{Z}\).
+\end{corollary}
+
+\begin{lemma}[Nonuniform residue distribution]\label{lem:nonuniform}
+If \(D \nmid N\), the multiset of \(N\) residues
+\(\{c_r \bmod D : r \in \mathcal{R}\}\) is not uniformly distributed over
+\(\mathbb{Z}/D\mathbb{Z}\).  More precisely, writing \(N = qD + s\) with
+\(0 < s < D\), exactly \(s\) residue classes are hit \(q+1\) times and
+\(D - s\) residue classes are hit \(q\) times.
+\end{lemma}
+
+\begin{lemma}[Uniform residue distribution]\label{lem:uniform}
+If \(D \mid N\), then every residue class \(c \in \mathbb{Z}/D\mathbb{Z}\) is
+hit exactly \(N/D\) times by the multiset
+\(\{c_r \bmod D : r \in \mathcal{R}\}\).
+\end{lemma}
+
+\begin{lemma}[Minimal period divides every period]
+\label{lem:minperiod_divides_periods}
+Let \((a_i)_{i\in\mathbb Z}\) be a bi-infinite sequence with minimal
+positive period~\(\lambda\).  If \(M > 0\) is also a period, then
+\(\lambda \mid M\).
+\end{lemma}
+
+\begin{lemma}[Trivial stabilizer of a cyclic interval]
+\label{lem:cyclic_interval_stabilizer}
+Let \(0 < s < D\) and let
+\[
+    H = \{x_0,\, x_0+1,\, \ldots,\, x_0+s-1\} \pmod{D}
+\]
+be a cyclic interval of length \(s\) in \(\mathbb{Z}/D\mathbb{Z}\).
+If \(\tau \in \mathbb{Z}/D\mathbb{Z}\) satisfies \(H + \tau = H\),
+then \(\tau \equiv 0 \pmod{D}\).
+\end{lemma}
+
+\begin{proposition}\label{prop:generic_period}
+If \(D \nmid N\), then the multiset gap sequence has minimal
+period \(\lambda = N\).
+\end{proposition}
+
+% =====================================================================
+\section{\texorpdfstring{The Degenerate Case \(D \mid N\)}{The Degenerate Case D divides N}}\label{sec:degenerate}
+% =====================================================================
+
+\begin{theorem}\label{thm:degenerate}
+If \(D \mid N\), then \(\lambda = N/D\).
+\end{theorem}
+
+\begin{example}\label{ex:degenerate}
+For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3\):
+\[
+    N = \lfloor 6 \rfloor + \lfloor 3 \rfloor + 1 = 10,
+    \qquad
+    D = 5.
+\]
+Since \(5 \mid 10\), the formula gives \(\lambda = 10/5 = 2\).
+Direct computation confirms the gap sequence
+\((0, 1, 0, 1, \ldots)\) with period~\(2\).
+\end{example}
+
+\begin{example}\label{ex:degenerate2}
+For \(\alpha = 3\), \(\beta = 2\), \(\omega = 5\):
+\[
+    N = \lfloor 15 \rfloor + \lfloor 10 \rfloor + 1 = 26,
+    \qquad
+    D = 13.
+\]
+Since \(13 \mid 26\), the formula gives \(\lambda = 26/13 = 2\).
+\end{example}
+
+\begin{remark}\label{rem:boundary}
+The boundary case \(N = D\), i.e. \(N/D = 1\), gives
+\(\lambda_{\mathrm{multiset}} = 1\): every integer is a projected value in
+the \(\tilde{p}\)-coordinate with multiplicity~\(1\), and all gaps
+equal~\(1\).  At this boundary the multiset and set conventions agree
+(Theorem~\ref{thm:setperiod}, case \(N \ge D\); see also
+Corollary~\ref{cor:setlemultiset}).
+\end{remark}
+
+% =====================================================================
+\section{The Set-Valued Period}\label{sec:setvalued}
+% =====================================================================
+
+Sorting instead the \emph{set} of distinct projected values
+\(\tilde{p} \in \mathbb{Z}\), with each value listed once, yields a strictly
+increasing enumeration \((\tilde{p}^{(i)}_{\mathrm{set}})_{i \in \mathbb{Z}}\)
+and the \emph{set-valued gap sequence}
+\begin{equation}\label{eq:delta_set}
+    \delta^{(i)}_{\mathrm{set}}
+    \;:=\; \tilde{p}^{(i+1)}_{\mathrm{set}} - \tilde{p}^{(i)}_{\mathrm{set}}.
+\end{equation}
+Its minimal period \(\lambda_{\mathrm{set}}\) is defined exactly as in
+Definition~\ref{def:period}.
+
+\begin{theorem}[Set-valued period]\label{thm:setperiod}
+Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha,\beta) = 1\) and
+\(\omega \in \mathbb{R}_{\ge 0}\).  With \(N\) and \(D\) as
+in~\eqref{eq:ND}, the set-valued gap sequence~\eqref{eq:delta_set}
+has minimal period
+\begin{equation}\label{eq:setformula}
+    \lambda_{\mathrm{set}} \;=\;
+    \begin{cases}
+        N & \text{if } N < D, \\
+        1 & \text{if } N \ge D.
+    \end{cases}
+\end{equation}
+\end{theorem}
+
+\begin{corollary}\label{cor:setlemultiset}
+For all \(\alpha, \beta, \omega\) as above,
+\[
+    \lambda_{\mathrm{set}} \;\mid\; \lambda_{\mathrm{multiset}},
+\]
+and in particular
+\[
+    \lambda_{\mathrm{set}} \;\le\; \lambda_{\mathrm{multiset}},
+\]
+with equality if and only if \(N \le D\).
+\end{corollary}
+
+\begin{example}[\(N < D\), set and multiset agree]\label{ex:set_lt}
+For \(\alpha = 2\), \(\beta = 3\), \(\omega = 2\): \(N = 4 + 6 + 1 = 11\)
+and \(D = 13\), so \(N < D\).  Then
+\(\lambda_{\mathrm{multiset}} = \lambda_{\mathrm{set}} = 11\).
+\end{example}
+
+\begin{example}[\(N = D\), boundary]\label{ex:set_eq}
+For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3/2\): \(N = 5 = D\), so
+\(\lambda_{\mathrm{multiset}} = N/D = 1 = \lambda_{\mathrm{set}}\)
+(cf.\ Remark~\ref{rem:boundary}).
+\end{example}
+
+\begin{example}[\(N > D\), \(D \nmid N\), set and multiset disagree]
+\label{ex:set_gt}
+Take \(\alpha = 3\), \(\beta = 4\), \(\omega = 4\).  Then
+\[
+    N = \lfloor 12 \rfloor + \lfloor 16 \rfloor + 1 = 29,
+    \qquad
+    D = 9 + 16 = 25,
+    \qquad
+    N = 1 \cdot D + 4,
+\]
+so the residue distribution
+(Lemma~\ref{lem:nonuniform}) hits exactly \(4\) classes with
+multiplicity \(2\) and the remaining \(21\) classes with
+multiplicity \(1\).
+
+\medskip
+\noindent\emph{Multiset side.}  Within each length-\(D\) window of the
+\(\tilde{p}\)-axis, the \(N = 29\) projected entries (counted with
+multiplicity) include four duplicated values: each of the four
+heavy residue classes contributes a coincident pair, hence a zero
+gap.  The block of \(N\) gaps therefore contains four \(0\)'s and
+\(N - 4 = 25\) positive values, summing to \(D\).
+Theorem~\ref{thm:main} gives
+\(\lambda_{\mathrm{multiset}} = N = 29\), and the heavy classes form
+a cyclic interval of length \(s = 4\) whose only translational
+symmetry is the identity
+(Lemma~\ref{lem:cyclic_interval_stabilizer}).
+
+\medskip
+\noindent\emph{Set side.}  Since every residue class is hit at least
+once, the underlying point set is all of \(\mathbb{Z}\) in the
+\(\tilde{p}\)-coordinate.  Discarding multiplicities collapses the four
+zero gaps and leaves the constant gap sequence \(1, 1, 1, \ldots\);
+Theorem~\ref{thm:setperiod} gives
+\(\lambda_{\mathrm{set}} = 1\).  Direct computation confirms both
+values.
+\end{example}
+
+% =====================================================================
+\section{Corollaries}\label{sec:corollaries}
+% =====================================================================
+
+Throughout this section, \(\lambda\) denotes the multiset period
+\(\lambda_{\mathrm{multiset}}\) of Theorem~\ref{thm:main}; the
+set-valued analogues follow from Theorem~\ref{thm:setperiod} via
+Corollary~\ref{cor:setlemultiset}.  Define
+\(\Lambda_{\alpha,\beta} := \alpha + \beta + 1\).
+
+\begin{corollary}[Finiteness]\label{cor:finite}
+For all \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha,\beta)=1\) and
+all \(\omega \in \mathbb{R}_{\ge 0}\), the period length~\(\lambda\) is
+finite.
+\end{corollary}
+
+\begin{corollary}[Period at \(\omega = 1\)]\label{cor:omega1}
+For \(\omega = 1\), \(\lambda = \Lambda_{\alpha,\beta}\).
+\end{corollary}
+
+\begin{corollary}[\(0 < \omega < 1\)]\label{cor:small_omega}
+If \(0 < \omega < 1\), then
+\[
+    \lambda < \Lambda_{\alpha,\beta}.
+\]
+\end{corollary}
+
+\begin{corollary}[\(1 < \omega < 2\)]\label{cor:medium_omega}
+If \(1 < \omega < 2\) and \(D \nmid N\), then
+\[
+    \lambda \ge \Lambda_{\alpha,\beta}.
+\]
+\end{corollary}
+
+\begin{remark}
+The condition \(D \nmid N\) in Corollary~\ref{cor:medium_omega} cannot be
+dropped.  For \(\alpha = 2\), \(\beta = 1\), \(\omega = 3/2\), one has
+\[
+    N = \lfloor 3 \rfloor + \lfloor 3/2 \rfloor + 1 = 5 = D.
+\]
+Since \(D \mid N\), we get \(\lambda = N/D = 1\), which is less than
+\(\Lambda_{2,1} = 4\).
+\end{remark}
+
+\begin{corollary}[\(\omega > 2\)]\label{cor:large_omega}
+If \(\omega > 2\) and \(D \nmid N\), then
+\[
+    \lambda > \Lambda_{\alpha,\beta}.
+\]
+\end{corollary}
+
+\begin{remark}
+In both corollaries above, the degenerate case \(D \mid N\) can produce
+small periods: \(\lambda = N/D\) may be much less than
+\(\Lambda_{\alpha,\beta}\).  This occurs when the window parameter is tuned so
+that the number of tracks is an exact multiple of \(D = \alpha^2+\beta^2\).
+\end{remark}
+
+% =====================================================================
+\section{The Irrational Case}\label{sec:irrational}
+% =====================================================================
+
+\begin{proposition}[Aperiodicity for irrational slope]\label{prop:irrational}
+Let \(a \in \mathbb{R}_{>0} \setminus \mathbb{Q}\) and \(\omega > 0\), and
+consider the analogous strip projection with line \(f(x) = a x\) and strip
+\(\{(x,y) : a(x-\omega) \le y \le a x + \omega\}\).  Then the projected
+gap sequence has \emph{no} finite period.  Moreover, the orthogonal
+projection is injective on \(\mathbb{Z}^2\), so the multiset and set
+conventions coincide in this case.
+\end{proposition}
+
+\begin{remark}[Period dichotomy]\label{rem:dichotomy}
+Within the family of positive slopes considered here, and for \(\omega > 0\),
+Corollary~\ref{cor:finite} and Proposition~\ref{prop:irrational} together
+form a complete dichotomy:
+\[
+    \text{the gap sequence has a finite period}
+    \;\;\Longleftrightarrow\;\;
+    \text{the slope is rational.}
+\]
+There are no exceptional irrational slopes that produce a finite period;
+the boundary between the periodic and the aperiodic regime coincides exactly
+with the boundary \(\mathbb{Q}_{>0} \subset \mathbb{R}_{>0}\).  The
+aperiodic side is the classical setting of model sets and aperiodic order
+(see the related-literature section of the main paper).
+\end{remark}
+
+\end{document}

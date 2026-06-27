@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build the Lean formalization
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installs elan + the pinned toolchain (Lean/CutAndProject/lean-toolchain),
+      # fetches the Mathlib cache, then runs `lake build` on the formalization.
+      - name: Build with Lean
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: Lean/CutAndProject
+          use-mathlib-cache: true

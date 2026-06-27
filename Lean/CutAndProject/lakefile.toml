@@ -1,0 +1,25 @@
+name = "CutAndProject"
+version = "0.1.0"
+description = "Lean 4 formalization of period length formulas for one-dimensional rational cut-and-project sequences (multiset and set conventions)"
+keywords = ["math", "number-theory", "combinatorics", "lean4", "formalization", "cut-and-project"]
+license = "MIT"
+defaultTargets = ["CutAndProject"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+# Silence cosmetic linter warnings whose fixes would shift line numbers
+# referenced by Table 1 of the companion paper.
+linter.style.longLine = false
+linter.style.maxHeartbeats = false
+linter.style.induction = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.29.1"
+
+[[lean_lib]]
+name = "CutAndProject"
