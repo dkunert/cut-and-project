@@ -1562,7 +1562,7 @@ and \texttt{set\_\allowbreak main\_\allowbreak theorem\_\allowbreak geometric\_\
 The irrational case (Proposition~\ref{prop:irrational}) is formalized
 separately in \texttt{Irrational.lean}.  The two files together
 comprise approximately 3{,}760 lines of verified code with no
-\texttt{sorry} axioms, and are available in the companion
+\texttt{sorry} axioms, and are available in the accompanying code
 repository~\cite{Kunert2025} under \texttt{Lean/CutAndProject/}.
 
 \subsection{Architecture}\label{subsec:lean_arch}
@@ -1663,7 +1663,7 @@ Bridge to paper formula \(c_r = -\alpha\beta^{-1}r\)
   & \texttt{c\_r\_eq\_multiplier\_mul\_r} & 2523 \\
 \(c_r\)-counting matches \texttt{count\_hits\_unit}
   & \texttt{count\_hits\_unit\_multiplier\_eq\_c\_r\_count} & 2543 \\
-Lemma~\ref{lem:nonuniform} with multiplier
+Residue distribution (general) with multiplier
   & \texttt{residue\_distribution\_unit} & 287 \\
 Heavy set under \(c_r\) is cyclic interval (image under \(u\))
   & \texttt{heavy\_set\_unit\_is\_cyclic\_interval} & 408 \\
@@ -1718,7 +1718,7 @@ Line numbers in the upper part of the table refer to
 \texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Basic.lean};
 those in the lower part refer to
 \texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Irrational.lean}
-(both files in the companion repository version submitted with the paper~\cite{Kunert2025}).}
+(both files in the accompanying code repository version submitted with the paper~\cite{Kunert2025}).}
 \label{tab:lean}
 \end{table}
 
@@ -1798,8 +1798,8 @@ the final theorem.
 \paragraph{Boundary between the two layers.} The hand-verified
 strip-to-residue reduction of Layer~1 is standard cut-and-project
 mathematics; what is novel in the formalization is that Layer~2 closes
-the residual gap left by previous formalizations, in which the abstract
-typeclass \texttt{GeometricProjection} was instantiated only for the
+the residual gap left by the earlier version of this development, in which the
+abstract typeclass \texttt{GeometricProjection} was instantiated only for the
 normalized residue map (\(u = 1\)).  In the present formalization, the
 geometric multiplier is fully threaded through to the period theorems on
 both the multiset and set sides.
@@ -1835,8 +1835,8 @@ studied here, so the two formalizations are complementary.
 
 The lower Christoffel word associated with the lattice path from
 \((0,0)\) to \((p,q)\), with \(\gcd(p,q)=1\), is a binary word of length
-\(p+q\)~\cite{BerstelEtAl2008}.  The corresponding mechanical Sturmian
-sequence -- in the convention where each letter encodes one unit step of
+\(p+q\)~\cite{BerstelEtAl2008}.  The corresponding mechanical
+word -- in the convention where each letter encodes one unit step of
 this path -- is then periodic with period \(p+q\) (the length of the
 Christoffel word).  (We note that under
 the alternative convention in which the slope is taken as
@@ -1926,7 +1926,8 @@ periodic rotation codings fall outside that framework, and no minimal-period
 formula of the present kind is formulated there.  In neither reference does the modulus
 \(D = \alpha^2+\beta^2\), nor the multiset/set period dichotomy, occur.  The
 present formula records, with an explicit closed form and a machine-checked
-proof, precisely the case these standard treatments set aside as degenerate.
+proof of its residue-combinatorial core, precisely the case these standard
+treatments set aside as degenerate.
 
 Where the rational case is treated, the emphasis is on different invariants:
 for instance, \cite{GaehlerHuntonKellendonk2013} computes the integral
