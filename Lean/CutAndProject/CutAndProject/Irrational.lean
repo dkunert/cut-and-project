@@ -4,7 +4,7 @@ Aperiodicity of the projected gap sequence for irrational slopes.
 This file formalizes the aperiodicity proposition (`prop:irrational`) of
 `LaTeX/rational_cut_and_project_gap_periods.tex`, Section
 "The Irrational Case". For positive irrational
-slope `a` and strip half-width `ω > 0`, the projected gap sequence
+slope `a` and window parameter `ω > 0`, the projected gap sequence
 on the accepted lattice points has no finite period.
 
 The proof has three steps:
@@ -263,7 +263,7 @@ theorem accepted_preimage_finite
 
 /-! ### Section E. Bi-infinite unboundedness -/
 
-/-- Auxiliary lemma: for any `ε > 0` (with `ε ≤ 1`), there exist integers `p, q`
+/-- Auxiliary lemma: for any `ε > 0`, there exist integers `p, q`
 with `0 < |sInternal a (p,q)| < ε` and `0 < tildeP a (p,q)`.  Density of
 `Set.range (sInternal a)` (Section C) on `Ioo 0 ε` produces `(p, q)` with
 `s ∈ (0, ε)`; flipping sign of `(p, q)` if necessary forces `tildeP > 0`. -/

@@ -51,7 +51,7 @@ In every case $\lambda_{\mathrm{set}}$ divides $\lambda_{\mathrm{multiset}}$
 (so in particular $\lambda_{\mathrm{set}} \le \lambda_{\mathrm{multiset}}$),
 with equality if and only if $N \le D$.
 
-For positive irrational slope and strip half-width $\omega > 0$, the
+For positive irrational slope and window parameter $\omega > 0$, the
 projected set has no coincident projected values, and its gap sequence has
 no finite period.
 
@@ -82,7 +82,7 @@ The mathematical core is formalized in
 - `Basic.lean` (~2,862 lines) — both period theorems for the
   rational case (multiset and set conventions).
 - `Irrational.lean` (~896 lines) — Proposition 1 of the paper:
-  for positive irrational slope and strip half-width $\omega > 0$,
+  for positive irrational slope and window parameter $\omega > 0$,
   the projected gap sequence has no finite period.
 
 The headline theorems for the rational, geometric enumeration are:
@@ -101,7 +101,7 @@ The proof has two layers.
 
 **Layer 1:** The strip geometry and projection are reduced to a
 discrete enumeration of $N$ consecutive residue classes modulo $D$
-under the multiplier $m = -\alpha\beta^{-1}$ (Sections 2–3 of the
+under the multiplier $m = -\alpha\beta^{-1}$ (Sections 2 and 4.2 of the
 paper).
 
 **Layer 2:** Starting from the residue model, Lean
@@ -127,7 +127,7 @@ semantics) largely overlaps with existing Mathlib:
   `Mathlib/Data/Int/CardIntervalMod.lean`. The supporting lemmas
   `count_hits_D` / `_lt_D` / `_mul_D` / `_eq` reprove this per-class count, and the
   `⌊N/D⌋`/`⌈N/D⌉` two-valuedness is also
-  `Finset.equitableOn_iff_exists_eq_eq_add_one`.
+  `Set.equitableOn_iff_exists_eq_eq_add_one`.
 - **Aggregate distribution over `ZMod D`.** `residue_distribution` packages the
   aggregate counts (exactly `N % D` heavy classes, `D − N % D` light;
   `uniform_residue_distribution` is the `D ∣ N` case), and
@@ -180,9 +180,10 @@ memory limits, $x$-range, conjecture-test counts, output formats) and
 a `Makefile` with targets `make all` / `make perf` / `make debug` /
 `make clean`.
 
-> **Note:** `MAX_PERIOD_ARRAY_SIZE` controls a single allocation; the
-> default of $8 \times 10^9$ requests $\approx 60$ GB of RAM. Adjust
-> before building.
+> **Note:** `MAX_PERIOD_ARRAY_SIZE` controls a single allocation of
+> 8-byte entries; the defaults are $10^7$ ($\approx 80$ MB) in
+> `src/c/multiset/` and $4 \times 10^9$ ($\approx 32$ GB) in
+> `src/c/set/`. Adjust before building.
 
 ### Python (`src/python/`)
 

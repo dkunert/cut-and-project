@@ -2,7 +2,7 @@
 
 This directory contains a Lean 4 formalisation of all period theorems for one-dimensional cut-and-project gap sequences proved in `../../LaTeX/rational_cut_and_project_gap_periods.tex`.
 
-The formalisation comprises approximately 3,750 lines of verified code split across two files in `CutAndProject/`, and contains no `sorry`, `admit`, or `axiom`.
+The formalisation comprises approximately 3,760 lines of verified code split across two files in `CutAndProject/`, and contains no `sorry`, `admit`, or `axiom`.
 
 * `Basic.lean` (~2,860 lines) — rational case: the residue-combinatorial core for both period theorems (multiset and set conventions).
 * `Irrational.lean` (~900 lines) — irrational case: aperiodicity of the projected gap sequence for irrational slope.
@@ -30,11 +30,11 @@ p_s(i) := V(i mod N) + (i / N) * D
 
 where `V` is the quantile function of the cumulative residue distribution. The bridge lemma `count_hits_eq_sorted_count` verifies this is consistent with the residue counting function.
 
-Thus `Basic.lean` verifies the residue-combinatorial core of both proofs (multiset and set), with the geometric multiplier threaded through to the headline statements; the strip-to-residue reduction itself is hand-verified in Sections 2 and 3.2 of the paper.
+Thus `Basic.lean` verifies the residue-combinatorial core of both proofs (multiset and set), with the geometric multiplier threaded through to the headline statements; the strip-to-residue reduction itself is hand-verified in Sections 2 and 4.2 of the paper.
 
 ## Scope: irrational case (`Irrational.lean`)
 
-For positive irrational slope `a` and strip half-width `ω > 0`, `Irrational.lean` proves Proposition 1 of the paper (Section "The Irrational Case"): the projected gap sequence has no finite period. The headline theorem is `prop_irrational`; the corollary `tildeP_injOn_acceptedSet` formalises the second clause ("multiset and set conventions coincide" because the projection is injective on `ℤ²`).
+For positive irrational slope `a` and window parameter `ω > 0`, `Irrational.lean` proves Proposition 1 of the paper (Section "The Irrational Case"): the projected gap sequence has no finite period. The headline theorem is `prop_irrational`; the corollary `tildeP_injOn_acceptedSet` formalises the second clause ("multiset and set conventions coincide" because the projection is injective on `ℤ²`).
 
 Beyond the proposition itself, the file establishes the supporting infrastructure used implicitly in the paper proof: local finiteness of `tildeP(A)`, bi-infinite unboundedness, and the resulting `ℤ`-indexed enumeration of accepted projected points (assembled via Mathlib's `orderIsoIntOfLinearSuccPredArch`). Kronecker density of `ℤ + a·ℤ ⊂ ℝ` is reduced to Mathlib's `dense_addSubgroupClosure_pair_iff`.
 

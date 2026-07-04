@@ -39,7 +39,7 @@ Edit `src/c/multiset/constants.h` before building/running:
 - `NUMBER_OF_CONJECTURE_TESTS`: Number of random test iterations (default: 1000)
 - `TASKS`: Bitwise flags — `TEST | TEST_CONJECTURES` (both enabled by default)
 - `CREATE_FILE_TO_FIND_A_PATTERN`: Set to `true` to generate CSV output (default: `false`)
-- `MAX_PERIOD_ARRAY_SIZE`: Controls memory allocation (~8GB at default of 8,000,000,000)
+- `MAX_PERIOD_ARRAY_SIZE`: Controls memory allocation of 8-byte entries (defaults: 10,000,000 ≈ 80 MB in `src/c/multiset/`, 4,000,000,000 ≈ 32 GB in `src/c/set/`)
 
 ## Architecture
 

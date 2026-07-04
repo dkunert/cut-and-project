@@ -588,7 +588,7 @@ noncomputable def sorted_multiset (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β 
   (V α β ω r : ℤ) + q * D
 
 /--
-The concrete difference sequence from the cut-and-project set.
+The concrete difference sequence of the normalized residue model (`u = 1`). The geometric gap sequence of the cut-and-project set is realised by `difference_sequence_unit` with `u = multiplier α β h`; the two have the same period length (the content of the main theorems) but differ as sequences in general.
 -/
 noncomputable def difference_sequence (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) : ℤ :=
   sorted_multiset α β ω (i + 1) - sorted_multiset α β ω i
@@ -600,7 +600,7 @@ total number of hits in the integer range `[0, x]` of the multiplier-twisted
 arithmetic progression `u * (r0 + i)` for `i ∈ [0, N)`. With `u = 1` it
 reduces to `cumulative_hits` (`cumulative_hits_unit_one`); with
 `u = multiplier α β h` it realises the geometric residue map
-`c_r ≡ -αβ⁻¹·(r0 + r) (mod D)` from the paper.
+`c_{r0+i} ≡ -αβ⁻¹·(r0 + i) (mod D)`, `i ∈ [0, N)`, from the paper.
 -/
 noncomputable def cumulative_hits_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (x : ℕ) : ℕ :=
@@ -1267,7 +1267,7 @@ lemma count_hits_eq_sorted_count (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
   congr 1; exact (ZMod.natCast_zmod_val x).symm
 
 /--
-count_hits invariance under the sorted_multiset shift σ.
+Injectivity of `j ↦ (j + L) % N` on `[0, N)`: a cancellation lemma used in the minimality argument.
 -/
 private lemma mod_add_inj (N L j₁ j₂ : ℕ) (hN : 0 < N)
     (hj₁ : j₁ < N) (hj₂ : j₂ < N)
@@ -2485,8 +2485,8 @@ theorem main_theorem_unit_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β)
 
 /-- Geometric concrete main theorem. Specialises `main_theorem_unit_concrete`
 to the geometric multiplier `u = multiplier α β h_coprime`, so the period
-result holds for the actual cut-and-project enumeration with residues
-`c_r ≡ -αβ⁻¹ · (r0 + r) (mod D)`. -/
+result holds for the residue-model enumeration carrying the geometric
+residues `c_{r0+r} ≡ -αβ⁻¹ · (r0 + r) (mod D)` (paper §9.3, Layer 2). -/
 theorem main_theorem_geometric_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
     [NeZero (α ^ 2 + β ^ 2)] :

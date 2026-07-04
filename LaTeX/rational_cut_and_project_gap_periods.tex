@@ -6,6 +6,13 @@
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{caption}
 \captionsetup[table]{position=below,skip=12pt}
+\hypersetup{
+  pdftitle={Period Formulas for Rational Cut-and-Project Strip Projections:
+    Multiset and Set Cases},
+  pdfauthor={Dirk Kunert},
+  pdfkeywords={cut-and-project sets, gap sequences, period length,
+    set-valued period, Lean 4 formalization},
+}
 
 % Tolerate long, unbreakable \texttt{...} Lean identifiers without
 % producing visible right-margin overruns.
@@ -80,7 +87,9 @@ with equality if and only if \(N \le D\).  The proof reduces the
 geometry to the distribution of \(N\) consecutive residue classes
 modulo~\(D\).  When this distribution is nonuniform, the residue classes
 with larger multiplicity form a proper cyclic interval after passing to the
-\(m\)-stepping parametrization; its only translational symmetry is the identity,
+\(m\)-stepping parametrization (a relabeling of the residues by the
+invertible multiplier \(m \equiv -\alpha\beta^{-1} \pmod{D}\)); its only
+translational symmetry is the identity,
 which rules out any smaller period.  The algebraic core of both proofs
 has been formalized in Lean~4.
 \end{abstract}
@@ -153,7 +162,9 @@ common difference \(D\), and the relevant residues modulo \(D\) are
 obtained from \(N\) consecutive integers by multiplication with a unit
 modulo \(D\).  If \(D\nmid N\), the residue classes with larger multiplicity
 form a proper cyclic interval after passing to the \(m\)-stepping
-parametrization; its only translational symmetry is the identity, which
+parametrization, the relabeling of the residues by that unit
+\(m \equiv -\alpha\beta^{-1} \pmod{D}\) introduced in
+Section~\ref{sec:proof}; its only translational symmetry is the identity, which
 rules out any smaller period.  If \(D\mid N\), the residues are uniformly distributed and the gap
 sequence collapses to a simple pattern of period \(N/D\).  The set-valued
 formula then follows from the same residue-distribution analysis: under
@@ -161,7 +172,8 @@ formula then follows from the same residue-distribution analysis: under
 and multiset coincide as sequences; under \(N \ge D\) every residue is hit
 and the underlying set is~\(\mathbb{Z}\) in the \(\tilde{p}\)-coordinate.
 
-Both proofs have been formalized in Lean~4 with the geometric residue map
+The algebraic core of both proofs has been formalized in Lean~4, with the
+geometric residue map
 \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) threaded through to the period
 theorems on both the multiset and set sides.  The formalization verifies
 the residue-class and minimal-period arguments; the strip-to-residue
@@ -189,7 +201,8 @@ Section~\ref{sec:discussion} collects open questions.
 \subsection{Accepted lattice points}\label{subsec:construction}
 
 Throughout the paper, \(\mathbb{N} = \{1, 2, 3, \ldots\}\) denotes the
-positive integers.
+positive integers and \(\mathbb{N}_0 = \{0, 1, 2, \ldots\}\) the
+nonnegative integers.
 
 Let \(\alpha, \beta \in \mathbb{N}\) with \(\gcd(\alpha, \beta) = 1\) and let
 \(\omega \in \mathbb{R}_{\ge 0}\).
@@ -214,6 +227,8 @@ The interval is closed: lattice points lying on either bounding line are
 accepted.  This closed-boundary convention underlies the count
 \(N = \lfloor\omega\alpha\rfloor + \lfloor\omega\beta\rfloor + 1\) of
 admissible levels derived in Section~\ref{sec:mainresult}.
+Figure~\ref{fig:construction} illustrates the construction for
+\((\alpha, \beta, \omega) = (2, 1, 1)\).
 
 \subsection{Projection and ordering}\label{subsec:projection}
 
@@ -302,7 +317,8 @@ the ordering of projected points is determined by
   \(\alpha=2\), \(\beta=1\), \(\omega=1\).
   The strip (shaded) is bounded by the parallel lines
   \(u(x)=(\alpha/\beta)x+\omega\) and \(l(x)=(\alpha/\beta)(x-\omega)\).
-  Accepted lattice points (filled blue dots) lie inside the strip; faint dots
+  Accepted lattice points (filled blue dots) lie in the closed strip,
+  including its bounding lines; faint dots
   show rejected lattice points.  Each accepted point is projected orthogonally
   onto the line \(f(x)=(\alpha/\beta)x\) (red); the resulting projected points
   are drawn as red dots on \(f\), each connected to its preimage by a thin line.
@@ -388,7 +404,8 @@ class; here every class is hit, so all gaps equal~\(1\).}
 \label{fig:multiset-vs-set}
 \end{figure}
 
-The two conventions can produce different period lengths, and we prove a
+The two conventions are contrasted in Figure~\ref{fig:multiset-vs-set}.
+They can produce different period lengths, and we prove a
 formula for each.  The main result for the multiset convention is
 Theorem~\ref{thm:main} (Section~\ref{sec:mainresult}).  The companion
 result for the set convention is Theorem~\ref{thm:setperiod}
@@ -491,7 +508,8 @@ CSV datasets, since each row records both \(\lambda_{\mathrm{multiset}}\)
 and \(\lambda_{\mathrm{set}}\):
 \begin{itemize}
     \item 51{,}012 test cases with \(\alpha, \beta\) up to \({\sim}100{,}000\)
-          and rational \(\omega\) up to \({\sim}10\), all satisfying
+          and rational \(\omega\) up to \(39023/7 \approx 5{,}575\)
+          (96.7\% of the rows have \(\omega \le 10\)), all satisfying
           \(D \nmid N\) (51{,}011 with \(N < D\), one with \(N \ge D\));
           see file \texttt{multiset\_\allowbreak and\_\allowbreak set\_\allowbreak new\_\allowbreak find\_\allowbreak patterns\_\allowbreak 51012\_\allowbreak lines.csv}
           in the repository's \texttt{tests/} folder.
@@ -499,7 +517,9 @@ and \(\lambda_{\mathrm{set}}\):
           chosen so that \(D \mid N\) (with \(N\) up to \({\sim}4{,}300\)),
           verifying the \(\lambda = N/D\) branch; see file
           \texttt{multiset\_\allowbreak and\_\allowbreak set\_\allowbreak degenerate\_\allowbreak patterns\_\allowbreak 5000\_\allowbreak lines.csv}
-          in the repository's \texttt{tests/} folder.
+          in the repository's \texttt{tests/} folder
+          (the \texttt{5000} in the filename is historical; the file
+          contains exactly 477 data rows).
     \item 240 additional cases generated by an independent Python
           implementation, balanced 120 / 120 between \(N < D\) and
           \(N \ge D\) and spanning 25 distinct \((\alpha, \beta)\) pairs;
@@ -761,13 +781,12 @@ positive period~\(\lambda\).  If \(M > 0\) is also a period, then
 \end{lemma}
 
 \begin{proof}
-Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  Both \(M\) and
-\(\lambda\) are periods of the bi-infinite sequence; since the set of
-periods is closed under both addition and subtraction (using negative
-shifts where needed), the difference
-\(M - q\lambda = r\) is itself a period of the sequence.  As
-\(0 \le r < \lambda\) and \(\lambda\) is the \emph{minimal} positive
-period, the only possibility is \(r = 0\); hence \(\lambda \mid M\).
+Write \(M = q\lambda + r\) with \(0 \le r < \lambda\).  The integers
+\(k\) for which the index shift by \(k\) fixes the sequence form a
+subgroup of \(\mathbb{Z}\); it contains \(M\) and \(\lambda\), hence
+also \(r = M - q\lambda\).  If \(r > 0\), then \(r\) is a positive
+period smaller than \(\lambda\), contradicting the \emph{minimality}
+of \(\lambda\).  Hence \(r = 0\) and \(\lambda \mid M\).
 \end{proof}
 
 \begin{lemma}[Trivial stabilizer of a cyclic interval]
@@ -880,7 +899,7 @@ is a contiguous cyclic interval of length \(s\):
 \]
 for some \(x_0\), because after \(q\) complete cycles the remaining
 \(s\) elements contribute one additional hit on \(s\) consecutive
-classes in the \(m\)-stepping order.
+classes in the \(m\)-stepping order (see Figure~\ref{fig:heavy-set}).
 
 \begin{figure}[ht]
 \centering
@@ -916,9 +935,9 @@ classes in the \(m\)-stepping order.
   }
 
   \node[blue!60!black,font=\small] at (90-360*3/13:\R+2.9)
-       {\(H\): heavy, \(\mu=q+1\)};
+       {\(H\): heavy, \(\hat{\mu}=q+1\)};
   \node[gray!50!black,font=\small] at (90-360*9/13:\R+1.9)
-       {light, \(\mu=q\)};
+       {light, \(\hat{\mu}=q\)};
 
   \node at (0,0) {\(\mathbb{Z}/D\mathbb{Z}\)};
 
@@ -927,7 +946,7 @@ classes in the \(m\)-stepping order.
 \(m\)-stepping parametrization
 (here \(D=13,\ q=2,\ s=3,\ N=qD+s=29\); realizable for
 \((\alpha,\beta,\omega)=(3,2,17/3)\)).
-Next to each residue class, the multiplicity \(\mu\) is shown as a
+Next to each residue class, the multiplicity \(\hat{\mu}\) is shown as a
 small outward stack of dots: \(q=2\) for light classes, \(q+1=3\) for heavy
 classes.  The heavy set \(H=\{2,3,4\}\) is a contiguous cyclic
 interval of length \(s\).}
@@ -1220,7 +1239,10 @@ heavy residue classes contributes a coincident pair, hence a zero
 gap.  The block of \(N\) gaps therefore contains four \(0\)'s and
 \(N - 4 = 25\) positive values, summing to \(D\).
 Theorem~\ref{thm:main} gives
-\(\lambda_{\mathrm{multiset}} = N = 29\), and the heavy classes form
+\(\lambda_{\mathrm{multiset}} = N = 29\).  The heavy classes are
+\(\{5, 12, 16, 23\} \bmod 25\); viewed in the \(m\)-stepping
+parametrization of Section~\ref{subsec:step5} (here \(m = 18\),
+with preimages \(\{9, 10, 11, 12\}\)), they form
 a cyclic interval of length \(s = 4\) whose only translational
 symmetry is the identity
 (Lemma~\ref{lem:cyclic_interval_stabilizer}).
@@ -1247,9 +1269,14 @@ All 51{,}729 cases match formula~\eqref{eq:setformula} with zero failures.
 % =====================================================================
 
 Throughout this section, \(\lambda\) denotes the multiset period
-\(\lambda_{\mathrm{multiset}}\) of Theorem~\ref{thm:main}; the
-set-valued analogues follow from Theorem~\ref{thm:setperiod} via
-Corollary~\ref{cor:setlemultiset}.  Define
+\(\lambda_{\mathrm{multiset}}\) of Theorem~\ref{thm:main}.  Set-valued
+versions can be read off from Theorem~\ref{thm:setperiod}: for
+\(N < D\) one has \(\lambda_{\mathrm{set}} = \lambda_{\mathrm{multiset}}\)
+(Corollary~\ref{cor:setlemultiset}), so the statements below hold
+verbatim for \(\lambda_{\mathrm{set}}\); for \(N \ge D\) the set-valued
+period collapses to \(1\), so apart from the finiteness statement
+(Corollary~\ref{cor:finite}) the statements below do \emph{not}
+transfer to \(\lambda_{\mathrm{set}}\).  Define
 \(\Lambda_{\alpha,\beta} := \alpha + \beta + 1\).
 
 \begin{corollary}[Finiteness]\label{cor:finite}
@@ -1324,8 +1351,8 @@ Since \(D \mid N\), we get \(\lambda = N/D = 1\), which is less than
 \(\Lambda_{2,1} = 4\).
 \end{remark}
 
-\begin{corollary}[\(\omega > 2\)]\label{cor:large_omega}
-If \(\omega > 2\) and \(D \nmid N\), then
+\begin{corollary}[\(\omega \ge 2\)]\label{cor:large_omega}
+If \(\omega \ge 2\) and \(D \nmid N\), then
 \[
     \lambda > \Lambda_{\alpha,\beta}.
 \]
@@ -1362,14 +1389,23 @@ In this section we momentarily replace the rational invariants \(r\),
 \(\tilde p, s\) of cut-and-project theory; the rational analogues are
 recovered by setting \(a = \alpha/\beta\).%
 \footnote{Note that the symbol \(\tilde p\) is reused with a different
-normalization: in \S\ref{subsec:projection} we set
+normalization: in Section~\ref{subsec:projection} we set
 \(\tilde p = \beta x + \alpha y\), whereas here \(\tilde p = x + a y\).
 With \(a=\alpha/\beta\), the irrational form is the rational form divided
 by the positive constant~\(\beta\), so the two definitions induce the same
-ordering of projected points.}
+ordering of projected points.  Several further symbols are local to this
+section: \(s(x,y)\) denotes the internal coordinate (not the heavy-set
+size \(s = N \bmod D\) of Sections~\ref{sec:proof}--\ref{sec:setvalued});
+it relates to the invariant of Section~\ref{subsec:step1} by
+\(r = \alpha x - \beta y = -\beta\, s(x,y)\), so \(s \in W = [-a\omega,\,
+\omega]\) corresponds to \(r \in [-\omega\beta,\, \omega\alpha]\) with
+orientation reversed.  Likewise, \(m, n\) below denote generic integer
+coordinates (not the multiplier \(m\) of Section~\ref{sec:proof}), and
+\(\tau\) denotes an internal translation (not the stabilizer shift of
+Lemma~\ref{lem:cyclic_interval_stabilizer}).}
 
 Throughout this section we use the following notation.  For irrational
-\(a\) and \(\omega > 0\), define the physical and internal coordinates
+\(a > 0\) and \(\omega > 0\), define the physical and internal coordinates
 \[
     \tilde p(x, y) \;:=\; x + a y,
     \qquad
@@ -1552,9 +1588,14 @@ aperiodic side is the classical setting of model sets and aperiodic order
 % =====================================================================
 
 All period theorems of this paper have been formalized in
-Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020}.
+Lean~4~\cite{Moura2021} using the Mathlib library~\cite{Mathlib2020},
+at the level of their residue-combinatorial core: the machine-checked
+layer starts from the residue model, while the strip-to-residue
+reduction is hand-verified (see Section~\ref{subsec:lean_scope} for
+the precise boundary between the two layers).
 The rational case (Theorems~\ref{thm:main} and~\ref{thm:setperiod})
-is formalized in \texttt{Basic.lean}, including the geometric residue
+is formalized in this residue-model form in
+\texttt{Basic.lean}, including the geometric residue
 map \(c_r \equiv -\alpha\beta^{-1}r \pmod{D}\) (the multiplier is
 threaded through to the headline theorems
 \texttt{main\_\allowbreak theorem\_\allowbreak geometric\_\allowbreak concrete}
@@ -1596,7 +1637,8 @@ Each axiom is discharged by a separate lemma
 
 \paragraph{Irrational case.}
 The irrational case (Proposition~\ref{prop:irrational}) is formalized
-separately in \texttt{Irrational.lean} (896 lines).  In addition to
+in \texttt{Irrational.lean} (896 lines), separately from the rational
+case.  In addition to
 the proof of Proposition~\ref{prop:irrational}, the file establishes
 the supporting infrastructure used implicitly in
 Section~\ref{sec:irrational}: local finiteness of \(\tilde p(A)\),
@@ -1667,7 +1709,7 @@ Residue distribution (general) with multiplier
   & \texttt{residue\_distribution\_unit} & 287 \\
 Heavy set under \(c_r\) is cyclic interval (image under \(u\))
   & \texttt{heavy\_set\_unit\_is\_cyclic\_interval} & 408 \\
-Theorem~\ref{thm:main} for the \(c_r\) enumeration (abstract)
+Theorem~\ref{thm:main} for an arbitrary unit twist
   & \texttt{main\_theorem\_unit\_concrete} & 2411 \\
 Theorem~\ref{thm:main} for the \(c_r\) enumeration (geometric)
   & \texttt{main\_theorem\_geometric\_concrete} & 2490 \\
@@ -1684,7 +1726,7 @@ Set size positivity (well-defined modulo)
   & \texttt{set\_size\_pos} & 2219 \\
 Theorem~\ref{thm:setperiod} (concrete wrapper)
   & \texttt{set\_main\_theorem\_concrete} & 2562 \\
-Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (abstract)
+Theorem~\ref{thm:setperiod} for an arbitrary unit twist
   & \texttt{set\_main\_theorem\_unit} & 2815 \\
 Theorem~\ref{thm:setperiod} for \(c_r\) enumeration (geometric)
   & \texttt{set\_main\_theorem\_geometric\_concrete} & 2849 \\
@@ -1715,10 +1757,11 @@ Proposition~\ref{prop:irrational} (multiset \(=\) set)
 \end{tabular}
 \caption{Correspondence between paper results and Lean~4 declarations.
 Line numbers in the upper part of the table refer to
-\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Basic.lean};
-those in the lower part refer to
-\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/\allowbreak Irrational.lean}
-(both files in the accompanying code repository version submitted with the paper~\cite{Kunert2025}).}
+\texttt{Basic.lean}, those in the lower part to
+\texttt{Irrational.lean}, both under
+\texttt{Lean/\allowbreak CutAndProject/\allowbreak CutAndProject/} in the
+accompanying code repository version submitted with the
+paper~\cite{Kunert2025}.}
 \label{tab:lean}
 \end{table}
 
@@ -1797,10 +1840,10 @@ the final theorem.
 
 \paragraph{Boundary between the two layers.} The hand-verified
 strip-to-residue reduction of Layer~1 is standard cut-and-project
-mathematics; what is novel in the formalization is that Layer~2 closes
-the residual gap left by the earlier version of this development, in which the
-abstract typeclass \texttt{GeometricProjection} was instantiated only for the
-normalized residue map (\(u = 1\)).  In the present formalization, the
+mathematics.  Layer~2 proves the period theorems not only for the
+normalized residue map (\(u = 1\)), for which the abstract typeclass
+\texttt{GeometricProjection} is instantiated, but also, via dedicated
+unit-aware theorems, for arbitrary unit twists, so that the
 geometric multiplier is fully threaded through to the period theorems on
 both the multiset and set sides.
 
@@ -1836,8 +1879,8 @@ studied here, so the two formalizations are complementary.
 The lower Christoffel word associated with the lattice path from
 \((0,0)\) to \((p,q)\), with \(\gcd(p,q)=1\), is a binary word of length
 \(p+q\)~\cite{BerstelEtAl2008}.  The corresponding mechanical
-word -- in the convention where each letter encodes one unit step of
-this path -- is then periodic with period \(p+q\) (the length of the
+word --- in the convention where each letter encodes one unit step of
+this path --- is then periodic with period \(p+q\) (the length of the
 Christoffel word).  (We note that under
 the alternative convention in which the slope is taken as
 \(p/q\in(0,1)\) and the sequence is defined as
@@ -1867,6 +1910,11 @@ Reveill\`{e}s~\cite{Reveilles1991},
 \]
 here with \(\mu = -\omega\beta\) and arithmetic thickness
 \(W = (\alpha+\beta)\,\omega\) (up to the choice of boundary convention).
+In this display, \(D(\cdot)\), \(\mu\), and \(W\) are Reveill\`{e}s'
+standard symbols for the digital line, its translation constant, and its
+arithmetic thickness; they are unrelated to the modulus \(D\), the
+multiplicity function \(\mu\), and the window \(W\) used elsewhere in
+this paper.
 This family of objects has been studied extensively in digital geometry, and
 two of its periodicity results are directly comparable to ours:
 \begin{itemize}
@@ -1923,8 +1971,9 @@ irrational rotations.  In Arnoux's chapter on Sturmian sequences in the Pytheas
 Fogg volume~\cite{PytheasFogg2002}, a sequence is Sturmian precisely when it is
 balanced and \emph{not} eventually periodic, so the rational, eventually
 periodic rotation codings fall outside that framework, and no minimal-period
-formula of the present kind is formulated there.  In neither reference does the modulus
-\(D = \alpha^2+\beta^2\), nor the multiset/set period dichotomy, occur.  The
+formula of the present kind is formulated there.  Neither the modulus
+\(D = \alpha^2+\beta^2\) nor the multiset/set period dichotomy occurs in
+either reference.  The
 present formula records, with an explicit closed form and a machine-checked
 proof of its residue-combinatorial core, precisely the case these standard
 treatments set aside as degenerate.
@@ -2012,7 +2061,17 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
     \item \textbf{Distribution of gap lengths.}
     For fixed \(\alpha, \beta, \omega\), one may ask for a precise
     characterization of the distinct gap values and their multiplicities
-    within one minimal period (in either convention).
+    within one minimal period (in either convention).  Much of this is
+    within reach of classical tools: for \(N \ge D\) all gaps lie in
+    \(\{0, 1\}\) with counts given by
+    Lemmas~\ref{lem:nonuniform} and~\ref{lem:uniform}, and for
+    \(N < D\) the positive gap values are the cyclic gaps of \(N\)
+    consecutive multiples of \(m\) modulo \(D\), to which the
+    three-distance theory of Section~\ref{sec:literature} applies (at
+    most three distinct values).  What appears to remain open is an
+    explicit closed form for the values and their frequencies directly
+    in terms of \(\alpha, \beta, \omega\), for example via the
+    continued-fraction expansion of \(m/D\).
 \end{enumerate}
 
 % =====================================================================
@@ -2113,7 +2172,7 @@ Henna Koivusalo and James J.\ Walton,
 
 \bibitem{Kunert2025}
 Dirk Kunert,
-\emph{Repository cut-and-project}, version \texttt{v1.4-arxiv}, 2025.\newline
+\emph{Repository cut-and-project}, version \texttt{v1.4-arxiv}, 2026.\newline
 Available at: \url{https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv}.
 
 \bibitem{KunertThreeGap2026}
@@ -2130,6 +2189,14 @@ of a digital straight line,''
 \textsc{doi}: \href{https://doi.org/10.1016/j.dam.2012.08.038}%
 {10.1016/j.dam.2012.08.038}.
 
+\bibitem{MarklofStrombergsson2017}
+Jens Marklof and Andreas Str\"{o}mbergsson,
+``The Three Gap Theorem and the Space of Lattices,''
+\emph{The American Mathematical Monthly}, vol.~124, no.~8, pp.~741--745,
+2017.
+\textsc{doi}: \href{https://doi.org/10.4169/amer.math.monthly.124.8.741}%
+{10.4169/amer.math.monthly.124.8.741}.
+
 \bibitem{Mathlib2020}
 The mathlib Community,
 ``The Lean mathematical library,''
@@ -2139,13 +2206,10 @@ pp.~367--381, 2020.
 \textsc{doi}: \href{https://doi.org/10.1145/3372885.3373824}%
 {10.1145/3372885.3373824}.
 
-\bibitem{MarklofStrombergsson2017}
-Jens Marklof and Andreas Str\"{o}mbergsson,
-``The Three Gap Theorem and the Space of Lattices,''
-\emph{The American Mathematical Monthly}, vol.~124, no.~8, pp.~741--745,
-2017.
-\textsc{doi}: \href{https://doi.org/10.4169/amer.math.monthly.124.8.741}%
-{10.4169/amer.math.monthly.124.8.741}.
+\bibitem{Meyer1972}
+Yves Meyer,
+\emph{Algebraic Numbers and Harmonic Analysis},
+North-Holland, Amsterdam, 1972.
 
 \bibitem{Moura2021}
 Leonardo de Moura and Sebastian Ullrich,
@@ -2155,11 +2219,6 @@ Deduction (CADE-28)},
 LNAI, vol.~12699, pp.~625--635, Springer, 2021.
 \textsc{doi}: \href{https://doi.org/10.1007/978-3-030-79876-5_37}%
 {10.1007/978-3-030-79876-5\_37}.
-
-\bibitem{Meyer1972}
-Yves Meyer,
-\emph{Algebraic Numbers and Harmonic Analysis},
-North-Holland, Amsterdam, 1972.
 
 \bibitem{PytheasFogg2002}
 N.\ Pytheas Fogg,
