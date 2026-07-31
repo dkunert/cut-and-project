@@ -200,7 +200,11 @@ a `Makefile` with targets `make all` / `make perf` / `make debug` /
 
 ## Provenance
 
-The author used ChatGPT, Gemini, and Claude as AI assistants during
+The central conjecture of this work, and the observation that it can be
+proved via Bézout's lemma, come from the author's earlier work; the
+first versions of the C search code were likewise written by the author,
+and were subsequently developed further with AI assistance. Beyond that,
+the author used ChatGPT, Gemini, and Claude as AI assistants during
 mathematical exploration, drafting, proof construction, and the
 creation of the Lean formalization, all under the author's direction.
 The author has independently verified the mathematical content and
