@@ -7,8 +7,8 @@
 \usepackage{caption}
 \captionsetup[table]{position=below,skip=12pt}
 \hypersetup{
-  pdftitle={Period Formulas for Rational Cut-and-Project Strip Projections:
-    Multiset and Set Cases},
+  pdftitle={Period Length Formulas for Rational Cut-and-Project Strip
+    Projections: Multiset and Set Cases},
   pdfauthor={Dirk Kunert},
   pdfkeywords={cut-and-project sets, gap sequences, period length,
     set-valued period, Lean 4 formalization},
@@ -34,8 +34,8 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
 
-\title[Period Formulas for Rational Cut-and-Project Projections]{%
-  Period Formulas for Rational Cut-and-Project Strip Projections:
+\title[Period Length Formulas for Rational Cut-and-Project Projections]{%
+  Period Length Formulas for Rational Cut-and-Project Strip Projections:
   Multiset and Set Cases}
 
 \author{Dirk Kunert}
@@ -58,7 +58,7 @@ positive integers \(\alpha,\beta\) defining the rational slope
 \(\alpha/\beta\), and window parameter \(\omega \ge 0\).  Projecting lattice
 points from the resulting strip onto the line yields, after ordering, a
 periodic sequence of consecutive gaps.  We give two complementary period
-formulas, one for each natural way to count projected points.  For the
+length formulas, one for each natural way to count projected points.  For the
 projected multiset (values counted with multiplicity), the minimal period is
 \[
 \lambda_{\mathrm{multiset}} =
@@ -118,7 +118,7 @@ on a convention.  If projected values are counted with multiplicity, then
 distinct lattice points projecting to the same value give rise to zero gaps.
 If multiplicities are discarded, the resulting ordinary point-set gap
 sequence can collapse all the way to period~$1$.  We give a complete
-period formula for \emph{both} conventions.
+period length formula for \emph{both} conventions.
 
 Let the rational slope be \(\alpha/\beta\), with
 \(\gcd(\alpha,\beta)=1\), and let \(\omega\ge0\) be the window parameter.
@@ -2050,12 +2050,12 @@ arithmetic progressions modulo~\(D\), distribute uniformly or not:
     the strip.  In that case the admissible \(r\)-values should again
     form an interval of integers, but its endpoints and cardinality
     depend on the offset.  It would be useful to formulate the
-    resulting period formulas explicitly in terms of that cardinality
+    resulting period length formulas explicitly in terms of that cardinality
     and to check whether any genuinely new boundary phenomena occur.
 
     \item \textbf{Higher dimensions.}
     The cut-and-project construction generalizes to higher-dimensional
-    lattices.  Whether analogous period formulas hold in dimension
+    lattices.  Whether analogous period length formulas hold in dimension
     \(d \ge 2\) is unexplored.
 
     \item \textbf{Distribution of gap lengths.}
@@ -2176,10 +2176,10 @@ Henna Koivusalo and James J.\ Walton,
 
 \bibitem{Kunert2026}
 Dirk Kunert,
-``Period Formulas for Rational Cut-and-Project Strip Projections: Multiset and
-Set Cases,'' with Lean~4 formalization,
-\emph{Repository cut-and-project}, version \texttt{v1.4-arxiv}, 2026.\newline
-Available at: \url{https://github.com/dkunert/cut-and-project/tree/v1.4-arxiv}.
+``Period Length Formulas for Rational Cut-and-Project Strip Projections:
+Multiset and Set Cases,'' with Lean~4 formalization,
+\emph{Repository cut-and-project}, version \texttt{v1.5-arxiv}, 2026.\newline
+Available at: \url{https://github.com/dkunert/cut-and-project/tree/v1.5-arxiv}.
 
 \bibitem{KunertThreeGap2026}
 Dirk Kunert,

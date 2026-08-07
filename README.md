@@ -1,6 +1,6 @@
 # cut-and-project
 
-Period formulas for one-dimensional cut-and-project gap sequences, with
+Period length formulas for one-dimensional cut-and-project gap sequences, with
 explicit rational-slope formulas and the complementary irrational
 aperiodicity statement formalized in Lean 4.
 
