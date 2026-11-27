@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -21,3 +22,35 @@ jobs:
         with:
           lake-package-directory: Lean/CutAndProject
           use-mathlib-cache: true
+
+  paper:
+    name: Build the paper
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to create the release and upload the PDF
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Compiles on every push / pull request, so a paper that no longer
+      # builds is caught before a version is tagged.
+      - name: Compile the PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: LaTeX
+          root_file: rational_cut_and_project_gap_periods.tex
+
+      # Only on a pushed `v*` tag: attach the PDF to that tag's GitHub Release
+      # (created here if it does not exist yet). The newest release is then
+      # reachable under the stable URL
+      #   .../releases/latest/download/rational_cut_and_project_gap_periods.pdf
+      - name: Attach the PDF to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --verify-tag \
+                 --title "$GITHUB_REF_NAME" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" \
+            LaTeX/rational_cut_and_project_gap_periods.pdf --clobber
